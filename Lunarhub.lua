@@ -1,6 +1,6 @@
 -- ============================================
 -- 🌙 LUNAR HUB v5.2 (ЧЁРНЫЙ СТИЛЬ)
--- by Ryzen | МИНИМАЛИЗМ + АНИМАЦИИ + ЗВУК
+-- by Ryzen | МИНИМАЛИЗМ + ЗАЩИТА ОТ ОШИБОК
 -- ============================================
 
 -- ============================================
@@ -55,7 +55,7 @@ local Games = {
 }
 
 -- ============================================
--- 🔧 GUI (ЧЁРНЫЙ СТИЛЬ)
+-- 🔧 GUI (ЧЁРНЫЙ + ПРОЗРАЧНОСТЬ)
 -- ============================================
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -66,7 +66,7 @@ screen.Name = "LunarHub"
 screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- ОСНОВНОЙ ФРЕЙМ (ЧЁРНЫЙ)
+-- ОСНОВНОЙ ФРЕЙМ (ЧЁРНЫЙ С ПРОЗРАЧНОСТЬЮ)
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 0, 0, 0)
 frame.Position = UDim2.new(0.5, -190, 0.5, -230)
@@ -82,7 +82,7 @@ frame.Parent = screen
 local appearTween = TweenService:Create(
     frame,
     TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-    {Size = UDim2.new(0, 380, 0, 460), BackgroundTransparency = 0.1}
+    {Size = UDim2.new(0, 380, 0, 460), BackgroundTransparency = 0.15}
 )
 
 -- ТОНКАЯ БЕЛАЯ РАМКА
@@ -90,7 +90,7 @@ local border = Instance.new("Frame")
 border.Size = UDim2.new(1, 2, 1, 2)
 border.Position = UDim2.new(0, -1, 0, -1)
 border.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-border.BackgroundTransparency = 0.8
+border.BackgroundTransparency = 0.9
 border.BorderSizePixel = 0
 border.Parent = frame
 
@@ -98,7 +98,7 @@ border.Parent = frame
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 45)
 title.Position = UDim2.new(0, 0, 0, 10)
-title.Text = "🌙 LUNAR HUB v5.2"
+title.Text = "🌙 LUNAR HUB"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextScaled = true
 title.Font = Enum.Font.GothamBold
@@ -120,14 +120,14 @@ social.Parent = frame
 local sub = Instance.new("TextLabel")
 sub.Size = UDim2.new(1, 0, 0, 20)
 sub.Position = UDim2.new(0, 0, 0, 72)
-sub.Text = "📊 " .. #Games .. " игр | by Ryzen"
+sub.Text = "📊 " .. #Games .. " игр | by lunar hub"
 sub.TextColor3 = Color3.fromRGB(180, 180, 220)
 sub.TextSize = 12
 sub.Font = Enum.Font.Gotham
 sub.BackgroundTransparency = 1
 sub.Parent = frame
 
--- ЗАКРЫТИЕ С АНИМАЦИЕЙ
+-- ЗАКРЫТИЕ
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 32, 0, 32)
 close.Position = UDim2.new(1, -40, 0, 8)
@@ -183,11 +183,11 @@ listLayout.Parent = list
 
 -- ЗВУК НАЖАТИЯ
 local clickSound = Instance.new("Sound")
-clickSound.SoundId = "rbxassetid://9120383469" -- Короткий клик
+clickSound.SoundId = "rbxassetid://9120383469"
 clickSound.Volume = 0.3
 clickSound.Parent = screen
 
--- КНОПКИ
+-- КНОПКИ С ЗАЩИТОЙ ОТ ОШИБОК
 for _, game in ipairs(Games) do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, 0, 0, 32)
@@ -205,7 +205,6 @@ for _, game in ipairs(Games) do
     padding.PaddingLeft = UDim.new(0, 12)
     padding.Parent = btn
     
-    -- СТРЕЛКА
     local arrow = Instance.new("TextLabel")
     arrow.Size = UDim2.new(0, 25, 1, 0)
     arrow.Position = UDim2.new(1, -30, 0, 0)
@@ -215,7 +214,6 @@ for _, game in ipairs(Games) do
     arrow.BackgroundTransparency = 1
     arrow.Parent = btn
     
-    -- АНИМАЦИЯ НАВЕДЕНИЯ
     btn.MouseEnter:Connect(function()
         TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
         TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
@@ -225,7 +223,6 @@ for _, game in ipairs(Games) do
         TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(150, 150, 150)}):Play()
     end)
     
-    -- НАЖАТИЕ + ЗВУК
     btn.MouseButton1Click:Connect(function()
         clickSound:Play()
         btn.Text = "⏳..."
@@ -233,8 +230,10 @@ for _, game in ipairs(Games) do
         arrow.Text = "⏳"
         task.wait(0.15)
         
+        -- ЗАЩИТА ОТ ОШИБОК
         local success, err = pcall(function()
-            loadstring(game:HttpGet(game.link))()
+            local script = game:HttpGet(game.link)
+            loadstring(script)()
         end)
         
         if success then
@@ -245,6 +244,7 @@ for _, game in ipairs(Games) do
             btn.Text = "❌ " .. game.name
             btn.BackgroundColor3 = Color3.fromRGB(50, 30, 30)
             arrow.Text = "❌"
+            warn("Ошибка загрузки: " .. tostring(err))
         end
         
         task.wait(1)
@@ -279,4 +279,4 @@ end)
 appearTween:Play()
 
 print("✅ Lunar Hub v5.2 загружен! (" .. #Games .. " игр)")
-print("🌙 Чёрный стиль активирован!")
+print("🌙 Чёрный стиль + защита от ошибок активированы!")
