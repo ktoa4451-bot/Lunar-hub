@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.2 (ЧЁРНЫЙ СТИЛЬ)
+-- 🌙 LUNAR HUB v5.3 (ЧЁРНЫЙ СТИЛЬ)
 -- by Ryzen | УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.2"
+    local currentVersion = "5.3"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
