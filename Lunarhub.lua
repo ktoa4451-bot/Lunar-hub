@@ -1,6 +1,6 @@
 -- ============================================
 -- 🌙 LUNAR HUB v5.2 (ЧЁРНЫЙ СТИЛЬ)
--- by Ryzen | МИНИМАЛИЗМ + ЗАЩИТА ОТ ОШИБОК
+-- by Ryzen | УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
 -- ============================================
 
 -- ============================================
@@ -55,6 +55,27 @@ local Games = {
 }
 
 -- ============================================
+-- 🔧 УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
+-- ============================================
+local function loadScript(link)
+    local success, result = pcall(function()
+        local scriptContent = game:HttpGet(link)
+        return loadstring(scriptContent)
+    end)
+    
+    if success and result then
+        local execSuccess, execErr = pcall(result)
+        if execSuccess then
+            return true, "✅ Успешно"
+        else
+            return false, "Ошибка выполнения: " .. tostring(execErr)
+        end
+    else
+        return false, "Ошибка загрузки: " .. tostring(result)
+    end
+end
+
+-- ============================================
 -- 🔧 GUI (ЧЁРНЫЙ + ПРОЗРАЧНОСТЬ)
 -- ============================================
 local Players = game:GetService("Players")
@@ -66,7 +87,7 @@ screen.Name = "LunarHub"
 screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- ОСНОВНОЙ ФРЕЙМ (ЧЁРНЫЙ С ПРОЗРАЧНОСТЬЮ)
+-- ОСНОВНОЙ ФРЕЙМ
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 0, 0, 0)
 frame.Position = UDim2.new(0.5, -190, 0.5, -230)
@@ -105,11 +126,11 @@ title.Font = Enum.Font.GothamBold
 title.BackgroundTransparency = 1
 title.Parent = frame
 
--- ПРИВЕТСТВИЕ (ТГ И ТТ)
+-- ПРИВЕТСТВИЕ
 local social = Instance.new("TextLabel")
 social.Size = UDim2.new(1, 0, 0, 20)
 social.Position = UDim2.new(0, 0, 0, 52)
-social.Text = "📱 TG: @lunarhub_script | TT: @LunarHub"
+social.Text = "📱 TG: @LunarHub | TT: @LunarHub"
 social.TextColor3 = Color3.fromRGB(200, 200, 255)
 social.TextSize = 12
 social.Font = Enum.Font.Gotham
@@ -120,7 +141,7 @@ social.Parent = frame
 local sub = Instance.new("TextLabel")
 sub.Size = UDim2.new(1, 0, 0, 20)
 sub.Position = UDim2.new(0, 0, 0, 72)
-sub.Text = "📊 " .. #Games .. " игр | by lunar hub"
+sub.Text = "📊 " .. #Games .. " игр | by Ryzen"
 sub.TextColor3 = Color3.fromRGB(180, 180, 220)
 sub.TextSize = 12
 sub.Font = Enum.Font.Gotham
@@ -181,13 +202,13 @@ listLayout.SortOrder = Enum.SortOrder.Name
 listLayout.Padding = UDim.new(0, 4)
 listLayout.Parent = list
 
--- ЗВУК НАЖАТИЯ
+-- ЗВУК
 local clickSound = Instance.new("Sound")
 clickSound.SoundId = "rbxassetid://9120383469"
 clickSound.Volume = 0.3
 clickSound.Parent = screen
 
--- КНОПКИ С ЗАЩИТОЙ ОТ ОШИБОК
+-- КНОПКИ С УНИВЕРСАЛЬНЫМ ЗАГРУЗЧИКОМ
 for _, game in ipairs(Games) do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, 0, 0, 32)
@@ -230,11 +251,8 @@ for _, game in ipairs(Games) do
         arrow.Text = "⏳"
         task.wait(0.15)
         
-        -- ЗАЩИТА ОТ ОШИБОК
-        local success, err = pcall(function()
-            local script = game:HttpGet(game.link)
-            loadstring(script)()
-        end)
+        -- УНИВЕРСАЛЬНАЯ ЗАГРУЗКА
+        local success, msg = loadScript(game.link)
         
         if success then
             btn.Text = "✅ " .. game.name
@@ -244,7 +262,7 @@ for _, game in ipairs(Games) do
             btn.Text = "❌ " .. game.name
             btn.BackgroundColor3 = Color3.fromRGB(50, 30, 30)
             arrow.Text = "❌"
-            warn("Ошибка загрузки: " .. tostring(err))
+            warn("Ошибка: " .. msg)
         end
         
         task.wait(1)
@@ -279,4 +297,4 @@ end)
 appearTween:Play()
 
 print("✅ Lunar Hub v5.2 загружен! (" .. #Games .. " игр)")
-print("🌙 Чёрный стиль + защита от ошибок активированы!")
+print("🌙 Чёрный стиль + универсальный загрузчик активированы!")
