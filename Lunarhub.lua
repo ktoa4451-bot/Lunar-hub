@@ -6,7 +6,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "4.6"  -- ← МЕНЯЙ ЭТУ ЦИФРУ ПРИ ОБНОВЛЕНИИ
+    local currentVersion = "4.7"  -- ← МЕНЯЙ ЭТУ ЦИФРУ ПРИ ОБНОВЛЕНИИ
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -67,7 +67,7 @@ local Games = {
 -- ============================================
 local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
-screen.Parent = PlayerGui
+screen.Parent = CoreGui
 
 -- ОСНОВНОЙ ФРЕЙМ
 local frame = Instance.new("Frame")
