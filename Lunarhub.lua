@@ -1,41 +1,10 @@
 -- ============================================
--- 🌙 LUNAR HUB (С АВТО-ОБНОВЛЕНИЕМ V5.1)
--- by Ryzen
+-- 🌙 LUNAR HUB (РАБОЧАЯ ВЕРСИЯ)
+-- by Ryzen | СТАБИЛЬНОСТЬ + СТИЛЬ
 -- ============================================
 
--- ============================================
--- 🔄 АВТО-ОБНОВЛЕНИЕ
--- ============================================
-local function selfUpdate()
-    local currentVersion = "5.2"
-    local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
-    
-    local success, remoteVersion = pcall(function()
-        return game:HttpGet(repoURL .. "version.txt")
-    end)
-    
-    if not success then
-        warn("⚠️ Не удалось проверить обновления. Загружаю текущую версию.")
-        return false
-    end
-    
-    remoteVersion = remoteVersion:gsub("%s+", "")
-    
-    if remoteVersion ~= currentVersion then
-        print("🔄 Найдено обновление! (" .. currentVersion .. " → " .. remoteVersion .. ")")
-        print("📥 Загрузка новой версии...")
-        local newScript = game:HttpGet(repoURL .. "Lunarhub.lua")
-        loadstring(newScript)()
-        return true
-    end
-    
-    print("✅ Версия актуальна (" .. currentVersion .. ")")
-    return false
-end
-
-if selfUpdate() then
-    return
-end
+local Players = game:GetService("Players")
+local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 
 -- ============================================
 -- ⚡ ИГРЫ (ДОБАВЛЯЙ СЮДА)
@@ -56,28 +25,22 @@ local Games = {
     },
     ["🔑 Премиум"] = {
         {name = "Rost Alpha Premium", link = "https://api.jnkie.com/api/v1/luascripts/public/e629b8f01eed30630fc3cb93da70708fdac4e57f3fd11fc6dc308c4d7ba6c1bd/download"},
-        {name = "Prison Life Premium", link = "https://rawscripts.net/raw/Prison-Life-Override-Hub-Silent-Aim-and-More-242218"}
+        {name = "Prison Life Premium", link = "https://rawscripts.net/raw/Prison-Life-Override-Hub-Silent-Aim-and-More-242218"},
     }
 }
 
 -- ============================================
--- 🔧 GUI С КОСМИЧЕСКИМ ЛОГОТИПОМ
+-- 🔧 GUI (БЕЗ АНИМАЦИЙ)
 -- ============================================
-local Players = game:GetService("Players")
-local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
-local TweenService = game:GetService("TweenService")
-
 local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
 screen.Parent = PlayerGui
-screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- ОСНОВНОЙ ФРЕЙМ
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 0, 0, 0)
-frame.Position = UDim2.new(0.5, -210, 0.5, -280)
-frame.BackgroundColor3 = Color3.fromRGB(8, 8, 20)
-frame.BackgroundTransparency = 1
+frame.Size = UDim2.new(0, 400, 0, 480)
+frame.Position = UDim2.new(0.5, -200, 0.5, -240)
+frame.BackgroundColor3 = Color3.fromRGB(12, 12, 30)
+frame.BackgroundTransparency = 0
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
 frame.Active = true
@@ -89,16 +52,16 @@ local gradient = Instance.new("UIGradient")
 gradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 20, 60)),
     ColorSequenceKeypoint.new(0.5, Color3.fromRGB(18, 18, 48)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(8, 8, 20))
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 35))
 })
 frame.UIGradient = gradient
 
--- НЕОНОВАЯ РАМКА
+-- НЕОНОВАЯ РАМКА (БЕЗ ПУЛЬСАЦИИ)
 local glow = Instance.new("Frame")
-glow.Size = UDim2.new(1, 8, 1, 8)
-glow.Position = UDim2.new(0, -4, 0, -4)
+glow.Size = UDim2.new(1, 4, 1, 4)
+glow.Position = UDim2.new(0, -2, 0, -2)
 glow.BackgroundColor3 = Color3.fromRGB(180, 80, 255)
-glow.BackgroundTransparency = 0.3
+glow.BackgroundTransparency = 0.2
 glow.BorderSizePixel = 0
 glow.Parent = frame
 
@@ -110,65 +73,26 @@ glowGradient.Color = ColorSequence.new({
 })
 glow.UIGradient = glowGradient
 
-local glowPulse = TweenService:Create(
-    glow,
-    TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-    {BackgroundTransparency = 0.05}
-)
+-- ЗАГОЛОВОК (БЕЗ ВЕРСИИ)
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 50)
+title.Position = UDim2.new(0, 0, 0, 8)
+title.Text = "🌙 LUNAR HUB"
+title.TextColor3 = Color3.fromRGB(255, 215, 0)
+title.TextScaled = true
+title.Font = Enum.Font.GothamBold
+title.BackgroundTransparency = 1
+title.Parent = frame
 
-local appearTween = TweenService:Create(
-    frame,
-    TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-    {Size = UDim2.new(0, 420, 0, 580), BackgroundTransparency = 0}
-)
-
--- ============================================
--- 🌙 ЛОГОТИП (КАРТИНКА)
--- ============================================
-local logo = Instance.new("ImageLabel")
-logo.Size = UDim2.new(0, 380, 0, 120)
-logo.Position = UDim2.new(0.5, -190, 0, 10)
-logo.BackgroundTransparency = 1
-logo.Image = "https://i.imgur.com/YourImage.png" -- ВСТАВЬ СВОЮ ССЫЛКУ НА ЛОГОТИП
-logo.ScaleType = Enum.ScaleType.Fit
-logo.Parent = frame
-
--- НАЗВАНИЕ БЕЗ ВЕРСИИ
-local logoTitle = Instance.new("TextLabel")
-logoTitle.Size = UDim2.new(0, 380, 0, 50)
-logoTitle.Position = UDim2.new(0.5, -190, 0, 45)
-logoTitle.Text = "LUNAR HUB"
-logoTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
-logoTitle.TextSize = 28
-logoTitle.Font = Enum.Font.GothamBold
-logoTitle.BackgroundTransparency = 1
-logoTitle.TextStrokeTransparency = 0.5
-logoTitle.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-logoTitle.Parent = frame
-
-local subTitle = Instance.new("TextLabel")
-subTitle.Size = UDim2.new(0, 380, 0, 25)
-subTitle.Position = UDim2.new(0.5, -190, 0, 80)
-subTitle.Text = "by Ryzen"
-subTitle.TextColor3 = Color3.fromRGB(200, 200, 255)
-subTitle.TextSize = 14
-subTitle.Font = Enum.Font.Gotham
-subTitle.BackgroundTransparency = 1
-subTitle.TextStrokeTransparency = 0.5
-subTitle.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-subTitle.Parent = frame
-
--- ============================================
--- 🔧 СЧЁТЧИК ИГР
--- ============================================
+-- СЧЁТЧИК
 local totalGames = 0
 for _, list in pairs(Games) do
     totalGames = totalGames + #list
 end
 
 local sub = Instance.new("TextLabel")
-sub.Size = UDim2.new(0, 380, 0, 22)
-sub.Position = UDim2.new(0.5, -190, 0, 135)
+sub.Size = UDim2.new(1, 0, 0, 22)
+sub.Position = UDim2.new(0, 0, 0, 52)
 sub.Text = "📊 " .. totalGames .. " игр | by Ryzen"
 sub.TextColor3 = Color3.fromRGB(190, 190, 240)
 sub.TextSize = 13
@@ -176,38 +100,24 @@ sub.Font = Enum.Font.Gotham
 sub.BackgroundTransparency = 1
 sub.Parent = frame
 
--- ============================================
--- 🔧 ЗАКРЫТИЕ
--- ============================================
+-- ЗАКРЫТИЕ
 local close = Instance.new("TextButton")
-close.Size = UDim2.new(0, 36, 0, 36)
-close.Position = UDim2.new(1, -44, 0, 10)
+close.Size = UDim2.new(0, 34, 0, 34)
+close.Position = UDim2.new(1, -42, 0, 6)
 close.Text = "✕"
 close.TextColor3 = Color3.fromRGB(255, 100, 100)
-close.TextSize = 22
+close.TextSize = 20
 close.Font = Enum.Font.GothamBold
 close.BackgroundTransparency = 1
 close.Parent = frame
-
-close.MouseEnter:Connect(function()
-    TweenService:Create(close, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 50, 50)}):Play()
-end)
-close.MouseLeave:Connect(function()
-    TweenService:Create(close, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 100, 100)}):Play()
-end)
-
 close.MouseButton1Click:Connect(function()
-    TweenService:Create(frame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {Size = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 1}):Play()
-    task.wait(0.4)
     screen:Destroy()
 end)
 
--- ============================================
--- 🔧 ПОИСК И ВКЛАДКИ
--- ============================================
+-- ПОИСК
 local searchBox = Instance.new("TextBox")
 searchBox.Size = UDim2.new(1, -20, 0, 32)
-searchBox.Position = UDim2.new(0, 10, 0, 145)
+searchBox.Position = UDim2.new(0, 10, 0, 80)
 searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 55)
 searchBox.BackgroundTransparency = 0.5
 searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -219,9 +129,10 @@ searchBox.BorderSizePixel = 0
 searchBox.ClipsDescendants = true
 searchBox.Parent = frame
 
+-- ВКЛАДКИ
 local tabsFrame = Instance.new("Frame")
 tabsFrame.Size = UDim2.new(1, -16, 0, 36)
-tabsFrame.Position = UDim2.new(0, 8, 0, 182)
+tabsFrame.Position = UDim2.new(0, 8, 0, 117)
 tabsFrame.BackgroundTransparency = 1
 tabsFrame.Parent = frame
 
@@ -240,8 +151,8 @@ tabLayout.Parent = tabList
 
 -- СПИСОК ИГР
 local list = Instance.new("ScrollingFrame")
-list.Size = UDim2.new(1, -20, 1, -210)
-list.Position = UDim2.new(0, 10, 0, 222)
+list.Size = UDim2.new(1, -20, 1, -175)
+list.Position = UDim2.new(0, 10, 0, 158)
 list.BackgroundTransparency = 1
 list.CanvasSize = UDim2.new(0, 0, 0, 0)
 list.ScrollBarThickness = 5
@@ -259,10 +170,10 @@ local lastSearch = ""
 -- КНОПКИ ИГР
 local function createGameButton(data)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 38)
+    btn.Size = UDim2.new(1, 0, 0, 34)
     btn.Text = data.name
-    btn.TextColor3 = Color3.fromRGB(235, 235, 255)
-    btn.TextSize = 15
+    btn.TextColor3 = Color3.fromRGB(230, 230, 255)
+    btn.TextSize = 14
     btn.TextXAlignment = Enum.TextXAlignment.Left
     btn.Font = Enum.Font.GothamBold
     btn.BackgroundColor3 = Color3.fromRGB(25, 25, 55)
@@ -284,12 +195,14 @@ local function createGameButton(data)
     arrow.Parent = btn
     
     btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(70, 45, 115)}):Play()
-        TweenService:Create(arrow, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(230, 150, 255)}):Play()
+        btn.BackgroundTransparency = 0
+        btn.BackgroundColor3 = Color3.fromRGB(55, 40, 85)
+        arrow.TextColor3 = Color3.fromRGB(200, 150, 255)
     end)
     btn.MouseLeave:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundTransparency = 0.2, BackgroundColor3 = Color3.fromRGB(25, 25, 55)}):Play()
-        TweenService:Create(arrow, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(150, 100, 220)}):Play()
+        btn.BackgroundTransparency = 0.2
+        btn.BackgroundColor3 = Color3.fromRGB(25, 25, 55)
+        arrow.TextColor3 = Color3.fromRGB(150, 100, 220)
     end)
     
     btn.MouseButton1Click:Connect(function()
@@ -357,7 +270,7 @@ local function updateList(category, search)
         createGameButton(game)
     end
     
-    list.CanvasSize = UDim2.new(0, 0, 0, #gamesToShow * 44 + 10)
+    list.CanvasSize = UDim2.new(0, 0, 0, #gamesToShow * 39 + 10)
 end
 
 -- ВКЛАДКИ
@@ -374,11 +287,13 @@ for cat, _ in pairs(Games) do
     btn.Parent = tabList
     
     btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(55, 40, 90)}):Play()
+        btn.BackgroundTransparency = 0
+        btn.BackgroundColor3 = Color3.fromRGB(55, 40, 85)
     end)
     btn.MouseLeave:Connect(function()
         if currentCategory ~= cat then
-            TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundTransparency = 0.3, BackgroundColor3 = Color3.fromRGB(25, 25, 50)}):Play()
+            btn.BackgroundTransparency = 0.3
+            btn.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
         end
     end)
     
@@ -399,6 +314,7 @@ for cat, _ in pairs(Games) do
     end)
 end
 
+-- ВЫБИРАЕМ ПЕРВУЮ КАТЕГОРИЮ
 local first = next(Games)
 if first then
     currentCategory = first
@@ -411,17 +327,13 @@ if first then
     end
 end
 
+-- ПОИСК
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
     lastSearch = searchBox.Text
     updateList(currentCategory, lastSearch)
 end)
 
--- ============================================
--- 🚀 ЗАПУСК
--- ============================================
+-- ЗАПУСК
 updateList(currentCategory, "")
-appearTween:Play()
-glowPulse:Play()
 
-print("✅ Lunar Hub v5.1 загружен! (" .. totalGames .. " игр)")
-print("🌙 Космический логотип активирован!")
+print("✅ Lunar Hub загружен! (" .. totalGames .. " игр)")
