@@ -1,6 +1,6 @@
 -- ============================================
--- 🌙 LUNAR HUB v4.9 (КРАСИВЫЙ И СТАБИЛЬНЫЙ)
--- by Ryzen | СТИЛЬ + НАДЁЖНОСТЬ
+-- 🌙 LUNAR HUB v5.0 (ИСПРАВЛЕННАЯ ВЕРСИЯ)
+-- by Ryzen | СТАБИЛЬНОСТЬ + СТИЛЬ
 -- ============================================
 
 local Players = game:GetService("Players")
@@ -24,10 +24,11 @@ local Games = {
 }
 
 -- ============================================
--- 🔧 СТИЛЬНЫЙ GUI
+-- 🔧 GUI (КРАСИВЫЙ И СТАБИЛЬНЫЙ)
 -- ============================================
 local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
+screen.ResetOnSpawn = false
 screen.Parent = PlayerGui
 
 -- ОСНОВНОЙ ФРЕЙМ
@@ -35,7 +36,6 @@ local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 420, 0, 500)
 frame.Position = UDim2.new(0.5, -210, 0.5, -250)
 frame.BackgroundColor3 = Color3.fromRGB(12, 12, 30)
-frame.BackgroundTransparency = 0
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
 frame.Active = true
@@ -45,8 +45,8 @@ frame.Parent = screen
 -- КРАСИВЫЙ ГРАДИЕНТ
 local gradient = Instance.new("UIGradient")
 gradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 15, 55)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(15, 15, 45)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 20, 60)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(18, 18, 48)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 35))
 })
 frame.UIGradient = gradient
@@ -72,7 +72,7 @@ glow.UIGradient = glowGradient
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 55)
 title.Position = UDim2.new(0, 0, 0, 8)
-title.Text = "🌙 LUNAR HUB v4.9"
+title.Text = "🌙 LUNAR HUB v5.0"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextScaled = true
 title.Font = Enum.Font.GothamBold
@@ -100,6 +100,7 @@ close.TextSize = 22
 close.Font = Enum.Font.GothamBold
 close.BackgroundTransparency = 1
 close.Parent = frame
+
 close.MouseEnter:Connect(function()
     close.TextColor3 = Color3.fromRGB(255, 50, 50)
 end)
@@ -112,10 +113,9 @@ end)
 
 -- СПИСОК ИГР
 local list = Instance.new("ScrollingFrame")
-list.Size = UDim2.new(1, -20, 1, -115)
+list.Size = UDim2.new(1, -20, 1, -120)
 list.Position = UDim2.new(0, 10, 0, 85)
 list.BackgroundTransparency = 1
-list.CanvasSize = UDim2.new(0, 0, 0, 0)
 list.ScrollBarThickness = 6
 list.ScrollBarImageColor3 = Color3.fromRGB(120, 80, 200)
 list.Parent = frame
@@ -125,11 +125,16 @@ listLayout.SortOrder = Enum.SortOrder.Name
 listLayout.Padding = UDim.new(0, 6)
 listLayout.Parent = list
 
+-- Автоматическое обновление размера Canvas
+listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    list.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 10)
+end)
+
 -- КРАСИВЫЕ КНОПКИ
-for _, game in ipairs(Games) do
+for _, gameData in ipairs(Games) do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, 0, 0, 38)
-    btn.Text = game.name
+    btn.Text = gameData.name
     btn.TextColor3 = Color3.fromRGB(235, 235, 255)
     btn.TextSize = 15
     btn.TextXAlignment = Enum.TextXAlignment.Left
@@ -156,7 +161,7 @@ for _, game in ipairs(Games) do
     -- ЭФФЕКТ НАВЕДЕНИЯ
     btn.MouseEnter:Connect(function()
         btn.BackgroundTransparency = 0
-        btn.BackgroundColor3 = Color3.fromRGB(65, 40, 110)
+        btn.BackgroundColor3 = Color3.fromRGB(70, 45, 115)
         arrow.TextColor3 = Color3.fromRGB(230, 150, 255)
     end)
     btn.MouseLeave:Connect(function()
@@ -171,36 +176,28 @@ for _, game in ipairs(Games) do
         arrow.Text = "⏳"
         task.wait(0.2)
         
+        -- Используем глобальный объект game для загрузки
         local success, err = pcall(function()
-            loadstring(game:HttpGet(game.link))()
+            loadstring(game:HttpGet(gameData.link))()
         end)
         
         if success then
-            btn.Text = "✅ " .. game.name
+            btn.Text = "✅ " .. gameData.name
             btn.BackgroundColor3 = Color3.fromRGB(30, 70, 30)
             arrow.Text = "✅"
         else
-            btn.Text = "❌ " .. game.name
+            btn.Text = "❌ " .. gameData.name
             btn.BackgroundColor3 = Color3.fromRGB(70, 30, 30)
             arrow.Text = "❌"
+            warn("Ошибка загрузки скрипта для " .. gameData.name .. ": " .. tostring(err))
         end
         
         task.wait(1.5)
-        btn.Text = game.name
+        btn.Text = gameData.name
         btn.BackgroundColor3 = Color3.fromRGB(25, 25, 55)
         arrow.Text = "▶"
     end)
 end
 
--- ОБНОВЛЯЕМ РАЗМЕР СПИСКА
-task.wait(0.1)
-local count = 0
-for _, child in ipairs(list:GetChildren()) do
-    if child:IsA("TextButton") then
-        count = count + 1
-    end
-end
-list.CanvasSize = UDim2.new(0, 0, 0, count * 44 + 10)
-
-print("✅ Lunar Hub v4.9 загружен! (" .. #Games .. " игр)")
-print("🌙 Красивый хаб v4.9 активирован!")
+print("✅ Lunar Hub v5.0 загружен! (" .. #Games .. " игр)")
+print("🌙 Финальная стабильная версия активирована!")
