@@ -1,13 +1,13 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.3
--- by Ryzen | КРАСИВЫЙ | АНИМАЦИИ | АВТО-ОБНОВЛЕНИЕ
+-- 🌙 LUNAR HUB v5.2 (ЧЁРНЫЙ СТИЛЬ)
+-- by Ryzen | МИНИМАЛИЗМ + АНИМАЦИИ + ЗВУК
 -- ============================================
 
 -- ============================================
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.3"
+    local currentVersion = "5.2"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -55,7 +55,7 @@ local Games = {
 }
 
 -- ============================================
--- 🔧 GUI
+-- 🔧 GUI (ЧЁРНЫЙ СТИЛЬ)
 -- ============================================
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -66,11 +66,11 @@ screen.Name = "LunarHub"
 screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- ОСНОВНОЙ ФРЕЙМ
+-- ОСНОВНОЙ ФРЕЙМ (ЧЁРНЫЙ)
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 0, 0, 0)
 frame.Position = UDim2.new(0.5, -190, 0.5, -230)
-frame.BackgroundColor3 = Color3.fromRGB(12, 12, 30)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 frame.BackgroundTransparency = 1
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
@@ -78,57 +78,59 @@ frame.Active = true
 frame.Draggable = true
 frame.Parent = screen
 
--- ГРАДИЕНТНЫЙ ФОН
-local gradient = Instance.new("UIGradient")
-gradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 15, 55)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(15, 15, 45)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 35))
-})
-frame.UIGradient = gradient
-
--- НЕОНОВАЯ РАМКА
-local glow = Instance.new("Frame")
-glow.Size = UDim2.new(1, 6, 1, 6)
-glow.Position = UDim2.new(0, -3, 0, -3)
-glow.BackgroundColor3 = Color3.fromRGB(150, 80, 255)
-glow.BackgroundTransparency = 0.2
-glow.BorderSizePixel = 0
-glow.Parent = frame
-
 -- АНИМАЦИЯ ПОЯВЛЕНИЯ
 local appearTween = TweenService:Create(
     frame,
-    TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-    {Size = UDim2.new(0, 380, 0, 460), BackgroundTransparency = 0.05}
+    TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+    {Size = UDim2.new(0, 380, 0, 460), BackgroundTransparency = 0.1}
 )
 
--- НАЗВАНИЕ (МАЛЕНЬКОЕ)
+-- ТОНКАЯ БЕЛАЯ РАМКА
+local border = Instance.new("Frame")
+border.Size = UDim2.new(1, 2, 1, 2)
+border.Position = UDim2.new(0, -1, 0, -1)
+border.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+border.BackgroundTransparency = 0.8
+border.BorderSizePixel = 0
+border.Parent = frame
+
+-- ЗАГОЛОВОК
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 40)
-title.Position = UDim2.new(0, 0, 0, 8)
-title.Text = "🌙 LUNAR HUB"
+title.Size = UDim2.new(1, 0, 0, 45)
+title.Position = UDim2.new(0, 0, 0, 10)
+title.Text = "🌙 LUNAR HUB v5.2"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
-title.TextSize = 20
+title.TextScaled = true
 title.Font = Enum.Font.GothamBold
 title.BackgroundTransparency = 1
 title.Parent = frame
 
+-- ПРИВЕТСТВИЕ (ТГ И ТТ)
+local social = Instance.new("TextLabel")
+social.Size = UDim2.new(1, 0, 0, 20)
+social.Position = UDim2.new(0, 0, 0, 52)
+social.Text = "📱 TG: @lunarhub_script | TT: @LunarHub"
+social.TextColor3 = Color3.fromRGB(200, 200, 255)
+social.TextSize = 12
+social.Font = Enum.Font.Gotham
+social.BackgroundTransparency = 1
+social.Parent = frame
+
 -- СЧЁТЧИК
 local sub = Instance.new("TextLabel")
 sub.Size = UDim2.new(1, 0, 0, 20)
-sub.Position = UDim2.new(0, 0, 0, 45)
+sub.Position = UDim2.new(0, 0, 0, 72)
 sub.Text = "📊 " .. #Games .. " игр | by Ryzen"
-sub.TextColor3 = Color3.fromRGB(190, 190, 240)
+sub.TextColor3 = Color3.fromRGB(180, 180, 220)
 sub.TextSize = 12
 sub.Font = Enum.Font.Gotham
 sub.BackgroundTransparency = 1
 sub.Parent = frame
 
--- ЗАКРЫТИЕ
+-- ЗАКРЫТИЕ С АНИМАЦИЕЙ
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 32, 0, 32)
-close.Position = UDim2.new(1, -40, 0, 6)
+close.Position = UDim2.new(1, -40, 0, 8)
 close.Text = "✕"
 close.TextColor3 = Color3.fromRGB(255, 100, 100)
 close.TextSize = 18
@@ -137,10 +139,10 @@ close.BackgroundTransparency = 1
 close.Parent = frame
 
 close.MouseEnter:Connect(function()
-    TweenService:Create(close, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 50, 50)}):Play()
+    TweenService:Create(close, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 50, 50)}):Play()
 end)
 close.MouseLeave:Connect(function()
-    TweenService:Create(close, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 100, 100)}):Play()
+    TweenService:Create(close, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 100, 100)}):Play()
 end)
 
 close.MouseButton1Click:Connect(function()
@@ -152,8 +154,8 @@ end)
 -- ПОИСК
 local searchBox = Instance.new("TextBox")
 searchBox.Size = UDim2.new(1, -20, 0, 28)
-searchBox.Position = UDim2.new(0, 10, 0, 72)
-searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 55)
+searchBox.Position = UDim2.new(0, 10, 0, 95)
+searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 searchBox.BackgroundTransparency = 0.5
 searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 searchBox.PlaceholderText = "🔍 Поиск..."
@@ -166,12 +168,12 @@ searchBox.Parent = frame
 
 -- СПИСОК ИГР
 local list = Instance.new("ScrollingFrame")
-list.Size = UDim2.new(1, -20, 1, -100)
-list.Position = UDim2.new(0, 10, 0, 105)
+list.Size = UDim2.new(1, -20, 1, -145)
+list.Position = UDim2.new(0, 10, 0, 128)
 list.BackgroundTransparency = 1
 list.CanvasSize = UDim2.new(0, 0, 0, 0)
 list.ScrollBarThickness = 4
-list.ScrollBarImageColor3 = Color3.fromRGB(120, 80, 200)
+list.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80)
 list.Parent = frame
 
 local listLayout = Instance.new("UIListLayout")
@@ -179,7 +181,13 @@ listLayout.SortOrder = Enum.SortOrder.Name
 listLayout.Padding = UDim.new(0, 4)
 listLayout.Parent = list
 
--- КНОПКИ С АНИМАЦИЕЙ
+-- ЗВУК НАЖАТИЯ
+local clickSound = Instance.new("Sound")
+clickSound.SoundId = "rbxassetid://9120383469" -- Короткий клик
+clickSound.Volume = 0.3
+clickSound.Parent = screen
+
+-- КНОПКИ
 for _, game in ipairs(Games) do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, 0, 0, 32)
@@ -188,7 +196,7 @@ for _, game in ipairs(Games) do
     btn.TextSize = 13
     btn.TextXAlignment = Enum.TextXAlignment.Left
     btn.Font = Enum.Font.GothamBold
-    btn.BackgroundColor3 = Color3.fromRGB(25, 25, 55)
+    btn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     btn.BackgroundTransparency = 0.2
     btn.BorderSizePixel = 0
     btn.Parent = list
@@ -202,23 +210,26 @@ for _, game in ipairs(Games) do
     arrow.Size = UDim2.new(0, 25, 1, 0)
     arrow.Position = UDim2.new(1, -30, 0, 0)
     arrow.Text = "▶"
-    arrow.TextColor3 = Color3.fromRGB(150, 100, 220)
+    arrow.TextColor3 = Color3.fromRGB(150, 150, 150)
     arrow.TextSize = 16
     arrow.BackgroundTransparency = 1
     arrow.Parent = btn
     
+    -- АНИМАЦИЯ НАВЕДЕНИЯ
     btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(55, 40, 85)}):Play()
-        TweenService:Create(arrow, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(200, 150, 255)}):Play()
+        TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
+        TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
     end)
     btn.MouseLeave:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0.2, BackgroundColor3 = Color3.fromRGB(25, 25, 55)}):Play()
-        TweenService:Create(arrow, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(150, 100, 220)}):Play()
+        TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundTransparency = 0.2, BackgroundColor3 = Color3.fromRGB(15, 15, 15)}):Play()
+        TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(150, 150, 150)}):Play()
     end)
     
+    -- НАЖАТИЕ + ЗВУК
     btn.MouseButton1Click:Connect(function()
+        clickSound:Play()
         btn.Text = "⏳..."
-        btn.BackgroundColor3 = Color3.fromRGB(70, 50, 30)
+        btn.BackgroundColor3 = Color3.fromRGB(50, 50, 30)
         arrow.Text = "⏳"
         task.wait(0.15)
         
@@ -228,22 +239,22 @@ for _, game in ipairs(Games) do
         
         if success then
             btn.Text = "✅ " .. game.name
-            btn.BackgroundColor3 = Color3.fromRGB(30, 70, 30)
+            btn.BackgroundColor3 = Color3.fromRGB(30, 50, 30)
             arrow.Text = "✅"
         else
             btn.Text = "❌ " .. game.name
-            btn.BackgroundColor3 = Color3.fromRGB(70, 30, 30)
+            btn.BackgroundColor3 = Color3.fromRGB(50, 30, 30)
             arrow.Text = "❌"
         end
         
-        task.wait(1.2)
+        task.wait(1)
         btn.Text = game.name
-        btn.BackgroundColor3 = Color3.fromRGB(25, 25, 55)
+        btn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
         arrow.Text = "▶"
     end)
 end
 
--- ОБНОВЛЯЕМ РАЗМЕР
+-- ОБНОВЛЕНИЕ РАЗМЕРА
 task.wait(0.1)
 local count = 0
 for _, child in ipairs(list:GetChildren()) do
@@ -267,5 +278,5 @@ end)
 -- ЗАПУСК
 appearTween:Play()
 
-print("✅ Lunar Hub v5.1 загружен! (" .. #Games .. " игр)")
-print("🌙 Красивый, с анимациями и авто-обновлением!")
+print("✅ Lunar Hub v5.2 загружен! (" .. #Games .. " игр)")
+print("🌙 Чёрный стиль активирован!")
