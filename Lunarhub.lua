@@ -2,6 +2,39 @@
 -- 🌙 LUNAR HUB v4.5 (УЛУЧШЕННЫЙ ДИЗАЙН)
 -- by Ryzen | ТОТ ЖЕ РАБОЧИЙ СКРИПТ + ВИЗУАЛ
 -- ============================================
+-- ============================================
+-- 🔄 АВТО-ОБНОВЛЕНИЕ
+-- ============================================
+local function selfUpdate()
+    local currentVersion = "4.6"  -- ← МЕНЯЙ ЭТУ ЦИФРУ ПРИ ОБНОВЛЕНИИ
+    local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
+    
+    local success, remoteVersion = pcall(function()
+        return game:HttpGet(repoURL .. "version.txt")
+    end)
+    
+    if not success then
+        warn("⚠️ Не удалось проверить обновления. Загружаю текущую версию.")
+        return false
+    end
+    
+    remoteVersion = remoteVersion:gsub("%s+", "")
+    
+    if remoteVersion ~= currentVersion then
+        print("🔄 Найдено обновление! (" .. currentVersion .. " → " .. remoteVersion .. ")")
+        print("📥 Загрузка новой версии...")
+        local newScript = game:HttpGet(repoURL .. "Lunarhub.lua")
+        loadstring(newScript)()
+        return true
+    end
+    
+    print("✅ Версия актуальна (" .. currentVersion .. ")")
+    return false
+end
+
+if selfUpdate() then
+    return
+end
 
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -25,7 +58,7 @@ local Games = {
     },
     ["🔑 Премиум"] = {
         {name = "Rost Alpha Premium", link = "https://api.jnkie.com/api/v1/luascripts/public/e629b8f01eed30630fc3cb93da70708fdac4e57f3fd11fc6dc308c4d7ba6c1bd/download"},
-        {name = "Prison Life Premium", link = "https://rawscripts.net/raw/Prison-Life-Override-Hub-Silent-Aim-and-More-242218"},
+        {name = "Prison Life Premium", link = "https://rawscripts.net/raw/Prison-Life-Override-Hub-Silent-Aim-and-More-242218"}
     }
 }
 
