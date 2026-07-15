@@ -1,6 +1,6 @@
 -- ============================================
--- 🌙 LUNAR HUB (РАБОЧАЯ ВЕРСИЯ)
--- by Ryzen | СТАБИЛЬНОСТЬ + СТИЛЬ
+-- 🌙 LUNAR HUB (СТАБИЛЬНАЯ ВЕРСИЯ)
+-- by Ryzen
 -- ============================================
 
 local Players = game:GetService("Players")
@@ -30,7 +30,7 @@ local Games = {
 }
 
 -- ============================================
--- 🔧 GUI (БЕЗ АНИМАЦИЙ)
+-- 🔧 GUI (БЕЗ UIGradient)
 -- ============================================
 local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
@@ -39,7 +39,7 @@ screen.Parent = PlayerGui
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 400, 0, 480)
 frame.Position = UDim2.new(0.5, -200, 0.5, -240)
-frame.BackgroundColor3 = Color3.fromRGB(12, 12, 30)
+frame.BackgroundColor3 = Color3.fromRGB(14, 14, 34) -- Просто тёмный цвет
 frame.BackgroundTransparency = 0
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
@@ -47,33 +47,16 @@ frame.Active = true
 frame.Draggable = true
 frame.Parent = screen
 
--- ГРАДИЕНТ
-local gradient = Instance.new("UIGradient")
-gradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 20, 60)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(18, 18, 48)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 35))
-})
-frame.UIGradient = gradient
-
--- НЕОНОВАЯ РАМКА (БЕЗ ПУЛЬСАЦИИ)
+-- НЕОНОВАЯ РАМКА (без UIGradient)
 local glow = Instance.new("Frame")
 glow.Size = UDim2.new(1, 4, 1, 4)
 glow.Position = UDim2.new(0, -2, 0, -2)
-glow.BackgroundColor3 = Color3.fromRGB(180, 80, 255)
+glow.BackgroundColor3 = Color3.fromRGB(120, 80, 255)
 glow.BackgroundTransparency = 0.2
 glow.BorderSizePixel = 0
 glow.Parent = frame
 
-local glowGradient = Instance.new("UIGradient")
-glowGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(220, 50, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(50, 100, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(220, 50, 255))
-})
-glow.UIGradient = glowGradient
-
--- ЗАГОЛОВОК (БЕЗ ВЕРСИИ)
+-- ЗАГОЛОВОК
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 50)
 title.Position = UDim2.new(0, 0, 0, 8)
