@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.4 (ВСЁ ВВЕРХУ)
+-- 🌙 LUNAR HUB v5.5 (КАТЕГОРИЯ «ИГРОК»)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.4"
+    local currentVersion = "5.5"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -57,6 +57,19 @@ local Games = {
     {name = "Chameleon", link = "https://raw.githubusercontent.com/tawxm/NgThanhTam/refs/heads/main/Chameleon.lua"},
     {name = "Sell Limons", link = "https://raw.githubusercontent.com/Fluxyyy333/HoshiOnTop/main/loader.lua"},
     {name = "Mine Per Click", link = "https://raw.githubusercontent.com/gumanba/Scripts/refs/heads/main/1MinePerClick"},
+}
+
+-- ============================================
+-- 🎮 ФУНКЦИИ ИГРОКА
+-- ============================================
+local PlayerFunctions = {
+    {name = "🚀 Ноуклип", func = "noclip"},
+    {name = "💨 СПИД", func = "speed"},
+    {name = "🦘 Инфинити Джамп", func = "infiniteJump"},
+    {name = "✈️ Флай", func = "fly"},
+    {name = "🎛️ Флай скорость", func = "flySpeed"},
+    {name = "💪 Сила прыжка", func = "jumpPower"},
+    {name = "👁️ Икс Рей", func = "xray"},
 }
 
 -- ============================================
@@ -121,9 +134,8 @@ border.BorderSizePixel = 0
 border.Parent = frame
 
 -- ============================================
--- 🏷️ ВЕРХНЯЯ ЧАСТЬ (НАЗВАНИЕ, СОЦСЕТИ, СЧЁТЧИК, ПОИСК)
+-- 🏷️ ВЕРХНЯЯ ЧАСТЬ
 -- ============================================
--- ЗАГОЛОВОК
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 40)
 title.Position = UDim2.new(0, 0, 0, 8)
@@ -134,7 +146,6 @@ title.Font = Enum.Font.GothamBold
 title.BackgroundTransparency = 1
 title.Parent = frame
 
--- СОЦСЕТИ
 local social = Instance.new("TextLabel")
 social.Size = UDim2.new(1, 0, 0, 18)
 social.Position = UDim2.new(0, 0, 0, 45)
@@ -145,7 +156,6 @@ social.Font = Enum.Font.Gotham
 social.BackgroundTransparency = 1
 social.Parent = frame
 
--- СЧЁТЧИК ИГР
 local sub = Instance.new("TextLabel")
 sub.Size = UDim2.new(1, 0, 0, 18)
 sub.Position = UDim2.new(0, 0, 0, 63)
@@ -156,7 +166,6 @@ sub.Font = Enum.Font.Gotham
 sub.BackgroundTransparency = 1
 sub.Parent = frame
 
--- ПОИСК (ПОДНЯТ)
 local searchBox = Instance.new("TextBox")
 searchBox.Size = UDim2.new(1, -20, 0, 28)
 searchBox.Position = UDim2.new(0, 10, 0, 84)
@@ -203,7 +212,6 @@ local function updateCategory(category)
     updateContent(category)
 end
 
--- СОЗДАНИЕ ВКЛАДОК
 local categories = {
     {name = "🎮 Игры", key = "Games"},
     {name = "⚙️ Настройки", key = "Settings"},
@@ -228,7 +236,6 @@ for _, cat in ipairs(categories) do
     tabButtons[cat.key] = btn
 end
 
--- ВЫБОР ПЕРВОЙ ВКЛАДКИ
 if tabButtons["Games"] then
     tabButtons["Games"].BackgroundTransparency = 0
 end
@@ -251,11 +258,95 @@ contentLayout.Padding = UDim.new(0, 4)
 contentLayout.Parent = contentFrame
 
 -- ============================================
+-- 🔧 ФУНКЦИИ ДЛЯ ИГРОКА
+-- ============================================
+local PlayerState = {
+    noclip = false,
+    speed = false,
+    infiniteJump = false,
+    fly = false,
+    flySpeed = 50,
+    jumpPower = 50,
+    xray = false,
+}
+
+local function toggleNoclip()
+    PlayerState.noclip = not PlayerState.noclip
+    local player = Players.LocalPlayer
+    local character = player.Character
+    if character then
+        for _, part in ipairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = not PlayerState.noclip
+            end
+        end
+    end
+    return PlayerState.noclip and "✅ Включён" or "❌ Выключен"
+end
+
+local function toggleSpeed()
+    PlayerState.speed = not PlayerState.speed
+    local player = Players.LocalPlayer
+    local character = player.Character
+    if character and character:FindFirstChild("Humanoid") then
+        local humanoid = character.Humanoid
+        if PlayerState.speed then
+            humanoid.WalkSpeed = 50
+        else
+            humanoid.WalkSpeed = 16
+        end
+    end
+    return PlayerState.speed and "✅ Включён" or "❌ Выключен"
+end
+
+local function toggleInfiniteJump()
+    PlayerState.infiniteJump = not PlayerState.infiniteJump
+    local player = Players.LocalPlayer
+    local character = player.Character
+    if character and character:FindFirstChild("Humanoid") then
+        local humanoid = character.Humanoid
+        if PlayerState.infiniteJump then
+            humanoid.JumpPower = 50
+        else
+            humanoid.JumpPower = 50
+        end
+    end
+    return PlayerState.infiniteJump and "✅ Включён" or "❌ Выключен"
+end
+
+local function toggleFly()
+    PlayerState.fly = not PlayerState.fly
+    return PlayerState.fly and "✅ Включён" or "❌ Выключен"
+end
+
+local function setFlySpeed()
+    local speed = tonumber(flySpeedInput.Text) or 50
+    PlayerState.flySpeed = speed
+    return "✅ Скорость: " .. speed
+end
+
+local function setJumpPower()
+    local power = tonumber(jumpPowerInput.Text) or 50
+    PlayerState.jumpPower = power
+    local player = Players.LocalPlayer
+    local character = player.Character
+    if character and character:FindFirstChild("Humanoid") then
+        character.Humanoid.JumpPower = power
+    end
+    return "✅ Сила: " .. power
+end
+
+local function toggleXray()
+    PlayerState.xray = not PlayerState.xray
+    return PlayerState.xray and "✅ Включён" or "❌ Выключен"
+end
+
+-- ============================================
 -- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА
 -- ============================================
 local function updateContent(category)
     for _, child in ipairs(contentFrame:GetChildren()) do
-        if child:IsA("TextButton") or child:IsA("TextLabel") then
+        if child:IsA("TextButton") or child:IsA("TextLabel") or child:IsA("TextBox") then
             child:Destroy()
         end
     end
@@ -322,75 +413,112 @@ local function updateContent(category)
             end)
         end
         
-    elseif category == "Settings" then
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, 0, 0, 30)
-        label.Text = "⚙️ Настройки будут здесь"
-        label.TextColor3 = Color3.fromRGB(200, 200, 255)
-        label.TextSize = 14
-        label.BackgroundTransparency = 1
-        label.Parent = contentFrame
-        
     elseif category == "Player" then
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, 0, 0, 30)
-        label.Text = "👤 Скрипты игрока появятся здесь"
-        label.TextColor3 = Color3.fromRGB(200, 200, 255)
-        label.TextSize = 14
-        label.BackgroundTransparency = 1
-        label.Parent = contentFrame
-    end
-    
-    task.wait(0.1)
-    local count = 0
-    for _, child in ipairs(contentFrame:GetChildren()) do
-        if child:IsA("TextButton") or child:IsA("TextLabel") then
-            count = count + 1
+        -- КНОПКИ ФУНКЦИЙ ИГРОКА
+        local function createPlayerButton(name, func, color)
+            local btn = Instance.new("TextButton")
+            btn.Size = UDim2.new(1, 0, 0, 32)
+            btn.Text = name
+            btn.TextColor3 = Color3.fromRGB(230, 230, 255)
+            btn.TextSize = 13
+            btn.TextXAlignment = Enum.TextXAlignment.Left
+            btn.Font = Enum.Font.GothamBold
+            btn.BackgroundColor3 = color or Color3.fromRGB(15, 15, 15)
+            btn.BackgroundTransparency = 0.2
+            btn.BorderSizePixel = 0
+            btn.Parent = contentFrame
+            
+            local padding = Instance.new("UIPadding")
+            padding.PaddingLeft = UDim.new(0, 12)
+            padding.Parent = btn
+            
+            local arrow = Instance.new("TextLabel")
+            arrow.Size = UDim2.new(0, 25, 1, 0)
+            arrow.Position = UDim2.new(1, -30, 0, 0)
+            arrow.Text = "▶"
+            arrow.TextColor3 = Color3.fromRGB(150, 150, 150)
+            arrow.TextSize = 16
+            arrow.BackgroundTransparency = 1
+            arrow.Parent = btn
+            
+            btn.MouseEnter:Connect(function()
+                TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
+                TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
+            end)
+            btn.MouseLeave:Connect(function()
+                TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundTransparency = 0.2, BackgroundColor3 = color or Color3.fromRGB(15, 15, 15)}):Play()
+                TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(150, 150, 150)}):Play()
+            end)
+            
+            btn.MouseButton1Click:Connect(function()
+                local result = func()
+                btn.Text = name .. " (" .. result .. ")"
+                btn.BackgroundColor3 = Color3.fromRGB(30, 50, 30)
+                task.wait(1.5)
+                btn.Text = name
+                btn.BackgroundColor3 = color or Color3.fromRGB(15, 15, 15)
+            end)
         end
-    end
-    contentFrame.CanvasSize = UDim2.new(0, 0, 0, count * 36 + 10)
-end
-
--- ПОИСК
-searchBox:GetPropertyChangedSignal("Text"):Connect(function()
-    local search = string.lower(searchBox.Text)
-    for _, child in ipairs(contentFrame:GetChildren()) do
-        if child:IsA("TextButton") then
-            local name = string.lower(child.Text)
-            child.Visible = (search == "" or string.find(name, search))
-        end
-    end
-end)
-
--- ============================================
--- 🔧 ЗАКРЫТИЕ
--- ============================================
-local close = Instance.new("TextButton")
-close.Size = UDim2.new(0, 32, 0, 32)
-close.Position = UDim2.new(1, -40, 0, 8)
-close.Text = "✕"
-close.TextColor3 = Color3.fromRGB(255, 100, 100)
-close.TextSize = 18
-close.Font = Enum.Font.GothamBold
-close.BackgroundTransparency = 1
-close.Parent = frame
-
-close.MouseEnter:Connect(function()
-    TweenService:Create(close, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 50, 50)}):Play()
-end)
-close.MouseLeave:Connect(function()
-    TweenService:Create(close, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 100, 100)}):Play()
-end)
-
-close.MouseButton1Click:Connect(function()
-    TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Back), {Size = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 1}):Play()
-    task.wait(0.3)
-    screen:Destroy()
-end)
-
--- ЗАПУСК
-updateContent("Games")
-appearTween:Play()
-
-print("✅ Lunar Hub v5.4 загружен! (" .. #Games .. " игр)")
-print("🌙 Всё поднято вверх!")
+        
+        createPlayerButton("🚀 Ноуклип", toggleNoclip)
+        createPlayerButton("💨 СПИД", toggleSpeed)
+        createPlayerButton("🦘 Инфинити Джамп", toggleInfiniteJump)
+        createPlayerButton("✈️ Флай", toggleFly)
+        
+        -- ФЛАЙ СКОРОСТЬ
+        local flySpeedLabel = Instance.new("TextLabel")
+        flySpeedLabel.Size = UDim2.new(1, 0, 0, 20)
+        flySpeedLabel.Text = "🎛️ Скорость полёта:"
+        flySpeedLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
+        flySpeedLabel.TextSize = 13
+        flySpeedLabel.BackgroundTransparency = 1
+        flySpeedLabel.Parent = contentFrame
+        
+        flySpeedInput = Instance.new("TextBox")
+        flySpeedInput.Size = UDim2.new(0, 100, 0, 28)
+        flySpeedInput.Text = "50"
+        flySpeedInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+        flySpeedInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        flySpeedInput.BackgroundTransparency = 0.5
+        flySpeedInput.BorderSizePixel = 0
+        flySpeedInput.Parent = contentFrame
+        
+        local flySpeedBtn = Instance.new("TextButton")
+        flySpeedBtn.Size = UDim2.new(0, 120, 0, 28)
+        flySpeedBtn.Text = "Применить"
+        flySpeedBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        flySpeedBtn.BackgroundColor3 = Color3.fromRGB(30, 50, 30)
+        flySpeedBtn.BackgroundTransparency = 0.2
+        flySpeedBtn.BorderSizePixel = 0
+        flySpeedBtn.Parent = contentFrame
+        flySpeedBtn.MouseButton1Click:Connect(function()
+            setFlySpeed()
+            flySpeedBtn.Text = "✅ Применено"
+            task.wait(0.5)
+            flySpeedBtn.Text = "Применить"
+        end)
+        
+        -- СИЛА ПРЫЖКА
+        local jumpPowerLabel = Instance.new("TextLabel")
+        jumpPowerLabel.Size = UDim2.new(1, 0, 0, 20)
+        jumpPowerLabel.Text = "💪 Сила прыжка:"
+        jumpPowerLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
+        jumpPowerLabel.TextSize = 13
+        jumpPowerLabel.BackgroundTransparency = 1
+        jumpPowerLabel.Parent = contentFrame
+        
+        jumpPowerInput = Instance.new("TextBox")
+        jumpPowerInput.Size = UDim2.new(0, 100, 0, 28)
+        jumpPowerInput.Text = "50"
+        jumpPowerInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+        jumpPowerInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        jumpPowerInput.BackgroundTransparency = 0.5
+        jumpPowerInput.BorderSizePixel = 0
+        jumpPowerInput.Parent = contentFrame
+        
+        local jumpPowerBtn = Instance.new("TextButton")
+        jumpPowerBtn.Size = UDim2.new(0, 120, 0, 28)
+        jumpPowerBtn.Text = "Применить"
+        jumpPowerBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        jumpPowerBtn.BackgroundColor3 = Color3.fromRGB(30, 50, 30)
+        jumpPowerBtn.Background
