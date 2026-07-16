@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.5 (ПОЛНЫЕ НАСТРОЙКИ)
+-- 🌙 LUNAR HUB v5.3 (С НАСТРОЙКАМИ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.5"
+    local currentVersion = "5.3"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -60,27 +60,11 @@ local Games = {
 }
 
 -- ============================================
--- 🎨 ЦВЕТА
--- ============================================
-local Colors = {
-    ["Красный"] = Color3.fromRGB(255, 0, 0),
-    ["Оранжевый"] = Color3.fromRGB(255, 165, 0),
-    ["Жёлтый"] = Color3.fromRGB(255, 255, 0),
-    ["Зелёный"] = Color3.fromRGB(0, 255, 0),
-    ["Голубой"] = Color3.fromRGB(0, 255, 255),
-    ["Синий"] = Color3.fromRGB(0, 0, 255),
-    ["Фиолетовый"] = Color3.fromRGB(128, 0, 255),
-    ["Чёрный"] = Color3.fromRGB(0, 0, 0),
-    ["Серый"] = Color3.fromRGB(128, 128, 128),
-}
-
--- ============================================
 -- ⚙️ НАСТРОЙКИ (ПО УМОЛЧАНИЮ)
 -- ============================================
 local Settings = {
     WindowSize = 380,
-    MenuColor = Color3.fromRGB(0, 0, 0),
-    TextColor = Color3.fromRGB(255, 215, 0),
+    MenuColor = {0, 0, 0},
     Transparency = 0.15,
 }
 
@@ -127,7 +111,7 @@ end
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 0, 0, 0)
 frame.Position = UDim2.new(0.5, -Settings.WindowSize/2, 0.5, -Settings.WindowSize * 0.6)
-frame.BackgroundColor3 = Settings.MenuColor
+frame.BackgroundColor3 = Color3.fromRGB(Settings.MenuColor[1], Settings.MenuColor[2], Settings.MenuColor[3])
 frame.BackgroundTransparency = 1
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
@@ -158,7 +142,7 @@ local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 40)
 title.Position = UDim2.new(0, 0, 0, 8)
 title.Text = "🌙 LUNAR HUB"
-title.TextColor3 = Settings.TextColor
+title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextScaled = true
 title.Font = Enum.Font.GothamBold
 title.BackgroundTransparency = 1
@@ -168,7 +152,7 @@ local social = Instance.new("TextLabel")
 social.Size = UDim2.new(1, 0, 0, 18)
 social.Position = UDim2.new(0, 0, 0, 45)
 social.Text = "📱 TG: @LunarHub | TT: @LunarHub"
-social.TextColor3 = Settings.TextColor
+social.TextColor3 = Color3.fromRGB(200, 200, 255)
 social.TextSize = 12
 social.Font = Enum.Font.Gotham
 social.BackgroundTransparency = 1
@@ -178,7 +162,7 @@ local sub = Instance.new("TextLabel")
 sub.Size = UDim2.new(1, 0, 0, 18)
 sub.Position = UDim2.new(0, 0, 0, 63)
 sub.Text = "📊 " .. #Games .. " игр | by Ryzen"
-sub.TextColor3 = Settings.TextColor
+sub.TextColor3 = Color3.fromRGB(180, 180, 220)
 sub.TextSize = 12
 sub.Font = Enum.Font.Gotham
 sub.BackgroundTransparency = 1
@@ -275,41 +259,11 @@ contentLayout.Padding = UDim.new(0, 4)
 contentLayout.Parent = contentFrame
 
 -- ============================================
--- 🔧 ФУНКЦИЯ ДЛЯ КНОПОК ЦВЕТА
--- ============================================
-local function createColorButton(colorName, colorValue, callback)
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, 70, 0, 28)
-    btn.Text = colorName
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.TextSize = 11
-    btn.Font = Enum.Font.GothamBold
-    btn.BackgroundColor3 = colorValue
-    btn.BackgroundTransparency = 0.2
-    btn.BorderSizePixel = 0
-    btn.Parent = contentFrame
-    
-    btn.MouseEnter:Connect(function()
-        btn.BackgroundTransparency = 0
-    end)
-    btn.MouseLeave:Connect(function()
-        btn.BackgroundTransparency = 0.2
-    end)
-    
-    btn.MouseButton1Click:Connect(function()
-        callback(colorValue)
-        btn.BackgroundTransparency = 0.5
-        task.wait(0.2)
-        btn.BackgroundTransparency = 0.2
-    end)
-end
-
--- ============================================
 -- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА
 -- ============================================
 local function updateContent(category)
     for _, child in ipairs(contentFrame:GetChildren()) do
-        if child:IsA("TextButton") or child:IsA("TextLabel") or child:IsA("TextBox") or child:IsA("Frame") then
+        if child:IsA("TextButton") or child:IsA("TextLabel") or child:IsA("TextBox") then
             child:Destroy()
         end
     end
@@ -380,122 +334,85 @@ local function updateContent(category)
         -- РАЗМЕР ОКНА
         local sizeLabel = Instance.new("TextLabel")
         sizeLabel.Size = UDim2.new(1, 0, 0, 20)
-        sizeLabel.Text = "📐 Размер окна: " .. Settings.WindowSize
-        sizeLabel.TextColor3 = Settings.TextColor
+        sizeLabel.Text = "📐 Размер окна (300-600):"
+        sizeLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
         sizeLabel.TextSize = 13
         sizeLabel.BackgroundTransparency = 1
         sizeLabel.Parent = contentFrame
         
-        local sizeSlider = Instance.new("TextBox")
-        sizeSlider.Size = UDim2.new(0, 150, 0, 28)
-        sizeSlider.Text = tostring(Settings.WindowSize)
-        sizeSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
-        sizeSlider.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        sizeSlider.BackgroundTransparency = 0.5
-        sizeSlider.BorderSizePixel = 0
-        sizeSlider.Parent = contentFrame
-        
-        sizeSlider.FocusLost:Connect(function()
-            local val = tonumber(sizeSlider.Text)
+        local sizeBox = Instance.new("TextBox")
+        sizeBox.Size = UDim2.new(0, 120, 0, 28)
+        sizeBox.Text = tostring(Settings.WindowSize)
+        sizeBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+        sizeBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        sizeBox.BackgroundTransparency = 0.5
+        sizeBox.BorderSizePixel = 0
+        sizeBox.Parent = contentFrame
+        sizeBox.FocusLost:Connect(function()
+            local val = tonumber(sizeBox.Text)
             if val and val >= 300 and val <= 600 then
                 updateWindowSize(val)
-                sizeLabel.Text = "📐 Размер окна: " .. val
             else
-                sizeSlider.Text = tostring(Settings.WindowSize)
+                sizeBox.Text = tostring(Settings.WindowSize)
             end
         end)
         
-        -- ЦВЕТ МЕНЮ
-        local menuLabel = Instance.new("TextLabel")
-        menuLabel.Size = UDim2.new(1, 0, 0, 20)
-        menuLabel.Text = "🎨 Цвет меню:"
-        menuLabel.TextColor3 = Settings.TextColor
-        menuLabel.TextSize = 13
-        menuLabel.BackgroundTransparency = 1
-        menuLabel.Parent = contentFrame
+        -- ЦВЕТ МЕНЮ (RGB)
+        local colorLabel = Instance.new("TextLabel")
+        colorLabel.Size = UDim2.new(1, 0, 0, 20)
+        colorLabel.Text = "🎨 Цвет меню (R G B):"
+        colorLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
+        colorLabel.TextSize = 13
+        colorLabel.BackgroundTransparency = 1
+        colorLabel.Parent = contentFrame
         
-        local menuColorsFrame = Instance.new("Frame")
-        menuColorsFrame.Size = UDim2.new(1, 0, 0, 32)
-        menuColorsFrame.BackgroundTransparency = 1
-        menuColorsFrame.Parent = contentFrame
-        
-        local menuLayout = Instance.new("UIListLayout")
-        menuLayout.FillDirection = Enum.FillDirection.Horizontal
-        menuLayout.Padding = UDim.new(0, 4)
-        menuLayout.Parent = menuColorsFrame
-        
-        for name, color in pairs(Colors) do
-            createColorButton(name, color, function(c)
-                Settings.MenuColor = c
-                frame.BackgroundColor3 = c
-            end)
-        end
-        
-        -- ЦВЕТ ТЕКСТА
-        local textLabel = Instance.new("TextLabel")
-        textLabel.Size = UDim2.new(1, 0, 0, 20)
-        textLabel.Text = "📝 Цвет текста:"
-        textLabel.TextColor3 = Settings.TextColor
-        textLabel.TextSize = 13
-        textLabel.BackgroundTransparency = 1
-        textLabel.Parent = contentFrame
-        
-        local textColorsFrame = Instance.new("Frame")
-        textColorsFrame.Size = UDim2.new(1, 0, 0, 32)
-        textColorsFrame.BackgroundTransparency = 1
-        textColorsFrame.Parent = contentFrame
-        
-        local textLayout = Instance.new("UIListLayout")
-        textLayout.FillDirection = Enum.FillDirection.Horizontal
-        textLayout.Padding = UDim.new(0, 4)
-        textLayout.Parent = textColorsFrame
-        
-        for name, color in pairs(Colors) do
-            createColorButton(name, color, function(c)
-                Settings.TextColor = c
-                title.TextColor3 = c
-                social.TextColor3 = c
-                sub.TextColor3 = c
-                for _, btn in ipairs(tabsFrame:GetChildren()) do
-                    if btn:IsA("TextButton") then
-                        btn.TextColor3 = c
-                    end
+        local colorBox = Instance.new("TextBox")
+        colorBox.Size = UDim2.new(0, 120, 0, 28)
+        colorBox.Text = table.concat(Settings.MenuColor, " ")
+        colorBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+        colorBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        colorBox.BackgroundTransparency = 0.5
+        colorBox.BorderSizePixel = 0
+        colorBox.Parent = contentFrame
+        colorBox.FocusLost:Connect(function()
+            local parts = {}
+            for word in string.gmatch(colorBox.Text, "%d+") do
+                table.insert(parts, tonumber(word))
+            end
+            if #parts == 3 then
+                local r, g, b = parts[1], parts[2], parts[3]
+                if r >= 0 and r <= 255 and g >= 0 and g <= 255 and b >= 0 and b <= 255 then
+                    Settings.MenuColor = {r, g, b}
+                    frame.BackgroundColor3 = Color3.fromRGB(r, g, b)
                 end
-                for _, child in ipairs(contentFrame:GetChildren()) do
-                    if child:IsA("TextLabel") then
-                        child.TextColor3 = c
-                    end
-                end
-            end)
-        end
+            end
+            colorBox.Text = table.concat(Settings.MenuColor, " ")
+        end)
         
         -- ПРОЗРАЧНОСТЬ
         local transLabel = Instance.new("TextLabel")
         transLabel.Size = UDim2.new(1, 0, 0, 20)
-        transLabel.Text = "🔲 Прозрачность: " .. Settings.Transparency
-        transLabel.TextColor3 = Settings.TextColor
+        transLabel.Text = "🔲 Прозрачность (0-1):"
+        transLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
         transLabel.TextSize = 13
         transLabel.BackgroundTransparency = 1
         transLabel.Parent = contentFrame
         
-        local transSlider = Instance.new("TextBox")
-        transSlider.Size = UDim2.new(0, 150, 0, 28)
-        transSlider.Text = tostring(Settings.Transparency)
-        transSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
-        transSlider.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        transSlider.BackgroundTransparency = 0.5
-        transSlider.BorderSizePixel = 0
-        transSlider.Parent = contentFrame
-        
-        transSlider.FocusLost:Connect(function()
-            local val = tonumber(transSlider.Text)
+        local transBox = Instance.new("TextBox")
+        transBox.Size = UDim2.new(0, 120, 0, 28)
+        transBox.Text = tostring(Settings.Transparency)
+        transBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+        transBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        transBox.BackgroundTransparency = 0.5
+        transBox.BorderSizePixel = 0
+        transBox.Parent = contentFrame
+        transBox.FocusLost:Connect(function()
+            local val = tonumber(transBox.Text)
             if val and val >= 0 and val <= 1 then
                 Settings.Transparency = val
                 frame.BackgroundTransparency = val
-                transLabel.Text = "🔲 Прозрачность: " .. val
-                transSlider.Text = tostring(val)
             else
-                transSlider.Text = tostring(Settings.Transparency)
+                transBox.Text = tostring(Settings.Transparency)
             end
         end)
         
@@ -519,7 +436,70 @@ local function updateContent(category)
         end)
         
         resetBtn.MouseButton1Click:Connect(function()
-            Settings.MenuColor = Color3.fromRGB(0, 0, 0)
-            Settings.TextColor = Color3.fromRGB(255, 215, 0)
+            Settings.WindowSize = 380
+            Settings.MenuColor = {0, 0, 0}
             Settings.Transparency = 0.15
-      ку
+            
+            updateWindowSize(380)
+            frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            frame.BackgroundTransparency = 0.15
+            sizeBox.Text = "380"
+            colorBox.Text = "0 0 0"
+            transBox.Text = "0.15"
+        end)
+    end
+    
+    task.wait(0.1)
+    local count = 0
+    for _, child in ipairs(contentFrame:GetChildren()) do
+        if child:IsA("TextButton") or child:IsA("TextLabel") or child:IsA("TextBox") then
+            count = count + 1
+        end
+    end
+    contentFrame.CanvasSize = UDim2.new(0, 0, 0, count * 36 + 10)
+end
+
+-- ПОИСК
+searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+    local search = string.lower(searchBox.Text)
+    for _, child in ipairs(contentFrame:GetChildren()) do
+        if child:IsA("TextButton") then
+            local name = string.lower(child.Text)
+            child.Visible = (search == "" or string.find(name, search))
+        end
+    end
+end)
+
+-- ============================================
+-- 🔧 ЗАКРЫТИЕ
+-- ============================================
+local close = Instance.new("TextButton")
+close.Size = UDim2.new(0, 32, 0, 32)
+close.Position = UDim2.new(1, -40, 0, 8)
+close.Text = "✕"
+close.TextColor3 = Color3.fromRGB(255, 100, 100)
+close.TextSize = 18
+close.Font = Enum.Font.GothamBold
+close.BackgroundTransparency = 1
+close.Parent = frame
+
+close.MouseEnter:Connect(function()
+    TweenService:Create(close, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 50, 50)}):Play()
+end)
+close.MouseLeave:Connect(function()
+    TweenService:Create(close, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 100, 100)}):Play()
+end)
+
+close.MouseButton1Click:Connect(function()
+    TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Back), {Size = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 1}):Play()
+    task.wait(0.3)
+    screen:Destroy()
+end)
+
+-- ЗАПУСК
+updateContent("Games")
+updateWindowSize(Settings.WindowSize)
+appearTween:Play()
+
+print("✅ Lunar Hub v5.3 загружен! (" .. #Games .. " игр)")
+print("🌙 Настройки добавлены!")
