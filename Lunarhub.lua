@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.3 (КАТЕГОРИИ)
+-- 🌙 LUNAR HUB v5.4 (ВСЁ ВВЕРХУ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.3"
+    local currentVersion = "5.4"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -120,10 +120,13 @@ border.BackgroundTransparency = 0.9
 border.BorderSizePixel = 0
 border.Parent = frame
 
+-- ============================================
+-- 🏷️ ВЕРХНЯЯ ЧАСТЬ (НАЗВАНИЕ, СОЦСЕТИ, СЧЁТЧИК, ПОИСК)
+-- ============================================
 -- ЗАГОЛОВОК
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 45)
-title.Position = UDim2.new(0, 0, 0, 10)
+title.Size = UDim2.new(1, 0, 0, 40)
+title.Position = UDim2.new(0, 0, 0, 8)
 title.Text = "🌙 LUNAR HUB"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextScaled = true
@@ -131,10 +134,10 @@ title.Font = Enum.Font.GothamBold
 title.BackgroundTransparency = 1
 title.Parent = frame
 
--- ПРИВЕТСТВИЕ
+-- СОЦСЕТИ
 local social = Instance.new("TextLabel")
-social.Size = UDim2.new(1, 0, 0, 20)
-social.Position = UDim2.new(0, 0, 0, 52)
+social.Size = UDim2.new(1, 0, 0, 18)
+social.Position = UDim2.new(0, 0, 0, 45)
 social.Text = "📱 TG: @LunarHub | TT: @LunarHub"
 social.TextColor3 = Color3.fromRGB(200, 200, 255)
 social.TextSize = 12
@@ -142,10 +145,10 @@ social.Font = Enum.Font.Gotham
 social.BackgroundTransparency = 1
 social.Parent = frame
 
--- СЧЁТЧИК
+-- СЧЁТЧИК ИГР
 local sub = Instance.new("TextLabel")
-sub.Size = UDim2.new(1, 0, 0, 20)
-sub.Position = UDim2.new(0, 0, 0, 72)
+sub.Size = UDim2.new(1, 0, 0, 18)
+sub.Position = UDim2.new(0, 0, 0, 63)
 sub.Text = "📊 " .. #Games .. " игр | by Ryzen"
 sub.TextColor3 = Color3.fromRGB(180, 180, 220)
 sub.TextSize = 12
@@ -153,12 +156,27 @@ sub.Font = Enum.Font.Gotham
 sub.BackgroundTransparency = 1
 sub.Parent = frame
 
+-- ПОИСК (ПОДНЯТ)
+local searchBox = Instance.new("TextBox")
+searchBox.Size = UDim2.new(1, -20, 0, 28)
+searchBox.Position = UDim2.new(0, 10, 0, 84)
+searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+searchBox.BackgroundTransparency = 0.5
+searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+searchBox.PlaceholderText = "🔍 Поиск..."
+searchBox.PlaceholderColor3 = Color3.fromRGB(140, 140, 180)
+searchBox.TextSize = 13
+searchBox.Font = Enum.Font.Gotham
+searchBox.BorderSizePixel = 0
+searchBox.ClipsDescendants = true
+searchBox.Parent = frame
+
 -- ============================================
 -- 🔧 КАТЕГОРИИ (ВКЛАДКИ)
 -- ============================================
 local tabsFrame = Instance.new("Frame")
 tabsFrame.Size = UDim2.new(1, -20, 0, 30)
-tabsFrame.Position = UDim2.new(0, 10, 0, 95)
+tabsFrame.Position = UDim2.new(0, 10, 0, 116)
 tabsFrame.BackgroundTransparency = 1
 tabsFrame.Parent = frame
 
@@ -219,8 +237,8 @@ end
 -- 📋 КОНТЕНТ
 -- ============================================
 local contentFrame = Instance.new("ScrollingFrame")
-contentFrame.Size = UDim2.new(1, -20, 1, -145)
-contentFrame.Position = UDim2.new(0, 10, 0, 130)
+contentFrame.Size = UDim2.new(1, -20, 1, -180)
+contentFrame.Position = UDim2.new(0, 10, 0, 150)
 contentFrame.BackgroundTransparency = 1
 contentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
 contentFrame.ScrollBarThickness = 4
@@ -333,6 +351,17 @@ local function updateContent(category)
     contentFrame.CanvasSize = UDim2.new(0, 0, 0, count * 36 + 10)
 end
 
+-- ПОИСК
+searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+    local search = string.lower(searchBox.Text)
+    for _, child in ipairs(contentFrame:GetChildren()) do
+        if child:IsA("TextButton") then
+            local name = string.lower(child.Text)
+            child.Visible = (search == "" or string.find(name, search))
+        end
+    end
+end)
+
 -- ============================================
 -- 🔧 ЗАКРЫТИЕ
 -- ============================================
@@ -359,34 +388,9 @@ close.MouseButton1Click:Connect(function()
     screen:Destroy()
 end)
 
--- ПОИСК
-local searchBox = Instance.new("TextBox")
-searchBox.Size = UDim2.new(1, -20, 0, 28)
-searchBox.Position = UDim2.new(0, 10, 0, 75)
-searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-searchBox.BackgroundTransparency = 0.5
-searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-searchBox.PlaceholderText = "🔍 Поиск..."
-searchBox.PlaceholderColor3 = Color3.fromRGB(140, 140, 180)
-searchBox.TextSize = 13
-searchBox.Font = Enum.Font.Gotham
-searchBox.BorderSizePixel = 0
-searchBox.ClipsDescendants = true
-searchBox.Parent = frame
-
-searchBox:GetPropertyChangedSignal("Text"):Connect(function()
-    local search = string.lower(searchBox.Text)
-    for _, child in ipairs(contentFrame:GetChildren()) do
-        if child:IsA("TextButton") then
-            local name = string.lower(child.Text)
-            child.Visible = (search == "" or string.find(name, search))
-        end
-    end
-end)
-
 -- ЗАПУСК
 updateContent("Games")
 appearTween:Play()
 
-print("✅ Lunar Hub v5.3 загружен! (" .. #Games .. " игр)")
-print("🌙 Категории добавлены!")
+print("✅ Lunar Hub v5.4 загружен! (" .. #Games .. " игр)")
+print("🌙 Всё поднято вверх!")
