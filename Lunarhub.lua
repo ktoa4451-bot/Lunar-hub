@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.4 (ЧЁРНЫЙ СТИЛЬ)
+-- 🌙 LUNAR HUB v5.5 (ЧЁРНЫЙ СТИЛЬ)
 -- by Ryzen | УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.4"
+    local currentVersion = "5.5"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -56,7 +56,6 @@ local Games = {
     {name = "Blox Fruit", link = "https://raw.githubusercontent.com/UCT-hub/main/refs/heads/main/redz-v2"},
     {name = "Grow a Garden 2 (premium)", link = "https://api.luarmor.net/files/v3/loaders/d8824b23a4d9f2e0d62b4e69397d206b.lua"},
     {name = "Animal Hospital", link = "https://raw.githubusercontent.com/HexHubX/Games/refs/heads/main/Script%20Games.lua"},
-    {name = "Build a Boat", lonk = "https://raw.githubusercontent.com/XRoLLu/Rolly_Hub/main/open-source-trash-loader.exe.yeah"},
 }
 
 -- ============================================
