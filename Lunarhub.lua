@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.5 (КАТЕГОРИЯ «ИГРОК»)
+-- 🌙 LUNAR HUB v5.5 (ИСПРАВЛЕННЫЙ)
 -- by Ryzen
 -- ============================================
 
@@ -60,19 +60,6 @@ local Games = {
 }
 
 -- ============================================
--- 🎮 ФУНКЦИИ ИГРОКА
--- ============================================
-local PlayerFunctions = {
-    {name = "🚀 Ноуклип", func = "noclip"},
-    {name = "💨 СПИД", func = "speed"},
-    {name = "🦘 Инфинити Джамп", func = "infiniteJump"},
-    {name = "✈️ Флай", func = "fly"},
-    {name = "🎛️ Флай скорость", func = "flySpeed"},
-    {name = "💪 Сила прыжка", func = "jumpPower"},
-    {name = "👁️ Икс Рей", func = "xray"},
-}
-
--- ============================================
 -- 🔧 УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
 -- ============================================
 local function loadScript(link)
@@ -91,6 +78,88 @@ local function loadScript(link)
     else
         return false, "Ошибка загрузки: " .. tostring(result)
     end
+end
+
+-- ============================================
+-- 🎮 ФУНКЦИИ ИГРОКА (ОБЪЯВЛЕНЫ ДО GUI)
+-- ============================================
+local PlayerState = {
+    noclip = false,
+    speed = false,
+    infiniteJump = false,
+    fly = false,
+    flySpeed = 50,
+    jumpPower = 50,
+    xray = false,
+}
+
+local function toggleNoclip()
+    PlayerState.noclip = not PlayerState.noclip
+    local player = Players.LocalPlayer
+    local character = player.Character
+    if character then
+        for _, part in ipairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = not PlayerState.noclip
+            end
+        end
+    end
+    return PlayerState.noclip and "✅ Включён" or "❌ Выключен"
+end
+
+local function toggleSpeed()
+    PlayerState.speed = not PlayerState.speed
+    local player = Players.LocalPlayer
+    local character = player.Character
+    if character and character:FindFirstChild("Humanoid") then
+        local humanoid = character.Humanoid
+        if PlayerState.speed then
+            humanoid.WalkSpeed = 50
+        else
+            humanoid.WalkSpeed = 16
+        end
+    end
+    return PlayerState.speed and "✅ Включён" or "❌ Выключен"
+end
+
+local function toggleInfiniteJump()
+    PlayerState.infiniteJump = not PlayerState.infiniteJump
+    local player = Players.LocalPlayer
+    local character = player.Character
+    if character and character:FindFirstChild("Humanoid") then
+        local humanoid = character.Humanoid
+        if PlayerState.infiniteJump then
+            humanoid.JumpPower = 50
+        else
+            humanoid.JumpPower = 50
+        end
+    end
+    return PlayerState.infiniteJump and "✅ Включён" or "❌ Выключен"
+end
+
+local function toggleFly()
+    PlayerState.fly = not PlayerState.fly
+    return PlayerState.fly and "✅ Включён" or "❌ Выключен"
+end
+
+local function setFlySpeed(speed)
+    PlayerState.flySpeed = tonumber(speed) or 50
+    return "✅ Скорость: " .. PlayerState.flySpeed
+end
+
+local function setJumpPower(power)
+    PlayerState.jumpPower = tonumber(power) or 50
+    local player = Players.LocalPlayer
+    local character = player.Character
+    if character and character:FindFirstChild("Humanoid") then
+        character.Humanoid.JumpPower = PlayerState.jumpPower
+    end
+    return "✅ Сила: " .. PlayerState.jumpPower
+end
+
+local function toggleXray()
+    PlayerState.xray = not PlayerState.xray
+    return PlayerState.xray and "✅ Включён" or "❌ Выключен"
 end
 
 -- ============================================
@@ -258,87 +327,51 @@ contentLayout.Padding = UDim.new(0, 4)
 contentLayout.Parent = contentFrame
 
 -- ============================================
--- 🔧 ФУНКЦИИ ДЛЯ ИГРОКА
+-- 🔧 ФУНКЦИЯ КНОПКИ ИГРОКА
 -- ============================================
-local PlayerState = {
-    noclip = false,
-    speed = false,
-    infiniteJump = false,
-    fly = false,
-    flySpeed = 50,
-    jumpPower = 50,
-    xray = false,
-}
-
-local function toggleNoclip()
-    PlayerState.noclip = not PlayerState.noclip
-    local player = Players.LocalPlayer
-    local character = player.Character
-    if character then
-        for _, part in ipairs(character:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.CanCollide = not PlayerState.noclip
-            end
-        end
-    end
-    return PlayerState.noclip and "✅ Включён" or "❌ Выключен"
-end
-
-local function toggleSpeed()
-    PlayerState.speed = not PlayerState.speed
-    local player = Players.LocalPlayer
-    local character = player.Character
-    if character and character:FindFirstChild("Humanoid") then
-        local humanoid = character.Humanoid
-        if PlayerState.speed then
-            humanoid.WalkSpeed = 50
-        else
-            humanoid.WalkSpeed = 16
-        end
-    end
-    return PlayerState.speed and "✅ Включён" or "❌ Выключен"
-end
-
-local function toggleInfiniteJump()
-    PlayerState.infiniteJump = not PlayerState.infiniteJump
-    local player = Players.LocalPlayer
-    local character = player.Character
-    if character and character:FindFirstChild("Humanoid") then
-        local humanoid = character.Humanoid
-        if PlayerState.infiniteJump then
-            humanoid.JumpPower = 50
-        else
-            humanoid.JumpPower = 50
-        end
-    end
-    return PlayerState.infiniteJump and "✅ Включён" or "❌ Выключен"
-end
-
-local function toggleFly()
-    PlayerState.fly = not PlayerState.fly
-    return PlayerState.fly and "✅ Включён" or "❌ Выключен"
-end
-
-local function setFlySpeed()
-    local speed = tonumber(flySpeedInput.Text) or 50
-    PlayerState.flySpeed = speed
-    return "✅ Скорость: " .. speed
-end
-
-local function setJumpPower()
-    local power = tonumber(jumpPowerInput.Text) or 50
-    PlayerState.jumpPower = power
-    local player = Players.LocalPlayer
-    local character = player.Character
-    if character and character:FindFirstChild("Humanoid") then
-        character.Humanoid.JumpPower = power
-    end
-    return "✅ Сила: " .. power
-end
-
-local function toggleXray()
-    PlayerState.xray = not PlayerState.xray
-    return PlayerState.xray and "✅ Включён" or "❌ Выключен"
+local function createPlayerButton(name, func, color)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, 0, 0, 32)
+    btn.Text = name
+    btn.TextColor3 = Color3.fromRGB(230, 230, 255)
+    btn.TextSize = 13
+    btn.TextXAlignment = Enum.TextXAlignment.Left
+    btn.Font = Enum.Font.GothamBold
+    btn.BackgroundColor3 = color or Color3.fromRGB(15, 15, 15)
+    btn.BackgroundTransparency = 0.2
+    btn.BorderSizePixel = 0
+    btn.Parent = contentFrame
+    
+    local padding = Instance.new("UIPadding")
+    padding.PaddingLeft = UDim.new(0, 12)
+    padding.Parent = btn
+    
+    local arrow = Instance.new("TextLabel")
+    arrow.Size = UDim2.new(0, 25, 1, 0)
+    arrow.Position = UDim2.new(1, -30, 0, 0)
+    arrow.Text = "▶"
+    arrow.TextColor3 = Color3.fromRGB(150, 150, 150)
+    arrow.TextSize = 16
+    arrow.BackgroundTransparency = 1
+    arrow.Parent = btn
+    
+    btn.MouseEnter:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
+        TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
+    end)
+    btn.MouseLeave:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundTransparency = 0.2, BackgroundColor3 = color or Color3.fromRGB(15, 15, 15)}):Play()
+        TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(150, 150, 150)}):Play()
+    end)
+    
+    btn.MouseButton1Click:Connect(function()
+        local result = func()
+        btn.Text = name .. " (" .. result .. ")"
+        btn.BackgroundColor3 = Color3.fromRGB(30, 50, 30)
+        task.wait(1.5)
+        btn.Text = name
+        btn.BackgroundColor3 = color or Color3.fromRGB(15, 15, 15)
+    end)
 end
 
 -- ============================================
@@ -415,51 +448,6 @@ local function updateContent(category)
         
     elseif category == "Player" then
         -- КНОПКИ ФУНКЦИЙ ИГРОКА
-        local function createPlayerButton(name, func, color)
-            local btn = Instance.new("TextButton")
-            btn.Size = UDim2.new(1, 0, 0, 32)
-            btn.Text = name
-            btn.TextColor3 = Color3.fromRGB(230, 230, 255)
-            btn.TextSize = 13
-            btn.TextXAlignment = Enum.TextXAlignment.Left
-            btn.Font = Enum.Font.GothamBold
-            btn.BackgroundColor3 = color or Color3.fromRGB(15, 15, 15)
-            btn.BackgroundTransparency = 0.2
-            btn.BorderSizePixel = 0
-            btn.Parent = contentFrame
-            
-            local padding = Instance.new("UIPadding")
-            padding.PaddingLeft = UDim.new(0, 12)
-            padding.Parent = btn
-            
-            local arrow = Instance.new("TextLabel")
-            arrow.Size = UDim2.new(0, 25, 1, 0)
-            arrow.Position = UDim2.new(1, -30, 0, 0)
-            arrow.Text = "▶"
-            arrow.TextColor3 = Color3.fromRGB(150, 150, 150)
-            arrow.TextSize = 16
-            arrow.BackgroundTransparency = 1
-            arrow.Parent = btn
-            
-            btn.MouseEnter:Connect(function()
-                TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
-                TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
-            end)
-            btn.MouseLeave:Connect(function()
-                TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundTransparency = 0.2, BackgroundColor3 = color or Color3.fromRGB(15, 15, 15)}):Play()
-                TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(150, 150, 150)}):Play()
-            end)
-            
-            btn.MouseButton1Click:Connect(function()
-                local result = func()
-                btn.Text = name .. " (" .. result .. ")"
-                btn.BackgroundColor3 = Color3.fromRGB(30, 50, 30)
-                task.wait(1.5)
-                btn.Text = name
-                btn.BackgroundColor3 = color or Color3.fromRGB(15, 15, 15)
-            end)
-        end
-        
         createPlayerButton("🚀 Ноуклип", toggleNoclip)
         createPlayerButton("💨 СПИД", toggleSpeed)
         createPlayerButton("🦘 Инфинити Джамп", toggleInfiniteJump)
@@ -474,7 +462,7 @@ local function updateContent(category)
         flySpeedLabel.BackgroundTransparency = 1
         flySpeedLabel.Parent = contentFrame
         
-        flySpeedInput = Instance.new("TextBox")
+        local flySpeedInput = Instance.new("TextBox")
         flySpeedInput.Size = UDim2.new(0, 100, 0, 28)
         flySpeedInput.Text = "50"
         flySpeedInput.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -492,8 +480,8 @@ local function updateContent(category)
         flySpeedBtn.BorderSizePixel = 0
         flySpeedBtn.Parent = contentFrame
         flySpeedBtn.MouseButton1Click:Connect(function()
-            setFlySpeed()
-            flySpeedBtn.Text = "✅ Применено"
+            local result = setFlySpeed(flySpeedInput.Text)
+            flySpeedBtn.Text = result
             task.wait(0.5)
             flySpeedBtn.Text = "Применить"
         end)
@@ -507,7 +495,7 @@ local function updateContent(category)
         jumpPowerLabel.BackgroundTransparency = 1
         jumpPowerLabel.Parent = contentFrame
         
-        jumpPowerInput = Instance.new("TextBox")
+        local jumpPowerInput = Instance.new("TextBox")
         jumpPowerInput.Size = UDim2.new(0, 100, 0, 28)
         jumpPowerInput.Text = "50"
         jumpPowerInput.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -521,4 +509,21 @@ local function updateContent(category)
         jumpPowerBtn.Text = "Применить"
         jumpPowerBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         jumpPowerBtn.BackgroundColor3 = Color3.fromRGB(30, 50, 30)
-        jumpPowerBtn.Background
+        jumpPowerBtn.BackgroundTransparency = 0.2
+        jumpPowerBtn.BorderSizePixel = 0
+        jumpPowerBtn.Parent = contentFrame
+        jumpPowerBtn.MouseButton1Click:Connect(function()
+            local result = setJumpPower(jumpPowerInput.Text)
+            jumpPowerBtn.Text = result
+            task.wait(0.5)
+            jumpPowerBtn.Text = "Применить"
+        end)
+        
+        createPlayerButton("👁️ Икс Рей", toggleXray)
+        
+    elseif category == "Settings" then
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, 0, 0, 30)
+        label.Text = "⚙️ Настройки будут здесь"
+        label.TextColor3 = Color3.fromRGB(200, 200, 255)
+        label.TextSize = 
