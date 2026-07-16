@@ -1,6 +1,6 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.3 (НАСТРОЙКА РАЗМЕРА)
--- by Ryzen
+-- 🌙 LUNAR HUB v5.3 (ПОЛНЫЕ НАСТРОЙКИ)
+-- by Ryzen | РАЗМЕР | ЦВЕТА | ПРОЗРАЧНОСТЬ
 -- ============================================
 
 -- ============================================
@@ -81,6 +81,31 @@ local function loadScript(link)
 end
 
 -- ============================================
+-- 🎨 ЦВЕТА
+-- ============================================
+local Colors = {
+    ["Красный"] = Color3.fromRGB(255, 0, 0),
+    ["Оранжевый"] = Color3.fromRGB(255, 165, 0),
+    ["Жёлтый"] = Color3.fromRGB(255, 255, 0),
+    ["Зелёный"] = Color3.fromRGB(0, 255, 0),
+    ["Голубой"] = Color3.fromRGB(0, 255, 255),
+    ["Синий"] = Color3.fromRGB(0, 0, 255),
+    ["Фиолетовый"] = Color3.fromRGB(128, 0, 255),
+    ["Чёрный"] = Color3.fromRGB(0, 0, 0),
+    ["Серый"] = Color3.fromRGB(128, 128, 128),
+}
+
+-- ============================================
+-- ⚙️ НАСТРОЙКИ (ПО УМОЛЧАНИЮ)
+-- ============================================
+local Settings = {
+    WindowSize = 380,
+    MenuColor = Color3.fromRGB(0, 0, 0),
+    TextColor = Color3.fromRGB(255, 215, 0),
+    Transparency = 0.15,
+}
+
+-- ============================================
 -- 🔧 GUI
 -- ============================================
 local Players = game:GetService("Players")
@@ -92,14 +117,17 @@ screen.Name = "LunarHub"
 screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- ПЕРЕМЕННАЯ РАЗМЕРА (стандартный размер)
-local windowSize = 380
+local function updateWindowSize(newSize)
+    Settings.WindowSize = math.clamp(newSize, 300, 600)
+    frame.Size = UDim2.new(0, Settings.WindowSize, 0, Settings.WindowSize * 1.2)
+    frame.Position = UDim2.new(0.5, -Settings.WindowSize/2, 0.5, -Settings.WindowSize * 0.6)
+end
 
 -- ОСНОВНОЙ ФРЕЙМ
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 0, 0, 0)
-frame.Position = UDim2.new(0.5, -windowSize/2, 0.5, -230)
-frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.Position = UDim2.new(0.5, -Settings.WindowSize/2, 0.5, -Settings.WindowSize * 0.6)
+frame.BackgroundColor3 = Settings.MenuColor
 frame.BackgroundTransparency = 1
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
@@ -107,21 +135,13 @@ frame.Active = true
 frame.Draggable = true
 frame.Parent = screen
 
--- ФУНКЦИЯ ОБНОВЛЕНИЯ РАЗМЕРА
-local function updateWindowSize(newSize)
-    windowSize = math.clamp(newSize, 300, 600)
-    frame.Size = UDim2.new(0, windowSize, 0, windowSize * 1.2)
-    frame.Position = UDim2.new(0.5, -windowSize/2, 0.5, -windowSize * 0.6)
-end
-
--- АНИМАЦИЯ ПОЯВЛЕНИЯ
 local appearTween = TweenService:Create(
     frame,
     TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-    {Size = UDim2.new(0, windowSize, 0, windowSize * 1.2), BackgroundTransparency = 0.15}
+    {Size = UDim2.new(0, Settings.WindowSize, 0, Settings.WindowSize * 1.2), BackgroundTransparency = Settings.Transparency}
 )
 
--- ТОНКАЯ БЕЛАЯ РАМКА
+-- РАМКА
 local border = Instance.new("Frame")
 border.Size = UDim2.new(1, 2, 1, 2)
 border.Position = UDim2.new(0, -1, 0, -1)
@@ -135,7 +155,7 @@ local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 45)
 title.Position = UDim2.new(0, 0, 0, 10)
 title.Text = "🌙 LUNAR HUB"
-title.TextColor3 = Color3.fromRGB(255, 215, 0)
+title.TextColor3 = Settings.TextColor
 title.TextScaled = true
 title.Font = Enum.Font.GothamBold
 title.BackgroundTransparency = 1
@@ -146,7 +166,7 @@ local social = Instance.new("TextLabel")
 social.Size = UDim2.new(1, 0, 0, 20)
 social.Position = UDim2.new(0, 0, 0, 52)
 social.Text = "📱 TG: @LunarHub | TT: @LunarHub"
-social.TextColor3 = Color3.fromRGB(200, 200, 255)
+social.TextColor3 = Settings.TextColor
 social.TextSize = 12
 social.Font = Enum.Font.Gotham
 social.BackgroundTransparency = 1
@@ -157,7 +177,7 @@ local sub = Instance.new("TextLabel")
 sub.Size = UDim2.new(1, 0, 0, 20)
 sub.Position = UDim2.new(0, 0, 0, 72)
 sub.Text = "📊 " .. #Games .. " игр | by Ryzen"
-sub.TextColor3 = Color3.fromRGB(180, 180, 220)
+sub.TextColor3 = Settings.TextColor
 sub.TextSize = 12
 sub.Font = Enum.Font.Gotham
 sub.BackgroundTransparency = 1
@@ -224,17 +244,7 @@ clickSound.Volume = 0.3
 clickSound.Parent = screen
 
 -- ============================================
--- ⚙️ НАСТРОЙКИ
--- ============================================
-local Settings = {
-    MenuColor = Color3.fromRGB(0, 0, 0),
-    TextColor = Color3.fromRGB(255, 215, 0),
-    Transparency = 0.15,
-    WindowSize = 380,
-}
-
--- ============================================
--- 🔧 КНОПКИ ИГР
+-- 🔘 КНОПКИ ИГР
 -- ============================================
 for _, gameData in ipairs(Games) do
     local btn = Instance.new("TextButton")
@@ -320,8 +330,8 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ЗАПУСК
-updateWindowSize(windowSize)
+updateWindowSize(Settings.WindowSize)
 appearTween:Play()
 
 print("✅ Lunar Hub v5.3 загружен! (" .. #Games .. " игр)")
-print("🌙 Настройка размера в меню настроек!")
+print("🌙 Полные настройки активированы!")
