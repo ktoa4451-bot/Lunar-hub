@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.2 (РАБОЧАЯ ВЕРСИЯ)
+-- 🌙 LUNAR HUB v5.3 (НАСТРОЙКА РАЗМЕРА)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.2"
+    local currentVersion = "5.3"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -92,10 +92,13 @@ screen.Name = "LunarHub"
 screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
+-- ПЕРЕМЕННАЯ РАЗМЕРА (стандартный размер)
+local windowSize = 380
+
 -- ОСНОВНОЙ ФРЕЙМ
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 0, 0, 0)
-frame.Position = UDim2.new(0.5, -190, 0.5, -230)
+frame.Position = UDim2.new(0.5, -windowSize/2, 0.5, -230)
 frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 frame.BackgroundTransparency = 1
 frame.BorderSizePixel = 0
@@ -104,11 +107,18 @@ frame.Active = true
 frame.Draggable = true
 frame.Parent = screen
 
+-- ФУНКЦИЯ ОБНОВЛЕНИЯ РАЗМЕРА
+local function updateWindowSize(newSize)
+    windowSize = math.clamp(newSize, 300, 600)
+    frame.Size = UDim2.new(0, windowSize, 0, windowSize * 1.2)
+    frame.Position = UDim2.new(0.5, -windowSize/2, 0.5, -windowSize * 0.6)
+end
+
 -- АНИМАЦИЯ ПОЯВЛЕНИЯ
 local appearTween = TweenService:Create(
     frame,
     TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-    {Size = UDim2.new(0, 380, 0, 460), BackgroundTransparency = 0.15}
+    {Size = UDim2.new(0, windowSize, 0, windowSize * 1.2), BackgroundTransparency = 0.15}
 )
 
 -- ТОНКАЯ БЕЛАЯ РАМКА
@@ -131,10 +141,21 @@ title.Font = Enum.Font.GothamBold
 title.BackgroundTransparency = 1
 title.Parent = frame
 
+-- ПРИВЕТСТВИЕ
+local social = Instance.new("TextLabel")
+social.Size = UDim2.new(1, 0, 0, 20)
+social.Position = UDim2.new(0, 0, 0, 52)
+social.Text = "📱 TG: @LunarHub | TT: @LunarHub"
+social.TextColor3 = Color3.fromRGB(200, 200, 255)
+social.TextSize = 12
+social.Font = Enum.Font.Gotham
+social.BackgroundTransparency = 1
+social.Parent = frame
+
 -- СЧЁТЧИК
 local sub = Instance.new("TextLabel")
 sub.Size = UDim2.new(1, 0, 0, 20)
-sub.Position = UDim2.new(0, 0, 0, 52)
+sub.Position = UDim2.new(0, 0, 0, 72)
 sub.Text = "📊 " .. #Games .. " игр | by Ryzen"
 sub.TextColor3 = Color3.fromRGB(180, 180, 220)
 sub.TextSize = 12
@@ -169,7 +190,7 @@ end)
 -- ПОИСК
 local searchBox = Instance.new("TextBox")
 searchBox.Size = UDim2.new(1, -20, 0, 28)
-searchBox.Position = UDim2.new(0, 10, 0, 75)
+searchBox.Position = UDim2.new(0, 10, 0, 95)
 searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 searchBox.BackgroundTransparency = 0.5
 searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -183,8 +204,8 @@ searchBox.Parent = frame
 
 -- СПИСОК ИГР
 local list = Instance.new("ScrollingFrame")
-list.Size = UDim2.new(1, -20, 1, -110)
-list.Position = UDim2.new(0, 10, 0, 108)
+list.Size = UDim2.new(1, -20, 1, -145)
+list.Position = UDim2.new(0, 10, 0, 128)
 list.BackgroundTransparency = 1
 list.CanvasSize = UDim2.new(0, 0, 0, 0)
 list.ScrollBarThickness = 4
@@ -202,7 +223,19 @@ clickSound.SoundId = "rbxassetid://9120383469"
 clickSound.Volume = 0.3
 clickSound.Parent = screen
 
--- КНОПКИ
+-- ============================================
+-- ⚙️ НАСТРОЙКИ
+-- ============================================
+local Settings = {
+    MenuColor = Color3.fromRGB(0, 0, 0),
+    TextColor = Color3.fromRGB(255, 215, 0),
+    Transparency = 0.15,
+    WindowSize = 380,
+}
+
+-- ============================================
+-- 🔧 КНОПКИ ИГР
+-- ============================================
 for _, gameData in ipairs(Games) do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, 0, 0, 32)
@@ -287,7 +320,8 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ЗАПУСК
+updateWindowSize(windowSize)
 appearTween:Play()
 
-print("✅ Lunar Hub v5.2 загружен! (" .. #Games .. " игр)")
-print("🌙 Чёрный стиль + универсальный загрузчик активированы!")
+print("✅ Lunar Hub v5.3 загружен! (" .. #Games .. " игр)")
+print("🌙 Настройка размера в меню настроек!")
