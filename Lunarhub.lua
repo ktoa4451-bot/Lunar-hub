@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.3 (РЕСАЙЗ)
+-- 🌙 LUNAR HUB v5.2 (РАБОЧАЯ ВЕРСИЯ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.3"
+    local currentVersion = "5.2"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -81,12 +81,11 @@ local function loadScript(link)
 end
 
 -- ============================================
--- 🔧 GUI С РЕСАЙЗОМ
+-- 🔧 GUI
 -- ============================================
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
 
 local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
@@ -105,63 +104,7 @@ frame.Active = true
 frame.Draggable = true
 frame.Parent = screen
 
--- ============================================
--- 🔧 РЕСАЙЗ (ИЗМЕНЕНИЕ РАЗМЕРА)
--- ============================================
-local isResizing = false
-local resizeStartPos = nil
-local resizeStartSize = nil
-
-local function startResizing()
-    isResizing = true
-    resizeStartPos = UserInputService:GetMouseLocation()
-    resizeStartSize = frame.Size
-end
-
-local function updateResize()
-    if not isResizing then return end
-    local currentMouse = UserInputService:GetMouseLocation()
-    local delta = currentMouse - resizeStartPos
-    local newWidth = math.max(300, resizeStartSize.X.Offset + delta.X)
-    local newHeight = math.max(300, resizeStartSize.Y.Offset + delta.Y)
-    frame.Size = UDim2.new(0, newWidth, 0, newHeight)
-    
-    -- Обновляем размер списка
-    list.Size = UDim2.new(1, -20, 1, -110)
-    searchBox.Size = UDim2.new(1, -20, 0, 28)
-end
-
-local function stopResizing()
-    isResizing = false
-end
-
--- НЕВИДИМАЯ ОБЛАСТЬ ДЛЯ РЕСАЙЗА (НИЖНИЙ ПРАВЫЙ УГОЛ)
-local resizeArea = Instance.new("Frame")
-resizeArea.Size = UDim2.new(0, 20, 0, 20)
-resizeArea.Position = UDim2.new(1, -20, 1, -20)
-resizeArea.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
-resizeArea.BackgroundTransparency = 0.5
-resizeArea.BorderSizePixel = 0
-resizeArea.Parent = frame
-resizeArea.MouseButton1Down:Connect(startResizing)
-resizeArea.MouseEnter:Connect(function() resizeArea.BackgroundTransparency = 0.3 end)
-resizeArea.MouseLeave:Connect(function() resizeArea.BackgroundTransparency = 0.5 end)
-
-UserInputService.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        stopResizing()
-    end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
-        updateResize()
-    end
-end)
-
--- ============================================
--- 🎨 АНИМАЦИЯ ПОЯВЛЕНИЯ
--- ============================================
+-- АНИМАЦИЯ ПОЯВЛЕНИЯ
 local appearTween = TweenService:Create(
     frame,
     TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
@@ -346,5 +289,5 @@ end)
 -- ЗАПУСК
 appearTween:Play()
 
-print("✅ Lunar Hub v5.3 загружен! (" .. #Games .. " игр)")
-print("🌙 Ресайз активирован!")
+print("✅ Lunar Hub v5.2 загружен! (" .. #Games .. " игр)")
+print("🌙 Чёрный стиль + универсальный загрузчик активированы!")
