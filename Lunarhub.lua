@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v6.0 (ФИНАЛ)
+-- 🌙 LUNAR HUB v6.1 (ИСПРАВЛЕННЫЙ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "6.0"
+    local currentVersion = "6.1"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -186,7 +186,7 @@ minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
 minimizeBtn.Position = UDim2.new(1, -40, 0, 5)
 minimizeBtn.Text = "🌙"
 minimizeBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
-minimizeBtn.TextSize = 18
+minimizeBtn.TextSize = 20
 minimizeBtn.Font = Enum.Font.GothamBold
 minimizeBtn.BackgroundTransparency = 1
 minimizeBtn.Parent = frame
@@ -212,7 +212,7 @@ minimizeBtn.MouseButton1Click:Connect(function()
         minimizeBtn.Text = "🌕"
         minimizeBtn.Size = UDim2.new(0, 50, 0, 50)
         minimizeBtn.Position = UDim2.new(0.5, -25, 0.5, -25)
-        minimizeBtn.TextSize = 30
+        minimizeBtn.TextSize = 32
         minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 200)
         border.Visible = false
     else
@@ -231,7 +231,7 @@ minimizeBtn.MouseButton1Click:Connect(function()
         minimizeBtn.Text = "🌙"
         minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
         minimizeBtn.Position = UDim2.new(1, -40, 0, 5)
-        minimizeBtn.TextSize = 18
+        minimizeBtn.TextSize = 20
         minimizeBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
         border.Visible = true
     end
@@ -674,5 +674,5 @@ close.MouseButton1Click:Connect(function()
     screen:Destroy()
 end)
 
-print("✅ Lunar Hub v6.0 загружен! (" .. #Games .. " игр)")
-print("🌙 Финальная красивая версия с анимациями!")
+print("✅ Lunar Hub v6.1 загружен! (" .. #Games .. " игр)")
+print("🌙 Исправленная версия с рабочими ползунками!")
