@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.6 (ОТДЕЛЬНОЕ МЕНЮ НАСТРОЕК)
+-- 🌙 LUNAR HUB v5.7 (С НАСТРОЙКАМИ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.6"
+    local currentVersion = "5.7"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -102,29 +102,22 @@ screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local function updateWindowSize(newSize)
-    Settings.WindowSize = math.clamp(newSize, 300, 600)
-    frame.Size = UDim2.new(0, Settings.WindowSize, 0, Settings.WindowSize * 1.2)
-    frame.Position = UDim2.new(0.5, -Settings.WindowSize/2, 0.5, -Settings.WindowSize * 0.6)
+    Settings.WindowSize = newSize
+    frame.Size = UDim2.new(0, newSize, 0, newSize * 1.2)
+    frame.Position = UDim2.new(0.5, -newSize/2, 0.5, -newSize * 0.6)
 end
 
 -- ОСНОВНОЙ ФРЕЙМ
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 0, 0, 0)
-frame.Position = UDim2.new(0.5, -Settings.WindowSize/2, 0.5, -Settings.WindowSize * 0.6)
+frame.Size = UDim2.new(0, 380, 0, 460)
+frame.Position = UDim2.new(0.5, -190, 0.5, -230)
 frame.BackgroundColor3 = Color3.fromRGB(Settings.MenuColor[1], Settings.MenuColor[2], Settings.MenuColor[3])
-frame.BackgroundTransparency = 1
+frame.BackgroundTransparency = Settings.Transparency
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
 frame.Active = true
 frame.Draggable = true
 frame.Parent = screen
-
--- АНИМАЦИЯ ПОЯВЛЕНИЯ
-local appearTween = TweenService:Create(
-    frame,
-    TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-    {Size = UDim2.new(0, Settings.WindowSize, 0, Settings.WindowSize * 1.2), BackgroundTransparency = Settings.Transparency}
-)
 
 -- ТОНКАЯ БЕЛАЯ РАМКА
 local border = Instance.new("Frame")
@@ -137,8 +130,8 @@ border.Parent = frame
 
 -- ЗАГОЛОВОК
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 40)
-title.Position = UDim2.new(0, 0, 0, 8)
+title.Size = UDim2.new(1, 0, 0, 45)
+title.Position = UDim2.new(0, 0, 0, 10)
 title.Text = "🌙 LUNAR HUB"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextScaled = true
@@ -148,29 +141,14 @@ title.Parent = frame
 
 -- СЧЁТЧИК
 local sub = Instance.new("TextLabel")
-sub.Size = UDim2.new(1, 0, 0, 18)
-sub.Position = UDim2.new(0, 0, 0, 45)
+sub.Size = UDim2.new(1, 0, 0, 20)
+sub.Position = UDim2.new(0, 0, 0, 52)
 sub.Text = "📊 " .. #Games .. " игр | by Ryzen"
 sub.TextColor3 = Color3.fromRGB(180, 180, 220)
 sub.TextSize = 12
 sub.Font = Enum.Font.Gotham
 sub.BackgroundTransparency = 1
 sub.Parent = frame
-
--- ПОИСК
-local searchBox = Instance.new("TextBox")
-searchBox.Size = UDim2.new(1, -20, 0, 28)
-searchBox.Position = UDim2.new(0, 10, 0, 68)
-searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-searchBox.BackgroundTransparency = 0.5
-searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-searchBox.PlaceholderText = "🔍 Поиск..."
-searchBox.PlaceholderColor3 = Color3.fromRGB(140, 140, 180)
-searchBox.TextSize = 13
-searchBox.Font = Enum.Font.Gotham
-searchBox.BorderSizePixel = 0
-searchBox.ClipsDescendants = true
-searchBox.Parent = frame
 
 -- ============================================
 -- ⚙️ КНОПКА НАСТРОЕК
@@ -535,4 +513,31 @@ for _, child in ipairs(list:GetChildren()) do
         count = count + 1
     end
 end
-list.CanvasSize = UDim2.new(0, 0, 0, count * 36
+list.CanvasSize = UDim2.new(0, 0, 0, count * 36 + 10)
+
+-- ПОИСК
+local searchBox = Instance.new("TextBox")
+searchBox.Size = UDim2.new(1, -20, 0, 28)
+searchBox.Position = UDim2.new(0, 10, 0, 78)
+searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+searchBox.BackgroundTransparency = 0.5
+searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+searchBox.PlaceholderText = "🔍 Поиск..."
+searchBox.PlaceholderColor3 = Color3.fromRGB(140, 140, 180)
+searchBox.TextSize = 13
+searchBox.Font = Enum.Font.Gotham
+searchBox.BorderSizePixel = 0
+searchBox.ClipsDescendants = true
+searchBox.Parent = frame
+
+searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+    local search = string.lower(searchBox.Text)
+    for _, child in ipairs(list:GetChildren()) do
+        if child:IsA("TextButton") then
+            local name = string.lower(child.Text)
+            child.Visible = (search == "" or string.find(name, search))
+        end
+    end
+end)
+
+-- ===========
