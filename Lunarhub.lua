@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.8 (КРЕСТИК СЛЕВА)
+-- 🌙 LUNAR HUB v5.9 (ФИНАЛ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.8"
+    local currentVersion = "5.9"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -38,12 +38,10 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ
+-- ⚡ ИГРЫ (УДАЛЕНЫ ARENA 1.8 И RIVALS)
 -- ============================================
 local Games = {
-    {name = "Arena 1.8", link = "https://raw.githubusercontent.com/Lutosys/1.8arena/refs/heads/main/1.8arena.lua"},
     {name = "Forsaken", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
-    {name = "Rivals", link = "https://rawscripts.net/raw/RIVALS-Noks-hub-keyless-111339"},
     {name = "MM2", link = "https://raw.githubusercontent.com/pruzgar242-rgb/Update/refs/heads/main/out.lua%20(17).txt"},
     {name = "Prison Life", link = "https://rawscripts.net/raw/Prison-Life-serk4rx-script-239866"},
     {name = "Rost Alpha", link = "https://pastefy.app/JNOgCLi6/raw?part="},
@@ -60,16 +58,17 @@ local Games = {
 }
 
 -- ============================================
--- ⚙️ НАСТРОЙКИ
+-- ⚙️ НАСТРОЙКИ (СОХРАНЕНИЕ В SETTINGS)
 -- ============================================
 local Settings = {
     WindowSize = 380,
     MenuColor = {0, 0, 0},
     Transparency = 0.15,
+    IsMinimized = false,
 }
 
 -- ============================================
--- 🔧 ИСПРАВЛЕННЫЙ УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
+-- 🔧 УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
 -- ============================================
 local function loadScript(link)
     local success, result = pcall(function()
@@ -109,6 +108,9 @@ local function updateWindowSize(newSize)
     Settings.WindowSize = newSize
     frame.Size = UDim2.new(0, newSize, 0, newSize * 1.2)
     frame.Position = UDim2.new(0.5, -newSize/2, 0.5, -newSize * 0.6)
+    if not Settings.IsMinimized then
+        minimizeBtn.Visible = true
+    end
 end
 
 -- ОСНОВНОЙ ФРЕЙМ
@@ -180,11 +182,62 @@ searchBox.ClipsDescendants = true
 searchBox.Parent = frame
 
 -- ============================================
+-- 🔧 КНОПКА СВОРАЧИВАНИЯ (ЛУНА)
+-- ============================================
+local minimizeBtn = Instance.new("TextButton")
+minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+minimizeBtn.Position = UDim2.new(1, -40, 0, 5)
+minimizeBtn.Text = "🌙"
+minimizeBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
+minimizeBtn.TextSize = 18
+minimizeBtn.Font = Enum.Font.GothamBold
+minimizeBtn.BackgroundTransparency = 1
+minimizeBtn.Parent = frame
+
+local isMinimized = false
+
+minimizeBtn.MouseButton1Click:Connect(function()
+    isMinimized = not isMinimized
+    if isMinimized then
+        -- СВОРАЧИВАЕМ В КРУЖОК С ЛУНОЙ
+        frame.Size = UDim2.new(0, 50, 0, 50)
+        frame.Position = UDim2.new(1, -60, 0, 10)
+        frame.BackgroundTransparency = 0.5
+        frame.ClipsDescendants = true
+        title.Visible = false
+        social.Visible = false
+        sub.Visible = false
+        searchBox.Visible = false
+        list.Visible = false
+        settingsBtn.Visible = false
+        close.Visible = false
+        minimizeBtn.Text = "🌕"
+        minimizeBtn.Size = UDim2.new(0, 40, 0, 40)
+        minimizeBtn.Position = UDim2.new(0.5, -20, 0.5, -20)
+    else
+        -- РАЗВОРАЧИВАЕМ ОБРАТНО
+        frame.Size = UDim2.new(0, Settings.WindowSize, 0, Settings.WindowSize * 1.2)
+        frame.Position = UDim2.new(0.5, -Settings.WindowSize/2, 0.5, -Settings.WindowSize * 0.6)
+        frame.BackgroundTransparency = Settings.Transparency
+        title.Visible = true
+        social.Visible = true
+        sub.Visible = true
+        searchBox.Visible = true
+        list.Visible = true
+        settingsBtn.Visible = true
+        close.Visible = true
+        minimizeBtn.Text = "🌙"
+        minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+        minimizeBtn.Position = UDim2.new(1, -40, 0, 5)
+    end
+end)
+
+-- ============================================
 -- ⚙️ КНОПКА НАСТРОЕК
 -- ============================================
 local settingsBtn = Instance.new("TextButton")
 settingsBtn.Size = UDim2.new(0, 30, 0, 30)
-settingsBtn.Position = UDim2.new(1, -40, 0, 5)
+settingsBtn.Position = UDim2.new(1, -80, 0, 5)
 settingsBtn.Text = "⚙️"
 settingsBtn.TextColor3 = Color3.fromRGB(200, 200, 255)
 settingsBtn.TextSize = 18
@@ -612,5 +665,5 @@ close.MouseButton1Click:Connect(function()
     screen:Destroy()
 end)
 
-print("✅ Lunar Hub v5.8 загружен! (" .. #Games .. " игр)")
-print("🌙 Крестик слева + исправленный загрузчик!")
+print("✅ Lunar Hub v5.9 загружен! (" .. #Games .. " игр)")
+print("🌙 Финальная версия с иконкой луны!")
