@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.9 (ФИНАЛ)
+-- 🌙 LUNAR HUB v6.0 (ФИНАЛ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.9"
+    local currentVersion = "6.0"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -38,7 +38,7 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ (УДАЛЕНЫ ARENA 1.8 И RIVALS)
+-- ⚡ ИГРЫ
 -- ============================================
 local Games = {
     {name = "Forsaken", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
@@ -58,7 +58,7 @@ local Games = {
 }
 
 -- ============================================
--- ⚙️ НАСТРОЙКИ (СОХРАНЕНИЕ В SETTINGS)
+-- ⚙️ НАСТРОЙКИ
 -- ============================================
 local Settings = {
     WindowSize = 380,
@@ -108,9 +108,6 @@ local function updateWindowSize(newSize)
     Settings.WindowSize = newSize
     frame.Size = UDim2.new(0, newSize, 0, newSize * 1.2)
     frame.Position = UDim2.new(0.5, -newSize/2, 0.5, -newSize * 0.6)
-    if not Settings.IsMinimized then
-        minimizeBtn.Visible = true
-    end
 end
 
 -- ОСНОВНОЙ ФРЕЙМ
@@ -182,7 +179,7 @@ searchBox.ClipsDescendants = true
 searchBox.Parent = frame
 
 -- ============================================
--- 🔧 КНОПКА СВОРАЧИВАНИЯ (ЛУНА)
+-- 🌙 КНОПКА СВОРАЧИВАНИЯ (КРАСИВАЯ ЛУНА)
 -- ============================================
 local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -199,10 +196,11 @@ local isMinimized = false
 minimizeBtn.MouseButton1Click:Connect(function()
     isMinimized = not isMinimized
     if isMinimized then
-        -- СВОРАЧИВАЕМ В КРУЖОК С ЛУНОЙ
-        frame.Size = UDim2.new(0, 50, 0, 50)
-        frame.Position = UDim2.new(1, -60, 0, 10)
-        frame.BackgroundTransparency = 0.5
+        TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(0, 60, 0, 60),
+            Position = UDim2.new(1, -70, 0, 10),
+            BackgroundTransparency = 0.3
+        }):Play()
         frame.ClipsDescendants = true
         title.Visible = false
         social.Visible = false
@@ -212,13 +210,17 @@ minimizeBtn.MouseButton1Click:Connect(function()
         settingsBtn.Visible = false
         close.Visible = false
         minimizeBtn.Text = "🌕"
-        minimizeBtn.Size = UDim2.new(0, 40, 0, 40)
-        minimizeBtn.Position = UDim2.new(0.5, -20, 0.5, -20)
+        minimizeBtn.Size = UDim2.new(0, 50, 0, 50)
+        minimizeBtn.Position = UDim2.new(0.5, -25, 0.5, -25)
+        minimizeBtn.TextSize = 30
+        minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 200)
+        border.Visible = false
     else
-        -- РАЗВОРАЧИВАЕМ ОБРАТНО
-        frame.Size = UDim2.new(0, Settings.WindowSize, 0, Settings.WindowSize * 1.2)
-        frame.Position = UDim2.new(0.5, -Settings.WindowSize/2, 0.5, -Settings.WindowSize * 0.6)
-        frame.BackgroundTransparency = Settings.Transparency
+        TweenService:Create(frame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {
+            Size = UDim2.new(0, Settings.WindowSize, 0, Settings.WindowSize * 1.2),
+            Position = UDim2.new(0.5, -Settings.WindowSize/2, 0.5, -Settings.WindowSize * 0.6),
+            BackgroundTransparency = Settings.Transparency
+        }):Play()
         title.Visible = true
         social.Visible = true
         sub.Visible = true
@@ -229,6 +231,9 @@ minimizeBtn.MouseButton1Click:Connect(function()
         minimizeBtn.Text = "🌙"
         minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
         minimizeBtn.Position = UDim2.new(1, -40, 0, 5)
+        minimizeBtn.TextSize = 18
+        minimizeBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
+        border.Visible = true
     end
 end)
 
@@ -249,10 +254,10 @@ local settingsOpen = false
 local settingsFrame = nil
 
 settingsBtn.MouseEnter:Connect(function()
-    settingsBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TweenService:Create(settingsBtn, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 end)
 settingsBtn.MouseLeave:Connect(function()
-    settingsBtn.TextColor3 = Color3.fromRGB(200, 200, 255)
+    TweenService:Create(settingsBtn, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(200, 200, 255)}):Play()
 end)
 
 settingsBtn.MouseButton1Click:Connect(function()
@@ -320,7 +325,7 @@ settingsBtn.MouseButton1Click:Connect(function()
     settingsLayout.Padding = UDim.new(0, 10)
     settingsLayout.Parent = settingsScroll
     
-    -- РАЗМЕР (ПОЛЗУНОК)
+    -- РАЗМЕР (КРАСИВЫЙ ПОЛЗУНОК)
     local sizeLabel = Instance.new("TextLabel")
     sizeLabel.Size = UDim2.new(1, -20, 0, 20)
     sizeLabel.Text = "📐 Размер: " .. Settings.WindowSize
@@ -349,6 +354,7 @@ settingsBtn.MouseButton1Click:Connect(function()
     sizeHandle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     sizeHandle.BorderSizePixel = 0
     sizeHandle.Parent = sizeSlider
+    sizeHandle.BackgroundTransparency = 0.2
     
     local sizeDragging = false
     sizeHandle.MouseButton1Down:Connect(function()
@@ -437,7 +443,7 @@ settingsBtn.MouseButton1Click:Connect(function()
     end
     colorScroll.CanvasSize = UDim2.new(0, #colorList * 60, 0, 0)
     
-    -- ПРОЗРАЧНОСТЬ (ПОЛЗУНОК)
+    -- ПРОЗРАЧНОСТЬ (КРАСИВЫЙ ПОЛЗУНОК)
     local transLabel = Instance.new("TextLabel")
     transLabel.Size = UDim2.new(1, -20, 0, 20)
     transLabel.Text = "🔲 Прозрачность: " .. Settings.Transparency
@@ -466,6 +472,7 @@ settingsBtn.MouseButton1Click:Connect(function()
     transHandle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     transHandle.BorderSizePixel = 0
     transHandle.Parent = transSlider
+    transHandle.BackgroundTransparency = 0.2
     
     local transDragging = false
     transHandle.MouseButton1Down:Connect(function()
@@ -662,8 +669,10 @@ close.MouseLeave:Connect(function()
 end)
 
 close.MouseButton1Click:Connect(function()
+    TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Back), {Size = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 1}):Play()
+    task.wait(0.3)
     screen:Destroy()
 end)
 
-print("✅ Lunar Hub v5.9 загружен! (" .. #Games .. " игр)")
-print("🌙 Финальная версия с иконкой луны!")
+print("✅ Lunar Hub v6.0 загружен! (" .. #Games .. " игр)")
+print("🌙 Финальная красивая версия с анимациями!")
