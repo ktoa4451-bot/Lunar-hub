@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v6.2 (ФИНАЛ)
+-- 🌙 LUNAR HUB v6.3 (ФИНАЛ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "6.2"
+    local currentVersion = "6.3"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -179,7 +179,7 @@ searchBox.ClipsDescendants = true
 searchBox.Parent = frame
 
 -- ============================================
--- 🌙 ОТДЕЛЬНАЯ КРУГЛАЯ КНОПКА ДЛЯ СВОРАЧИВАНИЯ
+-- 🌙 КНОПКА СВОРАЧИВАНИЯ (ВСЕГДА ПОЯВЛЯЕТСЯ)
 -- ============================================
 local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -213,7 +213,6 @@ minimizeBtn.MouseButton1Click:Connect(function()
         minimizeBtn.Visible = false
         border.Visible = false
         
-        -- СОЗДАЁМ КРУГЛУЮ КНОПКУ С ЛУНОЙ
         if not moonButton then
             moonButton = Instance.new("TextButton")
             moonButton.Size = UDim2.new(0, 60, 0, 60)
@@ -362,65 +361,51 @@ settingsBtn.MouseButton1Click:Connect(function()
     settingsLayout.Padding = UDim.new(0, 10)
     settingsLayout.Parent = settingsScroll
     
-    -- РАЗМЕР (КРАСИВЫЙ ПОЛЗУНОК)
+    -- РАЗМЕР (ВВОД ЧИСЛА)
     local sizeLabel = Instance.new("TextLabel")
     sizeLabel.Size = UDim2.new(1, -20, 0, 20)
-    sizeLabel.Text = "📐 Размер: " .. Settings.WindowSize
+    sizeLabel.Text = "📐 Размер окна (300-600):"
     sizeLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
     sizeLabel.TextSize = 13
     sizeLabel.BackgroundTransparency = 1
     sizeLabel.Parent = settingsScroll
     
-    local sizeSlider = Instance.new("Frame")
-    sizeSlider.Size = UDim2.new(1, -20, 0, 20)
-    sizeSlider.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    sizeSlider.BackgroundTransparency = 0.5
-    sizeSlider.BorderSizePixel = 0
-    sizeSlider.Parent = settingsScroll
+    local sizeInput = Instance.new("TextBox")
+    sizeInput.Size = UDim2.new(0, 120, 0, 30)
+    sizeInput.Text = tostring(Settings.WindowSize)
+    sizeInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+    sizeInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    sizeInput.BackgroundTransparency = 0.5
+    sizeInput.BorderSizePixel = 0
+    sizeInput.Parent = settingsScroll
     
-    local sizeFill = Instance.new("Frame")
-    sizeFill.Size = UDim2.new((Settings.WindowSize - 300) / 300, 0, 1, 0)
-    sizeFill.BackgroundColor3 = Color3.fromRGB(100, 70, 255)
-    sizeFill.BorderSizePixel = 0
-    sizeFill.Parent = sizeSlider
+    local sizeApply = Instance.new("TextButton")
+    sizeApply.Size = UDim2.new(0, 100, 0, 30)
+    sizeApply.Text = "Применить"
+    sizeApply.TextColor3 = Color3.fromRGB(255, 255, 255)
+    sizeApply.BackgroundColor3 = Color3.fromRGB(30, 50, 30)
+    sizeApply.BackgroundTransparency = 0.2
+    sizeApply.BorderSizePixel = 0
+    sizeApply.Parent = settingsScroll
     
-    local sizeHandle = Instance.new("TextButton")
-    sizeHandle.Size = UDim2.new(0, 20, 1.5, 0)
-    sizeHandle.Position = UDim2.new((Settings.WindowSize - 300) / 300, -10, 0, 0)
-    sizeHandle.Text = ""
-    sizeHandle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    sizeHandle.BorderSizePixel = 0
-    sizeHandle.Parent = sizeSlider
-    sizeHandle.BackgroundTransparency = 0.2
-    
-    local sizeDragging = false
-    sizeHandle.MouseButton1Down:Connect(function()
-        sizeDragging = true
-    end)
-    UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            sizeDragging = false
-        end
-    end)
-    UserInputService.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement and sizeDragging then
-            local mouse = UserInputService:GetMouseLocation()
-            local sliderPos = sizeSlider.AbsolutePosition
-            local sliderSize = sizeSlider.AbsoluteSize
-            local percent = math.clamp((mouse.X - sliderPos.X) / sliderSize.X, 0, 1)
-            local newSize = math.round(300 + percent * 300)
-            newSize = math.clamp(newSize, 300, 600)
-            updateWindowSize(newSize)
-            sizeFill.Size = UDim2.new(percent, 0, 1, 0)
-            sizeHandle.Position = UDim2.new(percent, -10, 0, 0)
-            sizeLabel.Text = "📐 Размер: " .. newSize
+    sizeApply.MouseButton1Click:Connect(function()
+        local val = tonumber(sizeInput.Text)
+        if val and val >= 300 and val <= 600 then
+            updateWindowSize(val)
+            sizeApply.Text = "✅ Применено"
+            task.wait(0.5)
+            sizeApply.Text = "Применить"
+        else
+            sizeApply.Text = "❌ Ошибка"
+            task.wait(0.5)
+            sizeApply.Text = "Применить"
         end
     end)
     
     -- ЦВЕТ (ГОРИЗОНТАЛЬНЫЙ СКРОЛЛ)
     local colorLabel = Instance.new("TextLabel")
     colorLabel.Size = UDim2.new(1, -20, 0, 20)
-    colorLabel.Text = "🎨 Цвет:"
+    colorLabel.Text = "🎨 Цвет меню:"
     colorLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
     colorLabel.TextSize = 13
     colorLabel.BackgroundTransparency = 1
@@ -480,61 +465,49 @@ settingsBtn.MouseButton1Click:Connect(function()
     end
     colorScroll.CanvasSize = UDim2.new(0, #colorList * 60, 0, 0)
     
-    -- ПРОЗРАЧНОСТЬ (КРАСИВЫЙ ПОЛЗУНОК)
+    -- ПРОЗРАЧНОСТЬ (ВВОД ЧИСЛА)
     local transLabel = Instance.new("TextLabel")
     transLabel.Size = UDim2.new(1, -20, 0, 20)
-    transLabel.Text = "🔲 Прозрачность: " .. Settings.Transparency
+    transLabel.Text = "🔲 Прозрачность (0-1):"
     transLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
     transLabel.TextSize = 13
     transLabel.BackgroundTransparency = 1
     transLabel.Parent = settingsScroll
     
-    local transSlider = Instance.new("Frame")
-    transSlider.Size = UDim2.new(1, -20, 0, 20)
-    transSlider.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    transSlider.BackgroundTransparency = 0.5
-    transSlider.BorderSizePixel = 0
-    transSlider.Parent = settingsScroll
+    local transInput = Instance.new("TextBox")
+    transInput.Size = UDim2.new(0, 120, 0, 30)
+    transInput.Text = tostring(Settings.Transparency)
+    transInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+    transInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    transInput.BackgroundTransparency = 0.5
+    transInput.BorderSizePixel = 0
+    transInput.Parent = settingsScroll
     
-    local transFill = Instance.new("Frame")
-    transFill.Size = UDim2.new(Settings.Transparency, 0, 1, 0)
-    transFill.BackgroundColor3 = Color3.fromRGB(100, 70, 255)
-    transFill.BorderSizePixel = 0
-    transFill.Parent = transSlider
+    local transApply = Instance.new("TextButton")
+    transApply.Size = UDim2.new(0, 100, 0, 30)
+    transApply.Text = "Применить"
+    transApply.TextColor3 = Color3.fromRGB(255, 255, 255)
+    transApply.BackgroundColor3 = Color3.fromRGB(30, 50, 30)
+    transApply.BackgroundTransparency = 0.2
+    transApply.BorderSizePixel = 0
+    transApply.Parent = settingsScroll
     
-    local transHandle = Instance.new("TextButton")
-    transHandle.Size = UDim2.new(0, 20, 1.5, 0)
-    transHandle.Position = UDim2.new(Settings.Transparency, -10, 0, 0)
-    transHandle.Text = ""
-    transHandle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    transHandle.BorderSizePixel = 0
-    transHandle.Parent = transSlider
-    transHandle.BackgroundTransparency = 0.2
-    
-    local transDragging = false
-    transHandle.MouseButton1Down:Connect(function()
-        transDragging = true
-    end)
-    UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            transDragging = false
+    transApply.MouseButton1Click:Connect(function()
+        local val = tonumber(transInput.Text)
+        if val and val >= 0 and val <= 1 then
+            Settings.Transparency = val
+            frame.BackgroundTransparency = val
+            transApply.Text = "✅ Применено"
+            task.wait(0.5)
+            transApply.Text = "Применить"
+        else
+            transApply.Text = "❌ Ошибка"
+            task.wait(0.5)
+            transApply.Text = "Применить"
         end
     end)
-    UserInputService.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement and transDragging then
-            local mouse = UserInputService:GetMouseLocation()
-            local sliderPos = transSlider.AbsolutePosition
-            local sliderSize = transSlider.AbsoluteSize
-            local percent = math.clamp((mouse.X - sliderPos.X) / sliderSize.X, 0, 1)
-            local newTrans = math.round(percent * 10) / 10
-            newTrans = math.clamp(newTrans, 0, 1)
-            Settings.Transparency = newTrans
-            frame.BackgroundTransparency = newTrans
-            transFill.Size = UDim2.new(newTrans, 0, 1, 0)
-            transHandle.Position = UDim2.new(newTrans, -10, 0, 0)
-            transLabel.Text = "🔲 Прозрачность: " .. newTrans
-        end
-    end)
+    
+    settingsScroll.CanvasSize = UDim2.new(0, 0, 0, settingsLayout.AbsoluteContentSize.Y + 20)
 end)
 
 -- ============================================
@@ -662,5 +635,5 @@ close.MouseButton1Click:Connect(function()
     screen:Destroy()
 end)
 
-print("✅ Lunar Hub v6.2 загружен! (" .. #Games .. " игр)")
-print("🌙 Финальная версия с отдельной кнопкой луны!")
+print("✅ Lunar Hub v6.3 загружен! (" .. #Games .. " игр)")
+print("🌙 Финальная версия с полями ввода!")
