@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v5.7 (ПОЛНАЯ ВЕРСИЯ)
+-- 🌙 LUNAR HUB v5.8 (КРЕСТИК СЛЕВА)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "5.7"
+    local currentVersion = "5.8"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -69,12 +69,15 @@ local Settings = {
 }
 
 -- ============================================
--- 🔧 УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
+-- 🔧 ИСПРАВЛЕННЫЙ УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
 -- ============================================
 local function loadScript(link)
     local success, result = pcall(function()
         local scriptContent = game:HttpGet(link)
-        return loadstring(scriptContent)
+        if scriptContent then
+            return loadstring(scriptContent)
+        end
+        return nil
     end)
     
     if success and result then
@@ -238,7 +241,7 @@ settingsBtn.MouseButton1Click:Connect(function()
     
     local closeSettings = Instance.new("TextButton")
     closeSettings.Size = UDim2.new(0, 30, 0, 30)
-    closeSettings.Position = UDim2.new(1, -35, 0, 5)
+    closeSettings.Position = UDim2.new(0, 5, 0, 5)
     closeSettings.Text = "✕"
     closeSettings.TextColor3 = Color3.fromRGB(255, 100, 100)
     closeSettings.TextSize = 18
@@ -512,7 +515,7 @@ for _, gameData in ipairs(Games) do
     btn.TextSize = 13
     btn.TextXAlignment = Enum.TextXAlignment.Left
     btn.Font = Enum.Font.GothamBold
-        btn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    btn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     btn.BackgroundTransparency = 0.2
     btn.BorderSizePixel = 0
     btn.Parent = list
@@ -586,11 +589,11 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ============================================
--- 🔧 ЗАКРЫТИЕ ХАБА
+-- 🔧 ЗАКРЫТИЕ ХАБА (КРЕСТИК СЛЕВА)
 -- ============================================
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 30, 0, 30)
-close.Position = UDim2.new(1, -40, 0, 5)
+close.Position = UDim2.new(0, 8, 0, 5)
 close.Text = "✕"
 close.TextColor3 = Color3.fromRGB(255, 100, 100)
 close.TextSize = 18
@@ -609,6 +612,5 @@ close.MouseButton1Click:Connect(function()
     screen:Destroy()
 end)
 
-print("✅ Lunar Hub v5.7 загружен! (" .. #Games .. " игр)")
-print("🌙 Полная версия с настройками активирована!")
-    
+print("✅ Lunar Hub v5.8 загружен! (" .. #Games .. " игр)")
+print("🌙 Крестик слева + исправленный загрузчик!")
