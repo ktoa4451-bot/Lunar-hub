@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v6.7 (КНОПКА ЛУНЫ)
+-- 🌙 LUNAR HUB v6.8 (СТАБИЛЬНЫЙ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "6.7"
+    local currentVersion = "6.8"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -164,7 +164,7 @@ searchBox.ClipsDescendants = true
 searchBox.Parent = frame
 
 -- ============================================
--- 🌙 КНОПКА СВОРАЧИВАНИЯ (ВСЕГДА ВИДНА)
+-- 🌙 ПРОСТАЯ КНОПКА СВОРАЧИВАНИЯ
 -- ============================================
 local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -175,18 +175,16 @@ minimizeBtn.TextSize = 20
 minimizeBtn.Font = Enum.Font.GothamBold
 minimizeBtn.BackgroundTransparency = 1
 minimizeBtn.Parent = frame
-minimizeBtn.ZIndex = 10
 
 local isMinimized = false
-local moonButton = nil
 
 minimizeBtn.MouseButton1Click:Connect(function()
     isMinimized = not isMinimized
     if isMinimized then
-        -- СВОРАЧИВАЕМ
-        frame:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
-        frame:TweenPosition(UDim2.new(0.5, 0, 0.5, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+        frame.Size = UDim2.new(0, 0, 0, 0)
+        frame.Position = UDim2.new(0.5, 0, 0.5, 0)
         frame.BackgroundTransparency = 1
+        frame.ClipsDescendants = true
         
         title.Visible = false
         social.Visible = false
@@ -197,50 +195,28 @@ minimizeBtn.MouseButton1Click:Connect(function()
         minimizeBtn.Visible = false
         border.Visible = false
         
-        -- СОЗДАЁМ КРУГЛУЮ КНОПКУ
-        if not moonButton then
-            moonButton = Instance.new("TextButton")
-            moonButton.Size = UDim2.new(0, 60, 0, 60)
-            moonButton.Position = UDim2.new(1, -70, 0, 10)
-            moonButton.Text = "🌕"
-            moonButton.TextColor3 = Color3.fromRGB(255, 255, 200)
-            moonButton.TextSize = 32
-            moonButton.Font = Enum.Font.GothamBold
-            moonButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-            moonButton.BackgroundTransparency = 0.3
-            moonButton.BorderSizePixel = 0
-            moonButton.ClipsDescendants = true
-            moonButton.Parent = screen
-            moonButton.ZIndex = 10
-            
-            local corner = Instance.new("UICorner")
-            corner.CornerRadius = UDim.new(1, 0)
-            corner.Parent = moonButton
-            
-            moonButton.MouseButton1Click:Connect(function()
-                isMinimized = false
-                -- РАЗВОРАЧИВАЕМ
-                frame:TweenSize(UDim2.new(0, 380, 0, 460), Enum.EasingDirection.Out, Enum.EasingStyle.Back, 0.4, true)
-                frame:TweenPosition(UDim2.new(0.5, -190, 0.5, -230), Enum.EasingDirection.Out, Enum.EasingStyle.Back, 0.4, true)
-                frame.BackgroundTransparency = 0.15
-                
-                title.Visible = true
-                social.Visible = true
-                sub.Visible = true
-                searchBox.Visible = true
-                list.Visible = true
-                close.Visible = true
-                minimizeBtn.Visible = true
-                border.Visible = true
-                
-                moonButton:Destroy()
-                moonButton = nil
-            end)
-        end
+        wait(0.1)
+        minimizeBtn.Size = UDim2.new(0, 50, 0, 50)
+        minimizeBtn.Position = UDim2.new(1, -60, 0, 10)
+        minimizeBtn.Text = "🌕"
+        minimizeBtn.TextSize = 28
+        minimizeBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        minimizeBtn.BackgroundTransparency = 0.3
+        minimizeBtn.Visible = true
+        
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(1, 0)
+        corner.Parent = minimizeBtn
     else
-        -- РАЗВОРАЧИВАЕМ
-        frame:TweenSize(UDim2.new(0, 380, 0, 460), Enum.EasingDirection.Out, Enum.EasingStyle.Back, 0.4, true)
-        frame:TweenPosition(UDim2.new(0.5, -190, 0.5, -230), Enum.EasingDirection.Out, Enum.EasingStyle.Back, 0.4, true)
+        minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+        minimizeBtn.Position = UDim2.new(1, -40, 0, 5)
+        minimizeBtn.Text = "🌙"
+        minimizeBtn.TextSize = 20
+        minimizeBtn.BackgroundTransparency = 1
+        minimizeBtn.Visible = true
+        
+        frame.Size = UDim2.new(0, 380, 0, 460)
+        frame.Position = UDim2.new(0.5, -190, 0.5, -230)
         frame.BackgroundTransparency = 0.15
         
         title.Visible = true
@@ -249,13 +225,7 @@ minimizeBtn.MouseButton1Click:Connect(function()
         searchBox.Visible = true
         list.Visible = true
         close.Visible = true
-        minimizeBtn.Visible = true
         border.Visible = true
-        
-        if moonButton then
-            moonButton:Destroy()
-            moonButton = nil
-        end
     end
 end)
 
@@ -304,12 +274,14 @@ for _, gameData in ipairs(Games) do
     arrow.Parent = btn
     
     btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
-        TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
+        btn.BackgroundTransparency = 0
+        btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        arrow.TextColor3 = Color3.fromRGB(255, 215, 0)
     end)
     btn.MouseLeave:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundTransparency = 0.2, BackgroundColor3 = Color3.fromRGB(15, 15, 15)}):Play()
-        TweenService:Create(arrow, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(150, 150, 150)}):Play()
+        btn.BackgroundTransparency = 0.2
+        btn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+        arrow.TextColor3 = Color3.fromRGB(150, 150, 150)
     end)
     
     btn.MouseButton1Click:Connect(function()
@@ -379,10 +351,8 @@ close.MouseLeave:Connect(function()
 end)
 
 close.MouseButton1Click:Connect(function()
-    TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Back), {Size = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 1}):Play()
-    task.wait(0.3)
     screen:Destroy()
 end)
 
-print("✅ Lunar Hub v6.7 загружен! (" .. #Games .. " игр)")
-print("🌙 Кнопка луны теперь точно появляется!")
+print("✅ Lunar Hub v6.8 загружен! (" .. #Games .. " игр)")
+print("🌙 Простая и стабильная версия!")
