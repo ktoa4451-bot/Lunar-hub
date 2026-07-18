@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v6.5 (БЕЗ НАСТРОЕК)
+-- 🌙 LUNAR HUB v6.6 (ИГРЫ + КНОПКА ЛУНЫ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "6.5"
+    local currentVersion = "6.6"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -55,7 +55,32 @@ local Games = {
     {name = "Chameleon", link = "https://raw.githubusercontent.com/tawxm/NgThanhTam/refs/heads/main/Chameleon.lua"},
     {name = "Sell Limons", link = "https://raw.githubusercontent.com/Fluxyyy333/HoshiOnTop/main/loader.lua"},
     {name = "Mine Per Click", link = "https://raw.githubusercontent.com/gumanba/Scripts/refs/heads/main/1MinePerClick"},
+    {name = "1+ Speed Keyboard", link = "https://raw.githubusercontent.com/Gerreiro68/ShizaHub/refs/heads/main/loader.lua"},
 }
+
+-- ============================================
+-- 🔧 УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
+-- ============================================
+local function loadScript(link)
+    local success, result = pcall(function()
+        local scriptContent = game:HttpGet(link)
+        if scriptContent then
+            return loadstring(scriptContent)
+        end
+        return nil
+    end)
+    
+    if success and result then
+        local execSuccess, execErr = pcall(result)
+        if execSuccess then
+            return true, "✅ Успешно"
+        else
+            return false, "Ошибка выполнения: " .. tostring(execErr)
+        end
+    else
+        return false, "Ошибка загрузки: " .. tostring(result)
+    end
+end
 
 -- ============================================
 -- 🔧 GUI
@@ -101,7 +126,7 @@ title.Font = Enum.Font.GothamBold
 title.BackgroundTransparency = 1
 title.Parent = frame
 
--- СОЦИАЛЬНЫЕ СЕТИ
+-- СОЦСЕТИ
 local social = Instance.new("TextLabel")
 social.Size = UDim2.new(1, 0, 0, 16)
 social.Position = UDim2.new(0, 0, 0, 40)
@@ -139,7 +164,7 @@ searchBox.ClipsDescendants = true
 searchBox.Parent = frame
 
 -- ============================================
--- 🌙 КНОПКА СВОРАЧИВАНИЯ (КРАСИВАЯ ЛУНА)
+-- 🌙 КНОПКА СВОРАЧИВАНИЯ (ЛУНА)
 -- ============================================
 local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -355,5 +380,5 @@ close.MouseButton1Click:Connect(function()
     screen:Destroy()
 end)
 
-print("✅ Lunar Hub v6.5 загружен! (" .. #Games .. " игр)")
-print("🌙 Без настроек + красивая луна!")
+print("✅ Lunar Hub v6.6 загружен! (" .. #Games .. " игр)")
+print("🌙 Добавлена игра 1+ Speed Keyboard")
