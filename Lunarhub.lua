@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v6.8 (СТАБИЛЬНЫЙ)
+-- 🌙 LUNAR HUB v6.9 (АНИМАЦИИ + ИГРЫ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "6.7"
+    local currentVersion = "6.9"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -56,6 +56,10 @@ local Games = {
     {name = "Sell Limons", link = "https://raw.githubusercontent.com/Fluxyyy333/HoshiOnTop/main/loader.lua"},
     {name = "Mine Per Click", link = "https://raw.githubusercontent.com/gumanba/Scripts/refs/heads/main/1MinePerClick"},
     {name = "1+ Speed Keyboard", link = "https://raw.githubusercontent.com/Gerreiro68/ShizaHub/refs/heads/main/loader.lua"},
+    -- НОВЫЕ ИГРЫ
+    {name = "99 Nights in Forest", link = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"},
+    {name = "Merge Nuke", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/MergeaNuke"},
+    {name = "Dead Rails", link = "https://raw.githubusercontent.com/bocaj111004/Abysall/refs/heads/main/Loader.luau"},
 }
 
 -- ============================================
@@ -83,7 +87,7 @@ local function loadScript(link)
 end
 
 -- ============================================
--- 🔧 GUI
+-- 🔧 GUI С АНИМАЦИЯМИ
 -- ============================================
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -94,17 +98,24 @@ screen.Name = "LunarHub"
 screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- ОСНОВНОЙ ФРЕЙМ
+-- ОСНОВНОЙ ФРЕЙМ (СКРЫТ ПРИ СТАРТЕ)
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 380, 0, 460)
+frame.Size = UDim2.new(0, 0, 0, 0)
 frame.Position = UDim2.new(0.5, -190, 0.5, -230)
 frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-frame.BackgroundTransparency = 0.15
+frame.BackgroundTransparency = 1
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
 frame.Active = true
 frame.Draggable = true
 frame.Parent = screen
+
+-- АНИМАЦИЯ ПОЯВЛЕНИЯ
+local appearTween = TweenService:Create(
+    frame,
+    TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+    {Size = UDim2.new(0, 380, 0, 460), BackgroundTransparency = 0.15}
+)
 
 -- ТОНКАЯ БЕЛАЯ РАМКА
 local border = Instance.new("Frame")
@@ -164,73 +175,7 @@ searchBox.ClipsDescendants = true
 searchBox.Parent = frame
 
 -- ============================================
--- 🌙 ПРОСТАЯ КНОПКА СВОРАЧИВАНИЯ
--- ============================================
-local minimizeBtn = Instance.new("TextButton")
-minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
-minimizeBtn.Position = UDim2.new(1, -40, 0, 5)
-minimizeBtn.Text = "🌙"
-minimizeBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
-minimizeBtn.TextSize = 20
-minimizeBtn.Font = Enum.Font.GothamBold
-minimizeBtn.BackgroundTransparency = 1
-minimizeBtn.Parent = frame
-
-local isMinimized = false
-
-minimizeBtn.MouseButton1Click:Connect(function()
-    isMinimized = not isMinimized
-    if isMinimized then
-        frame.Size = UDim2.new(0, 0, 0, 0)
-        frame.Position = UDim2.new(0.5, 0, 0.5, 0)
-        frame.BackgroundTransparency = 1
-        frame.ClipsDescendants = true
-        
-        title.Visible = false
-        social.Visible = false
-        sub.Visible = false
-        searchBox.Visible = false
-        list.Visible = false
-        close.Visible = false
-        minimizeBtn.Visible = false
-        border.Visible = false
-        
-        wait(0.1)
-        minimizeBtn.Size = UDim2.new(0, 50, 0, 50)
-        minimizeBtn.Position = UDim2.new(1, -60, 0, 10)
-        minimizeBtn.Text = "🌕"
-        minimizeBtn.TextSize = 28
-        minimizeBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        minimizeBtn.BackgroundTransparency = 0.3
-        minimizeBtn.Visible = true
-        
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(1, 0)
-        corner.Parent = minimizeBtn
-    else
-        minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
-        minimizeBtn.Position = UDim2.new(1, -40, 0, 5)
-        minimizeBtn.Text = "🌙"
-        minimizeBtn.TextSize = 20
-        minimizeBtn.BackgroundTransparency = 1
-        minimizeBtn.Visible = true
-        
-        frame.Size = UDim2.new(0, 380, 0, 460)
-        frame.Position = UDim2.new(0.5, -190, 0.5, -230)
-        frame.BackgroundTransparency = 0.15
-        
-        title.Visible = true
-        social.Visible = true
-        sub.Visible = true
-        searchBox.Visible = true
-        list.Visible = true
-        close.Visible = true
-        border.Visible = true
-    end
-end)
-
--- ============================================
--- 📋 СПИСОК ИГР
+-- 📋 СПИСОК ИГР (С АНИМАЦИЕЙ КНОПОК)
 -- ============================================
 local list = Instance.new("ScrollingFrame")
 list.Size = UDim2.new(1, -20, 1, -120)
@@ -273,17 +218,17 @@ for _, gameData in ipairs(Games) do
     arrow.BackgroundTransparency = 1
     arrow.Parent = btn
     
+    -- АНИМАЦИЯ ПРИ НАВЕДЕНИИ
     btn.MouseEnter:Connect(function()
-        btn.BackgroundTransparency = 0
-        btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-        arrow.TextColor3 = Color3.fromRGB(255, 215, 0)
+        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
+        TweenService:Create(arrow, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
     end)
     btn.MouseLeave:Connect(function()
-        btn.BackgroundTransparency = 0.2
-        btn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-        arrow.TextColor3 = Color3.fromRGB(150, 150, 150)
+        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0.2, BackgroundColor3 = Color3.fromRGB(15, 15, 15)}):Play()
+        TweenService:Create(arrow, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(150, 150, 150)}):Play()
     end)
     
+    -- ЗАГРУЗКА С АНИМАЦИЕЙ
     btn.MouseButton1Click:Connect(function()
         btn.Text = "⏳..."
         btn.BackgroundColor3 = Color3.fromRGB(50, 50, 30)
@@ -303,7 +248,7 @@ for _, gameData in ipairs(Games) do
             warn("Ошибка: " .. msg)
         end
         
-        task.wait(1)
+        task.wait(1.5)
         btn.Text = gameData.name
         btn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
         arrow.Text = "▶"
@@ -344,15 +289,20 @@ close.BackgroundTransparency = 1
 close.Parent = frame
 
 close.MouseEnter:Connect(function()
-    close.TextColor3 = Color3.fromRGB(255, 50, 50)
+    TweenService:Create(close, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 50, 50)}):Play()
 end)
 close.MouseLeave:Connect(function()
-    close.TextColor3 = Color3.fromRGB(255, 100, 100)
+    TweenService:Create(close, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 100, 100)}):Play()
 end)
 
 close.MouseButton1Click:Connect(function()
+    TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Back), {Size = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 1}):Play()
+    task.wait(0.3)
     screen:Destroy()
 end)
 
-print("✅ Lunar Hub v6.8 загружен! (" .. #Games .. " игр)")
-print("🌙 Простая и стабильная версия!")
+-- ЗАПУСК АНИМАЦИИ
+appearTween:Play()
+
+print("✅ Lunar Hub v6.9 загружен! (" .. #Games .. " игр)")
+print("🌙 Анимации + новые игры добавлены!")
