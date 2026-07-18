@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v6.3 (ФИНАЛ)
+-- 🌙 LUNAR HUB v6.4 (ФИКС)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "6.3"
+    local currentVersion = "6.4"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -105,6 +105,7 @@ screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local function updateWindowSize(newSize)
+    newSize = math.clamp(newSize, 300, 600)
     Settings.WindowSize = newSize
     frame.Size = UDim2.new(0, newSize, 0, newSize * 1.2)
     frame.Position = UDim2.new(0.5, -newSize/2, 0.5, -newSize * 0.6)
@@ -635,5 +636,5 @@ close.MouseButton1Click:Connect(function()
     screen:Destroy()
 end)
 
-print("✅ Lunar Hub v6.3 загружен! (" .. #Games .. " игр)")
-print("🌙 Финальная версия с полями ввода!")
+print("✅ Lunar Hub v6.4 загружен! (" .. #Games .. " игр)")
+print("🌙 Размер работает, кнопка луны появляется!")
