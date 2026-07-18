@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v6.6 (ИГРЫ + КНОПКА ЛУНЫ)
+-- 🌙 LUNAR HUB v6.7 (КНОПКА ЛУНЫ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "6.6"
+    local currentVersion = "6.7"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -164,7 +164,7 @@ searchBox.ClipsDescendants = true
 searchBox.Parent = frame
 
 -- ============================================
--- 🌙 КНОПКА СВОРАЧИВАНИЯ (ЛУНА)
+-- 🌙 КНОПКА СВОРАЧИВАНИЯ (ВСЕГДА ВИДНА)
 -- ============================================
 local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -175,6 +175,7 @@ minimizeBtn.TextSize = 20
 minimizeBtn.Font = Enum.Font.GothamBold
 minimizeBtn.BackgroundTransparency = 1
 minimizeBtn.Parent = frame
+minimizeBtn.ZIndex = 10
 
 local isMinimized = false
 local moonButton = nil
@@ -182,12 +183,11 @@ local moonButton = nil
 minimizeBtn.MouseButton1Click:Connect(function()
     isMinimized = not isMinimized
     if isMinimized then
-        TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
-            Size = UDim2.new(0, 0, 0, 0),
-            BackgroundTransparency = 1,
-            Position = UDim2.new(0.5, 0, 0.5, 0)
-        }):Play()
-        frame.ClipsDescendants = true
+        -- СВОРАЧИВАЕМ
+        frame:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+        frame:TweenPosition(UDim2.new(0.5, 0, 0.5, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+        frame.BackgroundTransparency = 1
+        
         title.Visible = false
         social.Visible = false
         sub.Visible = false
@@ -197,6 +197,7 @@ minimizeBtn.MouseButton1Click:Connect(function()
         minimizeBtn.Visible = false
         border.Visible = false
         
+        -- СОЗДАЁМ КРУГЛУЮ КНОПКУ
         if not moonButton then
             moonButton = Instance.new("TextButton")
             moonButton.Size = UDim2.new(0, 60, 0, 60)
@@ -210,6 +211,7 @@ minimizeBtn.MouseButton1Click:Connect(function()
             moonButton.BorderSizePixel = 0
             moonButton.ClipsDescendants = true
             moonButton.Parent = screen
+            moonButton.ZIndex = 10
             
             local corner = Instance.new("UICorner")
             corner.CornerRadius = UDim.new(1, 0)
@@ -217,11 +219,11 @@ minimizeBtn.MouseButton1Click:Connect(function()
             
             moonButton.MouseButton1Click:Connect(function()
                 isMinimized = false
-                TweenService:Create(frame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {
-                    Size = UDim2.new(0, 380, 0, 460),
-                    Position = UDim2.new(0.5, -190, 0.5, -230),
-                    BackgroundTransparency = 0.15
-                }):Play()
+                -- РАЗВОРАЧИВАЕМ
+                frame:TweenSize(UDim2.new(0, 380, 0, 460), Enum.EasingDirection.Out, Enum.EasingStyle.Back, 0.4, true)
+                frame:TweenPosition(UDim2.new(0.5, -190, 0.5, -230), Enum.EasingDirection.Out, Enum.EasingStyle.Back, 0.4, true)
+                frame.BackgroundTransparency = 0.15
+                
                 title.Visible = true
                 social.Visible = true
                 sub.Visible = true
@@ -230,16 +232,17 @@ minimizeBtn.MouseButton1Click:Connect(function()
                 close.Visible = true
                 minimizeBtn.Visible = true
                 border.Visible = true
+                
                 moonButton:Destroy()
                 moonButton = nil
             end)
         end
     else
-        TweenService:Create(frame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {
-            Size = UDim2.new(0, 380, 0, 460),
-            Position = UDim2.new(0.5, -190, 0.5, -230),
-            BackgroundTransparency = 0.15
-        }):Play()
+        -- РАЗВОРАЧИВАЕМ
+        frame:TweenSize(UDim2.new(0, 380, 0, 460), Enum.EasingDirection.Out, Enum.EasingStyle.Back, 0.4, true)
+        frame:TweenPosition(UDim2.new(0.5, -190, 0.5, -230), Enum.EasingDirection.Out, Enum.EasingStyle.Back, 0.4, true)
+        frame.BackgroundTransparency = 0.15
+        
         title.Visible = true
         social.Visible = true
         sub.Visible = true
@@ -248,6 +251,7 @@ minimizeBtn.MouseButton1Click:Connect(function()
         close.Visible = true
         minimizeBtn.Visible = true
         border.Visible = true
+        
         if moonButton then
             moonButton:Destroy()
             moonButton = nil
@@ -380,5 +384,5 @@ close.MouseButton1Click:Connect(function()
     screen:Destroy()
 end)
 
-print("✅ Lunar Hub v6.6 загружен! (" .. #Games .. " игр)")
-print("🌙 Добавлена игра 1+ Speed Keyboard")
+print("✅ Lunar Hub v6.7 загружен! (" .. #Games .. " игр)")
+print("🌙 Кнопка луны теперь точно появляется!")
