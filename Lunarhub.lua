@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v7.6 (ПОЛНАЯ ВЕРСИЯ)
+-- 🌙 LUNAR HUB v7.7 (ИСПРАВЛЕННЫЙ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "7.6"
+    local currentVersion = "7.7"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -132,11 +132,11 @@ shadow.ImageTransparency = 0.3
 shadow.Parent = frame
 
 -- ============================================
--- 🔧 КНОПКА ЗАКРЫТИЯ (ВИДНАЯ)
+-- 🔧 КНОПКА ЗАКРЫТИЯ (СДВИНУТА ЛЕВЕЕ)
 -- ============================================
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 34, 0, 34)
-close.Position = UDim2.new(1, -12, 0, 10)
+close.Position = UDim2.new(0.97, -12, 0, 10)  -- Сдвинута левее
 close.Text = "✕"
 close.TextColor3 = Color3.fromRGB(255, 255, 255)
 close.TextSize = 20
@@ -235,7 +235,6 @@ categoriesLayout.FillDirection = Enum.FillDirection.Vertical
 categoriesLayout.Padding = UDim.new(0, 6)
 categoriesLayout.Parent = categoriesFrame
 
--- ДОБАВЛЯЕМ КАТЕГОРИЮ "ИЗБРАННОЕ"
 local allCategories = {"🔫 Шутеры", "🎮 Симуляторы", "💰 Премиум", "⭐ Избранное"}
 local currentCategory = "🔫 Шутеры"
 local categoryButtons = {}
@@ -329,7 +328,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v7.6 — Кнопка закрытия видна, избранное работает\nv7.5 — Исправлено отображение игр"
+    updateText.Text = "v7.7 — Исправлено отображение игр\nv7.6 — Избранное работает"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -544,5 +543,5 @@ end)
 updateContent("🔫 Шутеры")
 updateStats()
 
-print("✅ Lunar Hub v7.6 loaded! (" .. #Games .. " categories)")
-print("🌙 Кнопка закрытия видна, избранное работает!")
+print("✅ Lunar Hub v7.7 loaded! (" .. #Games .. " categories)")
+print("🌙 Кнопка закрытия сдвинута, игры отображаются!")
