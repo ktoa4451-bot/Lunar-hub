@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v8.1 (КНОПКА СЛЕВА + ФИКС ИГР)
+-- 🌙 LUNAR HUB v8.3 (ИСПРАВЛЕННЫЙ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "8.1"
+    local currentVersion = "8.3"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -38,29 +38,23 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ
+-- ⚡ ИГРЫ (ВСЕ В ОДНОМ СПИСКЕ)
 -- ============================================
 local Games = {
-    ["🔫 Шутеры"] = {
-        {name = "🔫 Forsaken", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
-        {name = "🔫 MM2", link = "https://raw.githubusercontent.com/pruzgar242-rgb/Update/refs/heads/main/out.lua%20(17).txt"},
-        {name = "🔫 Rivals", link = "https://rawscripts.net/raw/RIVALS-Noks-hub-keyless-111339"},
-        {name = "🔫 Slap Battles", link = "https://raw.githubusercontent.com/Articles-Hub/ROBLOXScript/refs/heads/main/File-Script/Slap_Battles.lua"},
-    },
-    ["🎮 Симуляторы"] = {
-        {name = "🎮 King Legacy", link = "https://pastefy.app/3xQp8vL9/raw"},
-        {name = "🎮 1+ Speed Keyboard", link = "https://raw.githubusercontent.com/Gerreiro68/ShizaHub/refs/heads/main/loader.lua"},
-        {name = "🎮 Merge Nuke", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/MergeaNuke"},
-        {name = "🎮 MorphUp", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/MorphUp"},
-        {name = "🎮 1 Magic Evolution", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/1MagicEvolution"},
-        {name = "🎮 99 Nights in Forest", link = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"},
-        {name = "🎮 Survive Zombie Arena", link = "https://raw.githubusercontent.com/caomod2077/Script/main/Foxname_SZA.lua"},
-        {name = "🎮 Color or Die", link = "https://rawscripts.net/raw/Color-or-Die-Esp-12555"},
-    },
-    ["💰 Премиум"] = {
-        {name = "💰 Rost Alpha Premium", link = "https://api.jnkie.com/api/v1/luascripts/public/e629b8f01eed30630fc3cb93da70708fdac4e57f3fd11fc6dc308c4d7ba6c1bd/download"},
-        {name = "💰 Prison Life Premium", link = "https://rawscripts.net/raw/Prison-Life-Override-Hub-Silent-Aim-and-More-242218"},
-    }
+    {name = "🔫 Forsaken", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
+    {name = "🔫 MM2", link = "https://raw.githubusercontent.com/pruzgar242-rgb/Update/refs/heads/main/out.lua%20(17).txt"},
+    {name = "🔫 Rivals", link = "https://rawscripts.net/raw/RIVALS-Noks-hub-keyless-111339"},
+    {name = "🔫 Slap Battles", link = "https://raw.githubusercontent.com/Articles-Hub/ROBLOXScript/refs/heads/main/File-Script/Slap_Battles.lua"},
+    {name = "🎮 King Legacy", link = "https://pastefy.app/3xQp8vL9/raw"},
+    {name = "🎮 1+ Speed Keyboard", link = "https://raw.githubusercontent.com/Gerreiro68/ShizaHub/refs/heads/main/loader.lua"},
+    {name = "🎮 Merge Nuke", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/MergeaNuke"},
+    {name = "🎮 MorphUp", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/MorphUp"},
+    {name = "🎮 1 Magic Evolution", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/1MagicEvolution"},
+    {name = "🎮 99 Nights in Forest", link = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"},
+    {name = "🎮 Survive Zombie Arena", link = "https://raw.githubusercontent.com/caomod2077/Script/main/Foxname_SZA.lua"},
+    {name = "🎮 Color or Die", link = "https://rawscripts.net/raw/Color-or-Die-Esp-12555"},
+    {name = "💰 Rost Alpha Premium", link = "https://api.jnkie.com/api/v1/luascripts/public/e629b8f01eed30630fc3cb93da70708fdac4e57f3fd11fc6dc308c4d7ba6c1bd/download"},
+    {name = "💰 Prison Life Premium", link = "https://rawscripts.net/raw/Prison-Life-Override-Hub-Silent-Aim-and-More-242218"},
 }
 
 -- ============================================
@@ -146,7 +140,7 @@ headerCorner.CornerRadius = UDim.new(0, 16)
 headerCorner.Parent = header
 
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(0, 300, 1, 0)
+title.Size = UDim2.new(0, 250, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
 title.Text = "🌙 LUNAR HUB"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
@@ -157,8 +151,8 @@ title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = header
 
 local onlineLabel = Instance.new("TextLabel")
-onlineLabel.Size = UDim2.new(0, 150, 1, 0)
-onlineLabel.Position = UDim2.new(0, 320, 0, 0)
+onlineLabel.Size = UDim2.new(0, 120, 1, 0)
+onlineLabel.Position = UDim2.new(0, 270, 0, 0)
 onlineLabel.Text = "🟢 Online: 0"
 onlineLabel.TextColor3 = Color3.fromRGB(0, 255, 100)
 onlineLabel.TextSize = 14
@@ -168,8 +162,8 @@ onlineLabel.TextXAlignment = Enum.TextXAlignment.Left
 onlineLabel.Parent = header
 
 local favLabel = Instance.new("TextLabel")
-favLabel.Size = UDim2.new(0, 150, 1, 0)
-favLabel.Position = UDim2.new(0, 470, 0, 0)
+favLabel.Size = UDim2.new(0, 120, 1, 0)
+favLabel.Position = UDim2.new(0, 390, 0, 0)
 favLabel.Text = "⭐ Избранное: 0"
 favLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
 favLabel.TextSize = 14
@@ -179,7 +173,7 @@ favLabel.TextXAlignment = Enum.TextXAlignment.Left
 favLabel.Parent = header
 
 -- ============================================
--- 🔧 КНОПКА ЗАКРЫТИЯ (СДВИНУТА ЛЕВЕЕ)
+-- 🔧 КНОПКА ЗАКРЫТИЯ
 -- ============================================
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 34, 0, 34)
@@ -232,7 +226,7 @@ searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
 -- ============================================
--- 📋 КАТЕГОРИИ
+-- 📋 КАТЕГОРИИ (ТОЛЬКО "ИГРЫ" И "ИЗБРАННОЕ")
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 300)
@@ -245,12 +239,8 @@ categoriesLayout.FillDirection = Enum.FillDirection.Vertical
 categoriesLayout.Padding = UDim.new(0, 6)
 categoriesLayout.Parent = categoriesFrame
 
-local allCategories = {"⭐ Избранное"}
-for cat, _ in pairs(Games) do
-    table.insert(allCategories, cat)
-end
-
-local currentCategory = nil
+local allCategories = {"🎮 Игры", "⭐ Избранное"}
+local currentCategory = "🎮 Игры"
 local categoryButtons = {}
 
 for _, cat in ipairs(allCategories) do
@@ -283,16 +273,12 @@ for _, cat in ipairs(allCategories) do
     categoryButtons[cat] = btn
 end
 
-local firstCat = allCategories[2] or allCategories[1]
-if firstCat then
-    currentCategory = firstCat
-    if categoryButtons[firstCat] then
-        categoryButtons[firstCat].BackgroundTransparency = 0
-    end
+if categoryButtons["🎮 Игры"] then
+    categoryButtons["🎮 Игры"].BackgroundTransparency = 0
 end
 
 -- ============================================
--- 📢 КНОПКА ОБНОВЛЕНИЙ
+-- 📢 КНОПКА ОБНОВЛЕНИЙ (ВНИЗУ КАТЕГОРИЙ)
 -- ============================================
 local updateBtn = Instance.new("TextButton")
 updateBtn.Size = UDim2.new(1, 0, 0, 36)
@@ -346,7 +332,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v8.1 — Кнопка закрытия сдвинута, фикс игр"
+    updateText.Text = "v8.3 — Категории: Игры + Избранное"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -509,15 +495,13 @@ local function updateContent(category)
     local searchText = searchBox.Text:lower()
     
     if category == "⭐ Избранное" then
-        for _, catList in pairs(Games) do
-            for _, game in ipairs(catList) do
-                if Favorites[game.name] then
-                    table.insert(gamesToShow, game)
-                end
+        for _, game in ipairs(Games) do
+            if Favorites[game.name] then
+                table.insert(gamesToShow, game)
             end
         end
-    elseif Games[category] then
-        for _, game in ipairs(Games[category]) do
+    else
+        for _, game in ipairs(Games) do
             table.insert(gamesToShow, game)
         end
     end
@@ -555,5 +539,5 @@ end)
 task.wait(0.2)
 updateContent(currentCategory)
 updateStats()
-print("✅ Lunar Hub v8.1 loaded! (" .. #Games .. " categories)")
-print("🌙 Кнопка закрытия сдвинута, игры отображаются!")
+print("✅ Lunar Hub v8.3 loaded! (" .. #Games .. " games)")
+print("🌙 Категории: Игры + Избранное!")
