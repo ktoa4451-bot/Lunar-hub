@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v8.6 (ПОЛНЫЙ ФИКС)
+-- 🌙 LUNAR HUB v8.7 (ЖЁСТКИЙ ФИКС)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "8.6"
+    local currentVersion = "8.7"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -38,7 +38,7 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ (ВСЕ В ОДНОМ СПИСКЕ)
+-- ⚡ ИГРЫ
 -- ============================================
 local Games = {
     {name = "🔫 Forsaken", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
@@ -332,7 +332,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v8.6 — Полный фикс отображения"
+    updateText.Text = "v8.7 — Жёсткий фикс отображения"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -484,7 +484,7 @@ local function createGameButton(gameData)
 end
 
 -- ============================================
--- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА (С ПРИНУДИТЕЛЬНЫМ СБРОСОМ)
+-- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА (ПРИНУДИТЕЛЬНОЕ)
 -- ============================================
 local function updateContent(category)
     for _, child in ipairs(contentFrame:GetChildren()) do
@@ -534,10 +534,21 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ============================================
--- 🚀 ЗАПУСК (С ПРИНУДИТЕЛЬНЫМ ОБНОВЛЕНИЕМ)
+-- 🚀 ЖЁСТКИЙ ЗАПУСК
 -- ============================================
-task.wait(0.5)
+-- 1. Ждём создания GUI
+task.wait(0.3)
+
+-- 2. Принудительно обновляем
 updateContent(currentCategory)
 updateStats()
-print("✅ Lunar Hub v8.6 loaded! (" .. #Games .. " games)")
-print("🌙 Полный фикс отображения!")
+
+-- 3. Дублируем вызов через 0.1 секунды для надёжности
+task.spawn(function()
+    task.wait(0.1)
+    updateContent(currentCategory)
+    updateStats()
+end)
+
+print("✅ Lunar Hub v8.7 loaded! (" .. #Games .. " games)")
+print("🌙 Жёсткий фикс отображения!")
