@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v8.4 (ФИКС ОТОБРАЖЕНИЯ)
+-- 🌙 LUNAR HUB v8.6 (ПОЛНЫЙ ФИКС)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "8.4"
+    local currentVersion = "8.6"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -332,7 +332,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v8.4 — Игры появляются сразу"
+    updateText.Text = "v8.6 — Полный фикс отображения"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -484,7 +484,7 @@ local function createGameButton(gameData)
 end
 
 -- ============================================
--- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА
+-- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА (С ПРИНУДИТЕЛЬНЫМ СБРОСОМ)
 -- ============================================
 local function updateContent(category)
     for _, child in ipairs(contentFrame:GetChildren()) do
@@ -536,8 +536,8 @@ end)
 -- ============================================
 -- 🚀 ЗАПУСК (С ПРИНУДИТЕЛЬНЫМ ОБНОВЛЕНИЕМ)
 -- ============================================
-task.wait(0.5)  -- Даём время на создание GUI
+task.wait(0.5)
 updateContent(currentCategory)
 updateStats()
-print("✅ Lunar Hub v8.4 loaded! (" .. #Games .. " games)")
-print("🌙 Игры появляются сразу!")
+print("✅ Lunar Hub v8.6 loaded! (" .. #Games .. " games)")
+print("🌙 Полный фикс отображения!")
