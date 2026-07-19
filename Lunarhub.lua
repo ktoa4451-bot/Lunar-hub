@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v7.4 (ИСПРАВЛЕННЫЙ)
+-- 🌙 LUNAR HUB v7.5 (ИСПРАВЛЕННЫЙ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "7.4"
+    local currentVersion = "7.5"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -132,7 +132,7 @@ shadow.ImageTransparency = 0.3
 shadow.Parent = frame
 
 -- ============================================
--- 🔧 КНОПКА ЗАКРЫТИЯ
+-- 🔧 КНОПКА ЗАКРЫТИЯ (ПРАВЫЙ ВЕРХНИЙ УГОЛ)
 -- ============================================
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 34, 0, 34)
@@ -164,6 +164,7 @@ topFrame.Position = UDim2.new(0, 20, 0, 10)
 topFrame.BackgroundTransparency = 1
 topFrame.Parent = frame
 
+-- ЗАГОЛОВОК
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 200, 1, 0)
 title.Text = "🌙 LUNAR HUB"
@@ -174,6 +175,7 @@ title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = topFrame
 
+-- ОНЛАЙН (РЕАЛЬНЫЙ)
 local onlineLabel = Instance.new("TextLabel")
 onlineLabel.Size = UDim2.new(0, 150, 1, 0)
 onlineLabel.Position = UDim2.new(0, 200, 0, 0)
@@ -185,6 +187,7 @@ onlineLabel.BackgroundTransparency = 1
 onlineLabel.TextXAlignment = Enum.TextXAlignment.Left
 onlineLabel.Parent = topFrame
 
+-- ИЗБРАННОЕ
 local favLabel = Instance.new("TextLabel")
 favLabel.Size = UDim2.new(0, 150, 1, 0)
 favLabel.Position = UDim2.new(0, 350, 0, 0)
@@ -214,7 +217,7 @@ searchBox.ClipsDescendants = true
 searchBox.Parent = frame
 
 -- ============================================
--- 📋 КАТЕГОРИИ (СЛЕВА)
+-- 📋 КАТЕГОРИИ (СЛЕВА, ВЕРТИКАЛЬНО)
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 330)
@@ -250,7 +253,7 @@ for cat, _ in pairs(Games) do
     btn.MouseButton1Click:Connect(function()
         currentCategory = cat
         for _, b in ipairs(categoriesFrame:GetChildren()) do
-            if b:IsA("TextButton") and b ~= updateBtn then
+            if b:IsA("TextButton") then
                 b.BackgroundTransparency = 0.3
             end
         end
@@ -260,6 +263,7 @@ for cat, _ in pairs(Games) do
     categoryButtons[cat] = btn
 end
 
+-- ВЫБИРАЕМ ПЕРВУЮ КАТЕГОРИЮ
 if categoryButtons["🔫 Шутеры"] then
     categoryButtons["🔫 Шутеры"].BackgroundTransparency = 0
 end
@@ -319,7 +323,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v7.4 — Исправлено отображение игр\nv7.3 — Кнопка закрытия в правом углу\nv7.2 — Реальный онлайн, категории слева"
+    updateText.Text = "v7.5 — Исправлено отображение игр\nv7.4 — Обновления внизу категорий\nv7.3 — Кнопка закрытия в углу"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -378,6 +382,7 @@ local function updateStats()
         favCount = favCount + 1
     end
     favLabel.Text = "⭐ Избранное: " .. favCount
+    
     local online = #Players:GetPlayers()
     onlineLabel.Text = "🟢 Online: " .. online
 end
@@ -415,6 +420,7 @@ local function createGameButton(gameData)
     arrow.BackgroundTransparency = 1
     arrow.Parent = btn
     
+    -- КНОПКА ИЗБРАННОГО
     local favBtn = Instance.new("TextButton")
     favBtn.Size = UDim2.new(0, 30, 1, 0)
     favBtn.Position = UDim2.new(1, -75, 0, 0)
@@ -532,5 +538,5 @@ end)
 updateContent("🔫 Шутеры")
 updateStats()
 
-print("✅ Lunar Hub v7.4 loaded! (" .. #Games .. " categories)")
-print("🌙 Игры показываются, обновления внизу категорий!")
+print("✅ Lunar Hub v7.5 loaded! (" .. #Games .. " categories)")
+print("🌙 Игры отображаются, закрытие работает!")
