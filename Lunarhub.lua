@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v8.0 (НОВОЕ МЕНЮ)
+-- 🌙 LUNAR HUB v8.1 (КНОПКА СЛЕВА + ФИКС ИГР)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "8.0"
+    local currentVersion = "8.1"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -93,7 +93,7 @@ local function loadScript(link)
 end
 
 -- ============================================
--- 🔧 GUI (НОВОЕ МЕНЮ)
+-- 🔧 GUI
 -- ============================================
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -179,11 +179,11 @@ favLabel.TextXAlignment = Enum.TextXAlignment.Left
 favLabel.Parent = header
 
 -- ============================================
--- 🔧 КНОПКА ЗАКРЫТИЯ
+-- 🔧 КНОПКА ЗАКРЫТИЯ (СДВИНУТА ЛЕВЕЕ)
 -- ============================================
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 34, 0, 34)
-close.Position = UDim2.new(1, -12, 0, 13)
+close.Position = UDim2.new(0.92, -12, 0, 13)
 close.Text = "✕"
 close.TextColor3 = Color3.fromRGB(255, 255, 255)
 close.TextSize = 20
@@ -232,7 +232,7 @@ searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
 -- ============================================
--- 📋 КАТЕГОРИИ (ВЕРТИКАЛЬНО, СЛЕВА)
+-- 📋 КАТЕГОРИИ
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 300)
@@ -346,7 +346,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v8.0 — Новое меню\nv7.9 — Исправлены категории"
+    updateText.Text = "v8.1 — Кнопка закрытия сдвинута, фикс игр"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -552,8 +552,8 @@ end)
 -- ============================================
 -- 🚀 ЗАПУСК
 -- ============================================
+task.wait(0.2)
 updateContent(currentCategory)
 updateStats()
-
-print("✅ Lunar Hub v8.0 loaded! (" .. #Games .. " categories)")
-print("🌙 Новое меню активировано!")
+print("✅ Lunar Hub v8.1 loaded! (" .. #Games .. " categories)")
+print("🌙 Кнопка закрытия сдвинута, игры отображаются!")
