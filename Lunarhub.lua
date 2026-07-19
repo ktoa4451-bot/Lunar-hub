@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v8.7 (ЖЁСТКИЙ ФИКС)
+-- 🌙 LUNAR HUB v8.8 (ПОЛНЫЙ ПЕРЕЗАПУСК)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "8.7"
+    local currentVersion = "8.8"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -332,7 +332,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v8.7 — Жёсткий фикс отображения"
+    updateText.Text = "v8.8 — Полный перезапуск логики"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -356,7 +356,7 @@ updateBtn.MouseButton1Click:Connect(function()
 end)
 
 -- ============================================
--- 📋 КОНТЕНТ
+-- 📋 КОНТЕНТ (СОЗДАЁМ В САМОМ КОНЦЕ)
 -- ============================================
 local contentFrame = Instance.new("ScrollingFrame")
 contentFrame.Size = UDim2.new(0, 430, 0, 300)
@@ -484,7 +484,7 @@ local function createGameButton(gameData)
 end
 
 -- ============================================
--- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА (ПРИНУДИТЕЛЬНОЕ)
+-- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА
 -- ============================================
 local function updateContent(category)
     for _, child in ipairs(contentFrame:GetChildren()) do
@@ -534,21 +534,22 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ============================================
--- 🚀 ЖЁСТКИЙ ЗАПУСК
+-- 🚀 ФИНАЛЬНЫЙ ЗАПУСК
 -- ============================================
--- 1. Ждём создания GUI
-task.wait(0.3)
+local function finalStart()
+    updateContent(currentCategory)
+    updateStats()
+    print("✅ Lunar Hub v8.8 loaded! (" .. #Games .. " games)")
+    print("🌙 Полный перезапуск логики!")
+end
 
--- 2. Принудительно обновляем
-updateContent(currentCategory)
-updateStats()
+-- Ждём полной отрисовки GUI
+task.wait(0.5)
+finalStart()
 
--- 3. Дублируем вызов через 0.1 секунды для надёжности
+-- Дублируем через 0.2 секунды (на случай, если первый вызов не сработал)
 task.spawn(function()
-    task.wait(0.1)
+    task.wait(0.2)
     updateContent(currentCategory)
     updateStats()
 end)
-
-print("✅ Lunar Hub v8.7 loaded! (" .. #Games .. " games)")
-print("🌙 Жёсткий фикс отображения!")
