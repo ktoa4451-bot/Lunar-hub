@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v8.3 (ИСПРАВЛЕННЫЙ)
+-- 🌙 LUNAR HUB v8.4 (ФИКС ОТОБРАЖЕНИЯ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "8.3"
+    local currentVersion = "8.4"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -226,7 +226,7 @@ searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
 -- ============================================
--- 📋 КАТЕГОРИИ (ТОЛЬКО "ИГРЫ" И "ИЗБРАННОЕ")
+-- 📋 КАТЕГОРИИ
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 300)
@@ -278,7 +278,7 @@ if categoryButtons["🎮 Игры"] then
 end
 
 -- ============================================
--- 📢 КНОПКА ОБНОВЛЕНИЙ (ВНИЗУ КАТЕГОРИЙ)
+-- 📢 КНОПКА ОБНОВЛЕНИЙ
 -- ============================================
 local updateBtn = Instance.new("TextButton")
 updateBtn.Size = UDim2.new(1, 0, 0, 36)
@@ -332,7 +332,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v8.3 — Категории: Игры + Избранное"
+    updateText.Text = "v8.4 — Игры появляются сразу"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -534,10 +534,10 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ============================================
--- 🚀 ЗАПУСК
+-- 🚀 ЗАПУСК (С ПРИНУДИТЕЛЬНЫМ ОБНОВЛЕНИЕМ)
 -- ============================================
-task.wait(0.2)
+task.wait(0.5)  -- Даём время на создание GUI
 updateContent(currentCategory)
 updateStats()
-print("✅ Lunar Hub v8.3 loaded! (" .. #Games .. " games)")
-print("🌙 Категории: Игры + Избранное!")
+print("✅ Lunar Hub v8.4 loaded! (" .. #Games .. " games)")
+print("🌙 Игры появляются сразу!")
