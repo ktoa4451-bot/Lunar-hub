@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v8.8 (ПОЛНЫЙ ПЕРЕЗАПУСК)
+-- 🌙 LUNAR HUB v8.9 (ФИКС ЧЕРЕЗ STEPPED)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "8.8"
+    local currentVersion = "8.9"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -92,6 +92,7 @@ end
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 
 local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
@@ -332,7 +333,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v8.8 — Полный перезапуск логики"
+    updateText.Text = "v8.9 — Фикс через Stepped"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -356,7 +357,7 @@ updateBtn.MouseButton1Click:Connect(function()
 end)
 
 -- ============================================
--- 📋 КОНТЕНТ (СОЗДАЁМ В САМОМ КОНЦЕ)
+-- 📋 КОНТЕНТ
 -- ============================================
 local contentFrame = Instance.new("ScrollingFrame")
 contentFrame.Size = UDim2.new(0, 430, 0, 300)
@@ -534,22 +535,39 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ============================================
--- 🚀 ФИНАЛЬНЫЙ ЗАПУСК
+-- 🚀 ФИНАЛЬНЫЙ ЗАПУСК ЧЕРЕЗ STEPPED
 -- ============================================
 local function finalStart()
     updateContent(currentCategory)
     updateStats()
-    print("✅ Lunar Hub v8.8 loaded! (" .. #Games .. " games)")
-    print("🌙 Полный перезапуск логики!")
+    print("✅ Lunar Hub v8.9 loaded! (" .. #Games .. " games)")
+    print("🌙 Фикс через Stepped активирован!")
 end
 
--- Ждём полной отрисовки GUI
+-- Ждём полной отрисовки
 task.wait(0.5)
 finalStart()
 
--- Дублируем через 0.2 секунды (на случай, если первый вызов не сработал)
-task.spawn(function()
-    task.wait(0.2)
-    updateContent(currentCategory)
-    updateStats()
+-- ПОВТОРНЫЙ ВЫЗОВ ЧЕРЕЗ STEPPED (САМЫЙ НАДЁЖНЫЙ)
+local connection
+connection = RunService.Stepped:Connect(function()
+    -- Проверяем, есть ли кнопки
+    local hasButtons = false
+    for _, child in ipairs(contentFrame:GetChildren()) do
+        if child:IsA("TextButton") then
+            hasButtons = true
+            break
+        end
+    end
+    
+    -- Если кнопок нет — обновляем
+    if not hasButtons then
+        updateContent(currentCategory)
+        updateStats()
+        print("🔄 Принудительное обновление через Stepped")
+    else
+        -- Если кнопки появились — отключаем проверку
+        connection:Disconnect()
+        print("✅ Кнопки появились, Stepped отключён")
+    end
 end)
