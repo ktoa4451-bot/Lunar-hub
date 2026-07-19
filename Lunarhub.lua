@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v7.3 (КНОПКА ЗАКРЫТИЯ В УГЛУ)
+-- 🌙 LUNAR HUB v7.4 (ИСПРАВЛЕННЫЙ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "7.3"
+    local currentVersion = "7.4"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -132,7 +132,7 @@ shadow.ImageTransparency = 0.3
 shadow.Parent = frame
 
 -- ============================================
--- 🔧 КНОПКА ЗАКРЫТИЯ (ПРАВЫЙ ВЕРХНИЙ УГОЛ)
+-- 🔧 КНОПКА ЗАКРЫТИЯ
 -- ============================================
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 34, 0, 34)
@@ -143,10 +143,6 @@ close.TextSize = 20
 close.Font = Enum.Font.GothamBold
 close.BackgroundTransparency = 1
 close.Parent = frame
-
-local closeCorner = Instance.new("UICorner")
-closeCorner.CornerRadius = UDim.new(0, 8)
-closeCorner.Parent = close
 
 close.MouseEnter:Connect(function()
     close.TextColor3 = Color3.fromRGB(255, 50, 50)
@@ -168,7 +164,6 @@ topFrame.Position = UDim2.new(0, 20, 0, 10)
 topFrame.BackgroundTransparency = 1
 topFrame.Parent = frame
 
--- ЗАГОЛОВОК
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 200, 1, 0)
 title.Text = "🌙 LUNAR HUB"
@@ -179,7 +174,6 @@ title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = topFrame
 
--- ОНЛАЙН
 local onlineLabel = Instance.new("TextLabel")
 onlineLabel.Size = UDim2.new(0, 150, 1, 0)
 onlineLabel.Position = UDim2.new(0, 200, 0, 0)
@@ -191,7 +185,6 @@ onlineLabel.BackgroundTransparency = 1
 onlineLabel.TextXAlignment = Enum.TextXAlignment.Left
 onlineLabel.Parent = topFrame
 
--- ИЗБРАННОЕ
 local favLabel = Instance.new("TextLabel")
 favLabel.Size = UDim2.new(0, 150, 1, 0)
 favLabel.Position = UDim2.new(0, 350, 0, 0)
@@ -203,10 +196,80 @@ favLabel.BackgroundTransparency = 1
 favLabel.TextXAlignment = Enum.TextXAlignment.Left
 favLabel.Parent = topFrame
 
--- КНОПКА ОБНОВЛЕНИЙ
+-- ============================================
+-- 📋 ПОИСК
+-- ============================================
+local searchBox = Instance.new("TextBox")
+searchBox.Size = UDim2.new(0, 660, 0, 30)
+searchBox.Position = UDim2.new(0, 20, 0, 55)
+searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
+searchBox.BackgroundTransparency = 0.5
+searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+searchBox.PlaceholderText = "🔍 Search game..."
+searchBox.PlaceholderColor3 = Color3.fromRGB(140, 140, 180)
+searchBox.TextSize = 13
+searchBox.Font = Enum.Font.Gotham
+searchBox.BorderSizePixel = 0
+searchBox.ClipsDescendants = true
+searchBox.Parent = frame
+
+-- ============================================
+-- 📋 КАТЕГОРИИ (СЛЕВА)
+-- ============================================
+local categoriesFrame = Instance.new("Frame")
+categoriesFrame.Size = UDim2.new(0, 120, 0, 330)
+categoriesFrame.Position = UDim2.new(0, 20, 0, 95)
+categoriesFrame.BackgroundTransparency = 1
+categoriesFrame.Parent = frame
+
+local categoriesLayout = Instance.new("UIListLayout")
+categoriesLayout.FillDirection = Enum.FillDirection.Vertical
+categoriesLayout.Padding = UDim.new(0, 6)
+categoriesLayout.Parent = categoriesFrame
+
+local currentCategory = "🔫 Шутеры"
+local categoryButtons = {}
+
+for cat, _ in pairs(Games) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 120, 0, 36)
+    btn.Text = cat
+    btn.TextColor3 = Color3.fromRGB(200, 200, 255)
+    btn.TextSize = 13
+    btn.Font = Enum.Font.GothamBold
+    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
+    btn.BackgroundTransparency = 0.3
+    btn.BorderSizePixel = 0
+    btn.Parent = categoriesFrame
+    btn.Name = cat
+    
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 6)
+    btnCorner.Parent = btn
+    
+    btn.MouseButton1Click:Connect(function()
+        currentCategory = cat
+        for _, b in ipairs(categoriesFrame:GetChildren()) do
+            if b:IsA("TextButton") and b ~= updateBtn then
+                b.BackgroundTransparency = 0.3
+            end
+        end
+        btn.BackgroundTransparency = 0
+        updateContent(cat)
+    end)
+    categoryButtons[cat] = btn
+end
+
+if categoryButtons["🔫 Шутеры"] then
+    categoryButtons["🔫 Шутеры"].BackgroundTransparency = 0
+end
+
+-- ============================================
+-- 📢 КНОПКА ОБНОВЛЕНИЙ (ВНИЗУ КАТЕГОРИЙ)
+-- ============================================
 local updateBtn = Instance.new("TextButton")
-updateBtn.Size = UDim2.new(0, 100, 1, 0)
-updateBtn.Position = UDim2.new(0, 560, 0, 0)
+updateBtn.Size = UDim2.new(0, 120, 0, 34)
+updateBtn.Position = UDim2.new(0, 20, 0, 431)
 updateBtn.Text = "📢 Обновления"
 updateBtn.TextColor3 = Color3.fromRGB(255, 200, 100)
 updateBtn.TextSize = 13
@@ -214,7 +277,7 @@ updateBtn.Font = Enum.Font.GothamBold
 updateBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
 updateBtn.BackgroundTransparency = 0.3
 updateBtn.BorderSizePixel = 0
-updateBtn.Parent = topFrame
+updateBtn.Parent = frame
 
 local updateBtnCorner = Instance.new("UICorner")
 updateBtnCorner.CornerRadius = UDim.new(0, 6)
@@ -256,7 +319,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v7.3 — Кнопка закрытия в правом углу\nv7.2 — Исправлен онлайн, поиск вверху, категории слева"
+    updateText.Text = "v7.4 — Исправлено отображение игр\nv7.3 — Кнопка закрытия в правом углу\nv7.2 — Реальный онлайн, категории слева"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -280,75 +343,7 @@ updateBtn.MouseButton1Click:Connect(function()
 end)
 
 -- ============================================
--- 📋 ПОИСК
--- ============================================
-local searchBox = Instance.new("TextBox")
-searchBox.Size = UDim2.new(0, 660, 0, 30)
-searchBox.Position = UDim2.new(0, 20, 0, 55)
-searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
-searchBox.BackgroundTransparency = 0.5
-searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-searchBox.PlaceholderText = "🔍 Search game..."
-searchBox.PlaceholderColor3 = Color3.fromRGB(140, 140, 180)
-searchBox.TextSize = 13
-searchBox.Font = Enum.Font.Gotham
-searchBox.BorderSizePixel = 0
-searchBox.ClipsDescendants = true
-searchBox.Parent = frame
-
--- ============================================
--- 📋 КАТЕГОРИИ (СЛЕВА)
--- ============================================
-local categoriesFrame = Instance.new("Frame")
-categoriesFrame.Size = UDim2.new(0, 120, 0, 370)
-categoriesFrame.Position = UDim2.new(0, 20, 0, 95)
-categoriesFrame.BackgroundTransparency = 1
-categoriesFrame.Parent = frame
-
-local categoriesLayout = Instance.new("UIListLayout")
-categoriesLayout.FillDirection = Enum.FillDirection.Vertical
-categoriesLayout.Padding = UDim.new(0, 6)
-categoriesLayout.Parent = categoriesFrame
-
-local currentCategory = "🔫 Шутеры"
-local categoryButtons = {}
-
-for cat, _ in pairs(Games) do
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, 120, 0, 36)
-    btn.Text = cat
-    btn.TextColor3 = Color3.fromRGB(200, 200, 255)
-    btn.TextSize = 13
-    btn.Font = Enum.Font.GothamBold
-    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
-    btn.BackgroundTransparency = 0.3
-    btn.BorderSizePixel = 0
-    btn.Parent = categoriesFrame
-    btn.Name = cat
-    
-    local btnCorner = Instance.new("UICorner")
-    btnCorner.CornerRadius = UDim.new(0, 6)
-    btnCorner.Parent = btn
-    
-    btn.MouseButton1Click:Connect(function()
-        currentCategory = cat
-        for _, b in ipairs(categoriesFrame:GetChildren()) do
-            if b:IsA("TextButton") then
-                b.BackgroundTransparency = 0.3
-            end
-        end
-        btn.BackgroundTransparency = 0
-        updateContent(cat)
-    end)
-    categoryButtons[cat] = btn
-end
-
-if categoryButtons["🔫 Шутеры"] then
-    categoryButtons["🔫 Шутеры"].BackgroundTransparency = 0
-end
-
--- ============================================
--- 📋 КОНТЕНТ
+-- 📋 КОНТЕНТ (СПИСОК ИГР)
 -- ============================================
 local contentFrame = Instance.new("ScrollingFrame")
 contentFrame.Size = UDim2.new(0, 520, 0, 370)
@@ -537,5 +532,5 @@ end)
 updateContent("🔫 Шутеры")
 updateStats()
 
-print("✅ Lunar Hub v7.3 loaded! (" .. #Games .. " categories)")
-print("🌙 Кнопка закрытия в правом углу!")
+print("✅ Lunar Hub v7.4 loaded! (" .. #Games .. " categories)")
+print("🌙 Игры показываются, обновления внизу категорий!")
