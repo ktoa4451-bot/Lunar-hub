@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v7.7 (ИСПРАВЛЕННЫЙ)
+-- 🌙 LUNAR HUB v7.8 (ИСПРАВЛЕННЫЙ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "7.7"
+    local currentVersion = "7.8"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -38,7 +38,7 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ
+-- ⚡ ИГРЫ (ТОЛЬКО КАТЕГОРИИ С ИГРАМИ)
 -- ============================================
 local Games = {
     ["🔫 Шутеры"] = {
@@ -136,7 +136,7 @@ shadow.Parent = frame
 -- ============================================
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 34, 0, 34)
-close.Position = UDim2.new(0.97, -12, 0, 10)  -- Сдвинута левее
+close.Position = UDim2.new(0.95, -12, 0, 10)
 close.Text = "✕"
 close.TextColor3 = Color3.fromRGB(255, 255, 255)
 close.TextSize = 20
@@ -222,7 +222,7 @@ searchBox.ClipsDescendants = true
 searchBox.Parent = frame
 
 -- ============================================
--- 📋 КАТЕГОРИИ (СЛЕВА)
+-- 📋 КАТЕГОРИИ (БЕРЁМ ТОЛЬКО ИЗ GAMES)
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 330)
@@ -235,11 +235,11 @@ categoriesLayout.FillDirection = Enum.FillDirection.Vertical
 categoriesLayout.Padding = UDim.new(0, 6)
 categoriesLayout.Parent = categoriesFrame
 
-local allCategories = {"🔫 Шутеры", "🎮 Симуляторы", "💰 Премиум", "⭐ Избранное"}
-local currentCategory = "🔫 Шутеры"
+local currentCategory = nil
 local categoryButtons = {}
 
-for _, cat in ipairs(allCategories) do
+-- СОЗДАЁМ КАТЕГОРИИ ТОЛЬКО ИЗ GAMES
+for cat, _ in pairs(Games) do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0, 120, 0, 36)
     btn.Text = cat
@@ -269,8 +269,13 @@ for _, cat in ipairs(allCategories) do
     categoryButtons[cat] = btn
 end
 
-if categoryButtons["🔫 Шутеры"] then
-    categoryButtons["🔫 Шутеры"].BackgroundTransparency = 0
+-- ВЫБИРАЕМ ПЕРВУЮ КАТЕГОРИЮ
+local firstCat = next(Games)
+if firstCat then
+    currentCategory = firstCat
+    if categoryButtons[firstCat] then
+        categoryButtons[firstCat].BackgroundTransparency = 0
+    end
 end
 
 -- ============================================
@@ -328,7 +333,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v7.7 — Исправлено отображение игр\nv7.6 — Избранное работает"
+    updateText.Text = "v7.8 — Исправлены категории\nv7.7 — Исправлено отображение игр"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -378,9 +383,6 @@ local function toggleFavorite(gameName)
         Favorites[gameName] = true
     end
     updateStats()
-    if currentCategory == "⭐ Избранное" then
-        updateContent("⭐ Избранное")
-    end
 end
 
 local function updateStats()
@@ -490,23 +492,9 @@ local function updateContent(category)
     local gamesToShow = {}
     local searchText = searchBox.Text:lower()
     
-    if category == "⭐ Избранное" then
-        for _, catList in pairs(Games) do
-            for _, game in ipairs(catList) do
-                if Favorites[game.name] then
-                    table.insert(gamesToShow, game)
-                end
-            end
-        end
-    elseif Games[category] then
+    if category and Games[category] then
         for _, game in ipairs(Games[category]) do
             table.insert(gamesToShow, game)
-        end
-    else
-        for _, catList in pairs(Games) do
-            for _, game in ipairs(catList) do
-                table.insert(gamesToShow, game)
-            end
         end
     end
     
@@ -540,8 +528,8 @@ end)
 -- ============================================
 -- 🚀 ЗАПУСК
 -- ============================================
-updateContent("🔫 Шутеры")
+updateContent(currentCategory)
 updateStats()
 
-print("✅ Lunar Hub v7.7 loaded! (" .. #Games .. " categories)")
-print("🌙 Кнопка закрытия сдвинута, игры отображаются!")
+print("✅ Lunar Hub v7.8 loaded! (" .. #Games .. " categories)")
+print("🌙 Категории исправлены, кнопка закрытия сдвинута!")
