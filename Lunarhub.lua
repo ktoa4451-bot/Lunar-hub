@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v9.6 (ГАРАНТИРОВАННЫЙ АВТО-ЗАПУСК)
+-- 🌙 LUNAR HUB v9.7 (ЖЁСТКИЙ АВТО-ЗАПУСК)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "9.6"
+    local currentVersion = "9.7"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -151,33 +151,14 @@ listLayout.Padding = UDim.new(0, 4)
 listLayout.Parent = list
 
 -- ============================================
--- ЛОГИКА ОБНОВЛЕНИЯ
+-- 🔧 ЖЁСТКОЕ СОЗДАНИЕ КНОПОК
 -- ============================================
-local function updateContent()
+local function createGameButtons()
     for _, child in ipairs(list:GetChildren()) do
         if child:IsA("TextButton") then child:Destroy() end
     end
     
-    local searchText = searchBox.Text:lower()
-    local gamesToShow = {}
-    
     for _, game in ipairs(Games) do
-        table.insert(gamesToShow, game)
-    end
-    
-    if searchText ~= "" then
-        local filtered = {}
-        for _, game in ipairs(gamesToShow) do
-            if string.find(string.lower(game.name), searchText) then
-                table.insert(filtered, game)
-            end
-        end
-        gamesToShow = filtered
-    end
-    
-    table.sort(gamesToShow, function(a, b) return a.name < b.name end)
-    
-    for _, game in ipairs(gamesToShow) do
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(1, 0, 0, 32)
         btn.Text = game.name
@@ -220,24 +201,27 @@ local function updateContent()
         end)
     end
     
-    list.CanvasSize = UDim2.new(0, 0, 0, #gamesToShow * 36 + 10)
+    list.CanvasSize = UDim2.new(0, 0, 0, #Games * 36 + 10)
 end
 
 -- ============================================
--- ПОИСК
+-- 🔍 ПОИСК
 -- ============================================
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
-    updateContent()
+    local searchText = searchBox.Text:lower()
+    
+    for _, child in ipairs(list:GetChildren()) do
+        if child:IsA("TextButton") then
+            local name = string.lower(child.Text)
+            child.Visible = (searchText == "" or string.find(name, searchText))
+        end
+    end
 end)
 
 -- ============================================
--- ⚡ АВТО-ЗАПУСК (ГАРАНТИРОВАННЫЙ)
+-- ⚡ ЗАПУСК (КНОПКИ СОЗДАЮТСЯ СРАЗУ)
 -- ============================================
-task.spawn(function()
-    task.wait(0.1)
-    updateContent()
-    print("🔄 Авто-запуск сработал!")
-end)
+createGameButtons()
 
-print("✅ Lunar Hub v9.6 loaded! (" .. #Games .. " games)")
-print("🌙 Гарантированный авто-запуск активирован!")
+print("✅ Lunar Hub v9.7 loaded! (" .. #Games .. " games)")
+print("🌙 Жёсткий авто-запуск активирован!")
