@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v7.1 (ГОРИЗОНТАЛЬНОЕ МЕНЮ)
+-- 🌙 LUNAR HUB v7.1 (БЕЗ ГРАДИЕНТА)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "7.1"
+    local currentVersion = "7.2"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -38,7 +38,7 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ (ГОРИЗОНТАЛЬНОЕ МЕНЮ)
+-- ⚡ ИГРЫ
 -- ============================================
 local Games = {
     ["🔫 Шутеры"] = {
@@ -106,12 +106,12 @@ screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 -- ============================================
--- 🎨 ГРАДИЕНТНЫЙ ФОН
+-- 🎨 ОСНОВНОЙ ФРЕЙМ (БЕЗ ГРАДИЕНТА)
 -- ============================================
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 600, 0, 460)
 frame.Position = UDim2.new(0.5, -300, 0.5, -230)
-frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BackgroundColor3 = Color3.fromRGB(8, 8, 20)
 frame.BackgroundTransparency = 0
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
@@ -119,21 +119,12 @@ frame.Active = true
 frame.Draggable = true
 frame.Parent = screen
 
--- ГРАДИЕНТ
-local gradient = Instance.new("UIGradient")
-gradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(15, 15, 45)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(30, 10, 60)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 5, 30))
-})
-frame.UIGradient = gradient
-
 -- СКРУГЛЁННЫЕ УГЛЫ
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 12)
 corner.Parent = frame
 
--- ТЕНЬ И СВЕЧЕНИЕ
+-- ТЕНЬ
 local shadow = Instance.new("ImageLabel")
 shadow.Size = UDim2.new(1, 20, 1, 20)
 shadow.Position = UDim2.new(0, -10, 0, -10)
@@ -142,26 +133,6 @@ shadow.Image = "rbxassetid://13188751145"
 shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
 shadow.ImageTransparency = 0.3
 shadow.Parent = frame
-
-local glow = Instance.new("Frame")
-glow.Size = UDim2.new(1, 4, 1, 4)
-glow.Position = UDim2.new(0, -2, 0, -2)
-glow.BackgroundColor3 = Color3.fromRGB(100, 50, 200)
-glow.BackgroundTransparency = 0.3
-glow.BorderSizePixel = 0
-glow.Parent = frame
-
-local glowCorner = Instance.new("UICorner")
-glowCorner.CornerRadius = UDim.new(0, 14)
-glowCorner.Parent = glow
-
-local glowGradient = Instance.new("UIGradient")
-glowGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 50, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(50, 100, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 50, 255))
-})
-glow.UIGradient = glowGradient
 
 -- ============================================
 -- 📊 ПАНЕЛЬ СТАТИСТИКИ
@@ -209,7 +180,7 @@ gameCountLabel.Parent = statsFrame
 -- ============================================
 local splash = Instance.new("Frame")
 splash.Size = UDim2.new(1, 0, 1, 0)
-splash.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+splash.BackgroundColor3 = Color3.fromRGB(8, 8, 20)
 splash.BackgroundTransparency = 0
 splash.BorderSizePixel = 0
 splash.Parent = frame
@@ -290,12 +261,33 @@ updateFrame.Parent = frame
 
 local updateLabel = Instance.new("TextLabel")
 updateLabel.Size = UDim2.new(1, 0, 1, 0)
-updateLabel.Text = "📢 Обновление: v7.1 — Горизонтальное меню, удалены хорроры"
+updateLabel.Text = "📢 Обновление: v7.1 — Горизонтальное меню, без градиента"
 updateLabel.TextColor3 = Color3.fromRGB(255, 200, 100)
 updateLabel.TextSize = 13
 updateLabel.Font = Enum.Font.Gotham
 updateLabel.BackgroundTransparency = 1
 updateLabel.Parent = updateFrame
+
+-- ============================================
+-- 🔧 ПОИСК
+-- ============================================
+local searchBox = Instance.new("TextBox")
+searchBox.Size = UDim2.new(0, 560, 0, 28)
+searchBox.Position = UDim2.new(0, 20, 0, 85)
+searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
+searchBox.BackgroundTransparency = 0.5
+searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+searchBox.PlaceholderText = "🔍 Search game..."
+searchBox.PlaceholderColor3 = Color3.fromRGB(140, 140, 180)
+searchBox.TextSize = 13
+searchBox.Font = Enum.Font.Gotham
+searchBox.BorderSizePixel = 0
+searchBox.ClipsDescendants = true
+searchBox.Parent = frame
+
+searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+    updateContent(currentTab)
+end)
 
 -- ============================================
 -- 📋 КОНТЕНТ
@@ -313,9 +305,6 @@ local contentLayout = Instance.new("UIListLayout")
 contentLayout.SortOrder = Enum.SortOrder.Name
 contentLayout.Padding = UDim.new(0, 6)
 contentLayout.Parent = contentFrame
-
--- КРАСИВЫЙ СКРОЛЛ
-contentFrame.ScrollBarImageColor3 = Color3.fromRGB(150, 50, 255)
 
 -- ============================================
 -- ⭐ ИЗБРАННОЕ
@@ -484,27 +473,6 @@ local function updateContent(category)
 end
 
 -- ============================================
--- 🔧 ПОИСК
--- ============================================
-local searchBox = Instance.new("TextBox")
-searchBox.Size = UDim2.new(0, 560, 0, 28)
-searchBox.Position = UDim2.new(0, 20, 0, 85)
-searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
-searchBox.BackgroundTransparency = 0.5
-searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-searchBox.PlaceholderText = "🔍 Search game..."
-searchBox.PlaceholderColor3 = Color3.fromRGB(140, 140, 180)
-searchBox.TextSize = 13
-searchBox.Font = Enum.Font.Gotham
-searchBox.BorderSizePixel = 0
-searchBox.ClipsDescendants = true
-searchBox.Parent = frame
-
-searchBox:GetPropertyChangedSignal("Text"):Connect(function()
-    updateContent(currentTab)
-end)
-
--- ============================================
 -- 🔧 ЗАКРЫТИЕ
 -- ============================================
 local close = Instance.new("TextButton")
@@ -535,4 +503,4 @@ updateContent("🔫 Шутеры")
 updateStats()
 
 print("✅ Lunar Hub v7.1 loaded! (" .. #Games .. " categories)")
-print("🌙 Горизонтальное меню активировано!")
+print("🌙 Без градиента, но всё работает!")
