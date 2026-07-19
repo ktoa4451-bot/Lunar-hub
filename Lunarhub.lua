@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v9.4 (СТАБИЛЬНАЯ ВЕРСИЯ)
+-- 🌙 LUNAR HUB v9.5 (РАБОЧИЙ + АВТО-ЗАПУСК)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "9.4"
+    local currentVersion = "9.5"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -58,11 +58,6 @@ local Games = {
 }
 
 -- ============================================
--- ⚙️ НАСТРОЙКИ
--- ============================================
-local Favorites = {}
-
--- ============================================
 -- 🔧 УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
 -- ============================================
 local function loadScript(link)
@@ -95,10 +90,9 @@ local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
 screen.Parent = PlayerGui
 
--- ОСНОВНОЙ ФРЕЙМ
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 500, 0, 450)
-frame.Position = UDim2.new(0.5, -250, 0.5, -225)
+frame.Size = UDim2.new(0, 400, 0, 450)
+frame.Position = UDim2.new(0.5, -200, 0.5, -225)
 frame.BackgroundColor3 = Color3.fromRGB(15, 15, 35)
 frame.BackgroundTransparency = 0
 frame.BorderSizePixel = 0
@@ -107,7 +101,6 @@ frame.Active = true
 frame.Draggable = true
 frame.Parent = screen
 
--- ЗАГОЛОВОК
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 40)
 title.Position = UDim2.new(0, 0, 0, 5)
@@ -118,7 +111,6 @@ title.Font = Enum.Font.GothamBold
 title.BackgroundTransparency = 1
 title.Parent = frame
 
--- ЗАКРЫТИЕ
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 30, 0, 30)
 close.Position = UDim2.new(1, -35, 0, 5)
@@ -130,7 +122,9 @@ close.MouseButton1Click:Connect(function()
     screen:Destroy()
 end)
 
--- ПОИСК
+-- ============================================
+-- 🔍 ПОИСК (ОБЯЗАТЕЛЕН ДЛЯ АВТО-ЗАПУСКА)
+-- ============================================
 local searchBox = Instance.new("TextBox")
 searchBox.Size = UDim2.new(0, 300, 0, 30)
 searchBox.Position = UDim2.new(0, 10, 0, 50)
@@ -144,22 +138,12 @@ searchBox.Font = Enum.Font.Gotham
 searchBox.BorderSizePixel = 0
 searchBox.Parent = frame
 
--- КАТЕГОРИИ
-local categoriesFrame = Instance.new("Frame")
-categoriesFrame.Size = UDim2.new(0, 100, 0, 300)
-categoriesFrame.Position = UDim2.new(0, 10, 0, 90)
-categoriesFrame.BackgroundTransparency = 1
-categoriesFrame.Parent = frame
-
-local categoriesLayout = Instance.new("UIListLayout")
-categoriesLayout.FillDirection = Enum.FillDirection.Vertical
-categoriesLayout.Padding = UDim.new(0, 5)
-categoriesLayout.Parent = categoriesFrame
-
--- СПИСОК ИГР
+-- ============================================
+-- 📋 СПИСОК ИГР
+-- ============================================
 local list = Instance.new("ScrollingFrame")
-list.Size = UDim2.new(0, 350, 0, 300)
-list.Position = UDim2.new(0, 125, 0, 90)
+list.Size = UDim2.new(1, -20, 1, -100)
+list.Position = UDim2.new(0, 10, 0, 90)
 list.BackgroundTransparency = 1
 list.CanvasSize = UDim2.new(0, 0, 0, 0)
 list.ScrollBarThickness = 4
@@ -171,28 +155,18 @@ listLayout.Padding = UDim.new(0, 4)
 listLayout.Parent = list
 
 -- ============================================
--- ЛОГИКА
+-- ЛОГИКА ОБНОВЛЕНИЯ
 -- ============================================
-local currentCategory = "Все игры"
-
-local function updateContent(category)
+local function updateContent()
     for _, child in ipairs(list:GetChildren()) do
         if child:IsA("TextButton") then child:Destroy() end
     end
     
-    local gamesToShow = {}
     local searchText = searchBox.Text:lower()
+    local gamesToShow = {}
     
-    if category == "Избранное" then
-        for _, game in ipairs(Games) do
-            if Favorites[game.name] then
-                table.insert(gamesToShow, game)
-            end
-        end
-    else
-        for _, game in ipairs(Games) do
-            table.insert(gamesToShow, game)
-        end
+    for _, game in ipairs(Games) do
+        table.insert(gamesToShow, game)
     end
     
     if searchText ~= "" then
@@ -224,27 +198,6 @@ local function updateContent(category)
         padding.PaddingLeft = UDim.new(0, 12)
         padding.Parent = btn
         
-        local favBtn = Instance.new("TextButton")
-        favBtn.Size = UDim2.new(0, 25, 1, 0)
-        favBtn.Position = UDim2.new(1, -30, 0, 0)
-        favBtn.Text = Favorites[game.name] and "⭐" or "☆"
-        favBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
-        favBtn.TextSize = 16
-        favBtn.BackgroundTransparency = 1
-        favBtn.Parent = btn
-        
-        favBtn.MouseButton1Click:Connect(function()
-            if Favorites[game.name] then
-                Favorites[game.name] = nil
-            else
-                Favorites[game.name] = true
-            end
-            favBtn.Text = Favorites[game.name] and "⭐" or "☆"
-            if currentCategory == "Избранное" then
-                updateContent("Избранное")
-            end
-        end)
-        
         btn.MouseEnter:Connect(function()
             btn.BackgroundTransparency = 0
             btn.BackgroundColor3 = Color3.fromRGB(45, 35, 80)
@@ -274,50 +227,19 @@ local function updateContent(category)
     list.CanvasSize = UDim2.new(0, 0, 0, #gamesToShow * 36 + 10)
 end
 
--- КАТЕГОРИИ
-local categories = {"Все игры", "Избранное"}
-local categoryButtons = {}
-
-for _, cat in ipairs(categories) do
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 30)
-    btn.Text = cat
-    btn.TextColor3 = Color3.fromRGB(200, 200, 255)
-    btn.TextSize = 13
-    btn.Font = Enum.Font.GothamBold
-    btn.BackgroundColor3 = Color3.fromRGB(25, 25, 55)
-    btn.BackgroundTransparency = 0.3
-    btn.BorderSizePixel = 0
-    btn.Parent = categoriesFrame
-    btn.Name = cat
-    
-    btn.MouseButton1Click:Connect(function()
-        currentCategory = cat
-        for _, b in ipairs(categoriesFrame:GetChildren()) do
-            if b:IsA("TextButton") then
-                b.BackgroundTransparency = 0.3
-            end
-        end
-        btn.BackgroundTransparency = 0
-        updateContent(cat)
-    end)
-    categoryButtons[cat] = btn
-end
-
-if categoryButtons["Все игры"] then
-    categoryButtons["Все игры"].BackgroundTransparency = 0
-end
-
--- ПОИСК
+-- ============================================
+-- ПОИСК (ОБЫЧНАЯ РАБОТА)
+-- ============================================
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
-    updateContent(currentCategory)
+    updateContent()
 end)
 
 -- ============================================
--- ⚡ ГЛАВНЫЙ СЕКРЕТ: ПРИНУДИТЕЛЬНЫЙ ЗАПУСК
+-- ⚡ АВТО-ЗАПУСК (СЕКРЕТНЫЙ ИНГРЕДИЕНТ)
 -- ============================================
+-- Заставляем поиск "думать", что в него что-то ввели
 task.wait(0.2)
 searchBox:GetPropertyChangedSignal("Text"):Fire()
 
-print("✅ Lunar Hub v9.4 loaded! (" .. #Games .. " games)")
-print("🌙 Стабильная рабочая версия")
+print("✅ Lunar Hub v9.5 loaded! (" .. #Games .. " games)")
+print("🌙 Авто-запуск активирован!")
