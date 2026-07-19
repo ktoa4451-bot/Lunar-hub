@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v9.5 (РАБОЧИЙ + АВТО-ЗАПУСК)
+-- 🌙 LUNAR HUB v9.6 (ГАРАНТИРОВАННЫЙ АВТО-ЗАПУСК)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "9.5"
+    local currentVersion = "9.6"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -122,9 +122,7 @@ close.MouseButton1Click:Connect(function()
     screen:Destroy()
 end)
 
--- ============================================
--- 🔍 ПОИСК (ОБЯЗАТЕЛЕН ДЛЯ АВТО-ЗАПУСКА)
--- ============================================
+-- ПОИСК
 local searchBox = Instance.new("TextBox")
 searchBox.Size = UDim2.new(0, 300, 0, 30)
 searchBox.Position = UDim2.new(0, 10, 0, 50)
@@ -138,9 +136,7 @@ searchBox.Font = Enum.Font.Gotham
 searchBox.BorderSizePixel = 0
 searchBox.Parent = frame
 
--- ============================================
--- 📋 СПИСОК ИГР
--- ============================================
+-- СПИСОК ИГР
 local list = Instance.new("ScrollingFrame")
 list.Size = UDim2.new(1, -20, 1, -100)
 list.Position = UDim2.new(0, 10, 0, 90)
@@ -228,18 +224,20 @@ local function updateContent()
 end
 
 -- ============================================
--- ПОИСК (ОБЫЧНАЯ РАБОТА)
+-- ПОИСК
 -- ============================================
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
     updateContent()
 end)
 
 -- ============================================
--- ⚡ АВТО-ЗАПУСК (СЕКРЕТНЫЙ ИНГРЕДИЕНТ)
+-- ⚡ АВТО-ЗАПУСК (ГАРАНТИРОВАННЫЙ)
 -- ============================================
--- Заставляем поиск "думать", что в него что-то ввели
-task.wait(0.2)
-searchBox:GetPropertyChangedSignal("Text"):Fire()
+task.spawn(function()
+    task.wait(0.1)
+    updateContent()
+    print("🔄 Авто-запуск сработал!")
+end)
 
-print("✅ Lunar Hub v9.5 loaded! (" .. #Games .. " games)")
-print("🌙 Авто-запуск активирован!")
+print("✅ Lunar Hub v9.6 loaded! (" .. #Games .. " games)")
+print("🌙 Гарантированный авто-запуск активирован!")
