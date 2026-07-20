@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v10.0 (ФИНАЛЬНАЯ ВЕРСИЯ)
+-- 🌙 LUNAR HUB v10.1 (ФИНАЛЬНЫЙ ФИКС)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "10.0"
+    local currentVersion = "10.1"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -217,7 +217,7 @@ headerCorner.Parent = header
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 250, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
-title.Text = "🌙 LUNAR HUB v10.0"
+title.Text = "🌙 LUNAR HUB v10.1"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextSize = 20
 title.Font = Enum.Font.GothamBold
@@ -301,7 +301,7 @@ searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
 -- ============================================
--- 📋 КАТЕГОРИИ
+-- 📋 КАТЕГОРИИ (ФИКС ПЕРЕКЛЮЧЕНИЯ)
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 300)
@@ -343,7 +343,18 @@ for _, cat in ipairs(allCategories) do
             end
         end
         btn.BackgroundTransparency = 0
+        
+        -- ФИКС: ИМИТАЦИЯ ПОИСКА ПРИ ПЕРЕКЛЮЧЕНИИ
+        searchBox.Text = ""
         updateContent(cat)
+        updateStats()
+        
+        -- ГАРАНТИЯ
+        task.wait(0.05)
+        if #contentFrame:GetChildren() == 0 then
+            searchBox.Text = ""
+            updateContent(cat)
+        end
     end)
     categoryButtons[cat] = btn
 end
@@ -407,7 +418,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v10.0 — Финальная версия\n— Игры появляются автоматически\n— Избранное сохраняется"
+    updateText.Text = "v10.1 — Финальный фикс\n— Переключение категорий работает\n— Автоматическое появление игр"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -632,20 +643,17 @@ local function finalStart()
     updateLoading(90, "Финальная настройка")
     task.wait(0.1)
     
-    -- ГЛАВНЫЙ ФИКС: ИМИТАЦИЯ ПОИСКА ПРИ ЗАПУСКЕ
+    -- ИМИТАЦИЯ ПОИСКА ПРИ ЗАПУСКЕ
     searchBox.Text = ""
     updateContent(currentCategory)
     updateStats()
     task.wait(0.1)
     
-    -- ВТОРОЙ РАЗ ДЛЯ ГАРАНТИИ
     searchBox.Text = ""
     updateContent(currentCategory)
     task.wait(0.05)
     
-    -- ТРЕТИЙ РАЗ (ЕСЛИ ВСЁ ЕЩЁ НЕТ КНОПОК)
     if #contentFrame:GetChildren() == 0 then
-        print("🔄 Экстренный запуск через поиск...")
         searchBox.Text = ""
         updateContent(currentCategory)
     end
@@ -655,7 +663,7 @@ local function finalStart()
     
     loadingFrame:Destroy()
     
-    print("✅ Lunar Hub v10.0 loaded! (" .. #Games .. " games)")
+    print("✅ Lunar Hub v10.1 loaded! (" .. #Games .. " games)")
     print("⭐ Избранное сохранено!")
 end
 
@@ -681,7 +689,6 @@ connection = RunService.Stepped:Connect(function()
     end
     
     if not hasButtons and frame.Visible then
-        print("🔄 Принудительное обновление через Stepped (имитация поиска)")
         searchBox.Text = ""
         updateContent(currentCategory)
         updateStats()
@@ -689,11 +696,10 @@ connection = RunService.Stepped:Connect(function()
 end)
 
 -- ============================================
--- 🔧 ДОПОЛНИТЕЛЬНЫЙ ТАЙМЕР (ГАРАНТИЯ)
+-- 🔧 ДОПОЛНИТЕЛЬНЫЙ ТАЙМЕР
 -- ============================================
 task.wait(1)
 if #contentFrame:GetChildren() == 0 then
-    print("🔄 Финальный форсированный запуск (имитация поиска)...")
     searchBox.Text = ""
     updateContent(currentCategory)
     updateStats()
@@ -701,7 +707,6 @@ end
 
 task.wait(2)
 if #contentFrame:GetChildren() == 0 then
-    print("🔄 Аварийный запуск (имитация поиска)...")
     searchBox.Text = ""
     updateContent(currentCategory)
     updateStats()
