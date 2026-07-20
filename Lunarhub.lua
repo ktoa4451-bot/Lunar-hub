@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v12.0 (КРАСИВЫЙ ДИЗАЙН)
+-- 🌙 LUNAR HUB v12.0 (ИЗБРАННОЕ КАК ВКЛАДКА)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "12.0"
+    local currentVersion = "12.1"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -38,7 +38,7 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ
+-- ⚡ ИГРЫ (С ИКОНКАМИ)
 -- ============================================
 local Games = {
     {name = "🔫 Forsaken", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
@@ -64,7 +64,7 @@ local Favorites = {}
 local currentCategory = "Все игры"
 
 -- ============================================
--- 🔧 ЗАГРУЗЧИК
+-- 🔧 УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
 -- ============================================
 local function loadScript(link)
     local success, result = pcall(function()
@@ -78,17 +78,17 @@ local function loadScript(link)
     if success and result then
         local execSuccess, execErr = pcall(result)
         if execSuccess then
-            return true
+            return true, "✅ Success"
         else
-            return false
+            return false, "Execute error: " .. tostring(execErr)
         end
     else
-        return false
+        return false, "Load error: " .. tostring(result)
     end
 end
 
 -- ============================================
--- 🎨 GUI (КРАСИВЫЙ, НЕОНОВЫЙ)
+-- 🔧 GUI (КРАСИВЫЙ, НЕОНОВЫЙ)
 -- ============================================
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -99,7 +99,7 @@ screen.Name = "LunarHub"
 screen.Parent = PlayerGui
 
 -- ============================================
--- 🖼️ ОСНОВНОЕ ОКНО (С ТЕНЬЮ)
+-- 🖼️ ОСНОВНОЕ ОКНО
 -- ============================================
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 550, 0, 470)
@@ -112,7 +112,6 @@ frame.Active = true
 frame.Draggable = true
 frame.Parent = screen
 
--- СКРУГЛЕНИЕ
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 16)
 corner.Parent = frame
@@ -130,7 +129,6 @@ local glowCorner = Instance.new("UICorner")
 glowCorner.CornerRadius = UDim.new(0, 20)
 glowCorner.Parent = glow
 
--- ПУЛЬСАЦИЯ НЕОНА
 local glowPulse = TweenService:Create(
     glow,
     TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
@@ -225,25 +223,46 @@ searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
 -- ============================================
--- 📂 КАТЕГОРИИ
+-- 📂 КАТЕГОРИИ (ГОРИЗОНТАЛЬНЫЕ ВКЛАДКИ)
 -- ============================================
-local categoriesFrame = Instance.new("Frame")
-categoriesFrame.Size = UDim2.new(0, 110, 0, 300)
-categoriesFrame.Position = UDim2.new(0, 20, 0, 115)
-categoriesFrame.BackgroundTransparency = 1
-categoriesFrame.Parent = frame
+local categoriesContainer = Instance.new("Frame")
+categoriesContainer.Size = UDim2.new(0, 380, 0, 36)
+categoriesContainer.Position = UDim2.new(0, 145, 0, 115)
+categoriesContainer.BackgroundTransparency = 1
+categoriesContainer.Parent = frame
 
 local categoriesLayout = Instance.new("UIListLayout")
-categoriesLayout.FillDirection = Enum.FillDirection.Vertical
+categoriesLayout.FillDirection = Enum.FillDirection.Horizontal
 categoriesLayout.Padding = UDim.new(0, 8)
-categoriesLayout.Parent = categoriesFrame
+categoriesLayout.Parent = categoriesContainer
 
-local categories = {"Все игры", "⭐ Избранное"}
+local categories = {"Все игры", "⭐ Избранное", "📢 Обновления"}
 local categoryButtons = {}
+
+local function switchCategory(category)
+    currentCategory = category
+    
+    for _, btn in pairs(categoryButtons) do
+        btn.BackgroundTransparency = 0.3
+        btn.BorderColor3 = Color3.fromRGB(100, 50, 200)
+    end
+    
+    if categoryButtons[category] then
+        categoryButtons[category].BackgroundTransparency = 0
+        categoryButtons[category].BorderColor3 = Color3.fromRGB(255, 215, 0)
+    end
+    
+    if category == "📢 Обновления" then
+        showUpdateWindow()
+        return
+    end
+    
+    updateContent(category)
+end
 
 for _, cat in ipairs(categories) do
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 36)
+    btn.Size = UDim2.new(0, 120, 1, 0)
     btn.Text = cat
     btn.TextColor3 = Color3.fromRGB(200, 200, 255)
     btn.TextSize = 13
@@ -252,7 +271,7 @@ for _, cat in ipairs(categories) do
     btn.BackgroundTransparency = 0.3
     btn.BorderSizePixel = 1
     btn.BorderColor3 = Color3.fromRGB(100, 50, 200)
-    btn.Parent = categoriesFrame
+    btn.Parent = categoriesContainer
     btn.Name = cat
     
     local btnCorner = Instance.new("UICorner")
@@ -260,7 +279,9 @@ for _, cat in ipairs(categories) do
     btnCorner.Parent = btn
     
     btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(50, 35, 100)}):Play()
+        if currentCategory ~= cat then
+            TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(50, 35, 100)}):Play()
+        end
     end)
     btn.MouseLeave:Connect(function()
         if currentCategory ~= cat then
@@ -269,16 +290,7 @@ for _, cat in ipairs(categories) do
     end)
     
     btn.MouseButton1Click:Connect(function()
-        currentCategory = cat
-        for _, b in ipairs(categoriesFrame:GetChildren()) do
-            if b:IsA("TextButton") then
-                b.BackgroundTransparency = 0.3
-                b.BorderColor3 = Color3.fromRGB(100, 50, 200)
-            end
-        end
-        btn.BackgroundTransparency = 0
-        btn.BorderColor3 = Color3.fromRGB(255, 215, 0)
-        updateContent(cat)
+        switchCategory(cat)
     end)
     categoryButtons[cat] = btn
 end
@@ -289,11 +301,73 @@ if categoryButtons["Все игры"] then
 end
 
 -- ============================================
+-- 📢 ОКНО ОБНОВЛЕНИЙ
+-- ============================================
+local function showUpdateWindow()
+    local updateFrame = Instance.new("Frame")
+    updateFrame.Size = UDim2.new(0, 350, 0, 180)
+    updateFrame.Position = UDim2.new(0.5, -175, 0.5, -90)
+    updateFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 30)
+    updateFrame.BackgroundTransparency = 0
+    updateFrame.BorderSizePixel = 1
+    updateFrame.BorderColor3 = Color3.fromRGB(180, 50, 220)
+    updateFrame.ClipsDescendants = true
+    updateFrame.Parent = screen
+
+    local updateCorner = Instance.new("UICorner")
+    updateCorner.CornerRadius = UDim.new(0, 16)
+    updateCorner.Parent = updateFrame
+
+    local updateTitle = Instance.new("TextLabel")
+    updateTitle.Size = UDim2.new(1, 0, 0, 45)
+    updateTitle.Text = "📢 Обновления"
+    updateTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+    updateTitle.TextSize = 20
+    updateTitle.Font = Enum.Font.GothamBold
+    updateTitle.BackgroundTransparency = 1
+    updateTitle.Parent = updateFrame
+
+    local updateText = Instance.new("TextLabel")
+    updateText.Size = UDim2.new(1, -20, 0, 90)
+    updateText.Position = UDim2.new(0, 10, 0, 50)
+    updateText.Text = "v12.0 — Избранное как вкладка\n— Горизонтальные категории\n— Красивый неоновый дизайн"
+    updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
+    updateText.TextSize = 14
+    updateText.Font = Enum.Font.Gotham
+    updateText.BackgroundTransparency = 1
+    updateText.TextWrapped = true
+    updateText.Parent = updateFrame
+
+    local closeUpdate = Instance.new("TextButton")
+    closeUpdate.Size = UDim2.new(0, 34, 0, 34)
+    closeUpdate.Position = UDim2.new(1, -10, 0, 5)
+    closeUpdate.Text = "✕"
+    closeUpdate.TextColor3 = Color3.fromRGB(255, 100, 100)
+    closeUpdate.TextSize = 18
+    closeUpdate.Font = Enum.Font.GothamBold
+    closeUpdate.BackgroundTransparency = 1
+    closeUpdate.Parent = updateFrame
+    closeUpdate.MouseButton1Click:Connect(function()
+        updateFrame:Destroy()
+        -- Возвращаемся к "Все игры"
+        switchCategory("Все игры")
+    end)
+
+    -- Клик вне окна закрывает
+    screen.MouseButton1Click:Connect(function()
+        if updateFrame then
+            updateFrame:Destroy()
+            switchCategory("Все игры")
+        end
+    end)
+end
+
+-- ============================================
 -- 📋 СПИСОК ИГР
 -- ============================================
 local list = Instance.new("ScrollingFrame")
 list.Size = UDim2.new(0, 380, 0, 300)
-list.Position = UDim2.new(0, 145, 0, 115)
+list.Position = UDim2.new(0, 145, 0, 155)
 list.BackgroundTransparency = 1
 list.CanvasSize = UDim2.new(0, 0, 0, 0)
 list.ScrollBarThickness = 4
@@ -321,7 +395,11 @@ local function toggleFavorite(gameName)
         Favorites[gameName] = true
     end
     updateFavCount()
-    updateContent(currentCategory)
+    if currentCategory == "⭐ Избранное" then
+        updateContent("⭐ Избранное")
+    else
+        updateContent(currentCategory)
+    end
 end
 
 -- ============================================
@@ -382,7 +460,6 @@ local function updateContent(category)
         padding.PaddingLeft = UDim.new(0, 15)
         padding.Parent = btn
         
-        -- СТРЕЛКА
         local arrow = Instance.new("TextLabel")
         arrow.Size = UDim2.new(0, 30, 1, 0)
         arrow.Position = UDim2.new(1, -40, 0, 0)
@@ -392,7 +469,6 @@ local function updateContent(category)
         arrow.BackgroundTransparency = 1
         arrow.Parent = btn
         
-        -- КНОПКА ИЗБРАННОГО
         local favBtn = Instance.new("TextButton")
         favBtn.Size = UDim2.new(0, 30, 1, 0)
         favBtn.Position = UDim2.new(1, -75, 0, 0)
@@ -405,12 +481,8 @@ local function updateContent(category)
         favBtn.MouseButton1Click:Connect(function()
             toggleFavorite(game.name)
             favBtn.Text = Favorites[game.name] and "⭐" or "☆"
-            if currentCategory == "⭐ Избранное" then
-                updateContent("⭐ Избранное")
-            end
         end)
         
-        -- АНИМАЦИИ НАВЕДЕНИЯ
         btn.MouseEnter:Connect(function()
             TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(45, 30, 90)}):Play()
             TweenService:Create(arrow, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
@@ -420,14 +492,13 @@ local function updateContent(category)
             TweenService:Create(arrow, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(150, 100, 200)}):Play()
         end)
         
-        -- ЗАГРУЗКА
         btn.MouseButton1Click:Connect(function()
             btn.Text = "⏳..."
             btn.BackgroundColor3 = Color3.fromRGB(50, 50, 30)
             arrow.Text = "⏳"
             task.wait(0.15)
             
-            local success = loadScript(game.link)
+            local success, msg = loadScript(game.link)
             
             if success then
                 btn.Text = "✅ " .. game.name
@@ -460,12 +531,7 @@ end)
 -- ⚡ ЗАПУСК
 -- ============================================
 updateFavCount()
-updateContent(currentCategory)
-
--- ФИКС ПРИНУДИТЕЛЬНОГО ЗАПУСКА
-task.wait(0.2)
-searchBox.Text = ""
-searchBox:GetPropertyChangedSignal("Text"):Fire()
+switchCategory("Все игры")
 
 print("✅ Lunar Hub v12.0 loaded! (" .. #Games .. " games)")
-print("🎨 Красивый дизайн активирован!")
+print("⭐ Избранное как вкладка!")
