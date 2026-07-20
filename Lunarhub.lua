@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v10.2 (ФИКС КАТЕГОРИЙ И ПОИСКА)
+-- 🌙 LUNAR HUB v10.3 (ПОЛНЫЙ РЕФАКТОРИНГ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "10.2"
+    local currentVersion = "10.3"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -38,7 +38,7 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ (С ИКОНКАМИ)
+-- ⚡ ИГРЫ
 -- ============================================
 local Games = {
     {name = "🔫 Forsaken", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
@@ -58,7 +58,7 @@ local Games = {
 }
 
 -- ============================================
--- ⭐ ИЗБРАННОЕ (С СОХРАНЕНИЕМ)
+-- ⭐ ИЗБРАННОЕ
 -- ============================================
 local Favorites = {}
 
@@ -83,7 +83,7 @@ end
 loadFavorites()
 
 -- ============================================
--- 🔧 УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
+-- 🔧 ЗАГРУЗЧИК
 -- ============================================
 local function loadScript(link)
     local success, result = pcall(function()
@@ -120,7 +120,7 @@ screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 -- ============================================
--- 🎬 ЭКРАН ЗАГРУЗКИ
+-- 🎬 ЗАГРУЗКА
 -- ============================================
 local loadingFrame = Instance.new("Frame")
 loadingFrame.Size = UDim2.new(0, 320, 0, 140)
@@ -217,7 +217,7 @@ headerCorner.Parent = header
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 250, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
-title.Text = "🌙 LUNAR HUB v10.2"
+title.Text = "🌙 LUNAR HUB v10.3"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextSize = 20
 title.Font = Enum.Font.GothamBold
@@ -301,7 +301,7 @@ searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
 -- ============================================
--- 📋 КАТЕГОРИИ (С ПРИНУДИТЕЛЬНЫМ ПОИСКОМ)
+-- 📋 КАТЕГОРИИ
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 300)
@@ -344,10 +344,8 @@ for _, cat in ipairs(allCategories) do
         end
         btn.BackgroundTransparency = 0
         
-        -- 🔥 ПРИНУДИТЕЛЬНЫЙ ПОИСК ПРИ ПЕРЕКЛЮЧЕНИИ
-        searchBox.Text = ""
-        searchBox:GetPropertyChangedSignal("Text"):Fire()
-        updateContent(cat)
+        -- ===== ПРЯМОЙ ВЫЗОВ ОБНОВЛЕНИЯ =====
+        renderGames(cat)
         updateStats()
     end)
     categoryButtons[cat] = btn
@@ -412,7 +410,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v10.2 — Фикс категорий\n— Принудительный поиск\n— Избранное сохраняется"
+    updateText.Text = "v10.3 — Полный рефакторинг\n— Прямой вызов обновления\n— Гарантированное появление игр"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -464,7 +462,7 @@ local function toggleFavorite(gameName)
     saveFavorites()
     updateStats()
     if currentCategory == "⭐ Избранное" then
-        updateContent("⭐ Избранное")
+        renderGames("⭐ Избранное")
     end
 end
 
@@ -479,96 +477,10 @@ local function updateStats()
 end
 
 -- ============================================
--- 🎨 КНОПКИ ИГР
+-- 🎨 ОТРИСОВКА ИГР (ГЛАВНАЯ ФУНКЦИЯ)
 -- ============================================
-local function createGameButton(gameData)
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 38)
-    btn.Text = gameData.name
-    btn.TextColor3 = Color3.fromRGB(230, 230, 255)
-    btn.TextSize = 14
-    btn.TextXAlignment = Enum.TextXAlignment.Left
-    btn.Font = Enum.Font.GothamBold
-    btn.BackgroundColor3 = Color3.fromRGB(20, 20, 50)
-    btn.BackgroundTransparency = 0.2
-    btn.BorderSizePixel = 0
-    btn.Parent = contentFrame
-    btn.Name = gameData.name
-    
-    local btnCorner = Instance.new("UICorner")
-    btnCorner.CornerRadius = UDim.new(0, 8)
-    btnCorner.Parent = btn
-    
-    local padding = Instance.new("UIPadding")
-    padding.PaddingLeft = UDim.new(0, 15)
-    padding.Parent = btn
-    
-    local arrow = Instance.new("TextLabel")
-    arrow.Size = UDim2.new(0, 30, 1, 0)
-    arrow.Position = UDim2.new(1, -40, 0, 0)
-    arrow.Text = "▶"
-    arrow.TextColor3 = Color3.fromRGB(150, 100, 200)
-    arrow.TextSize = 18
-    arrow.BackgroundTransparency = 1
-    arrow.Parent = btn
-    
-    local favBtn = Instance.new("TextButton")
-    favBtn.Size = UDim2.new(0, 30, 1, 0)
-    favBtn.Position = UDim2.new(1, -75, 0, 0)
-    favBtn.Text = Favorites[gameData.name] and "⭐" or "☆"
-    favBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
-    favBtn.TextSize = 18
-    favBtn.BackgroundTransparency = 1
-    favBtn.Parent = btn
-    
-    favBtn.MouseButton1Click:Connect(function()
-        toggleFavorite(gameData.name)
-        favBtn.Text = Favorites[gameData.name] and "⭐" or "☆"
-    end)
-    
-    btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(40, 30, 80)}):Play()
-        TweenService:Create(arrow, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
-    end)
-    btn.MouseLeave:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0.2, BackgroundColor3 = Color3.fromRGB(20, 20, 50)}):Play()
-        TweenService:Create(arrow, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(150, 100, 200)}):Play()
-    end)
-    
-    btn.MouseButton1Click:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.1, Enum.EasingStyle.Back), {Size = UDim2.new(1, 0, 0, 36)}):Play()
-        task.wait(0.1)
-        TweenService:Create(btn, TweenInfo.new(0.1, Enum.EasingStyle.Back), {Size = UDim2.new(1, 0, 0, 38)}):Play()
-        
-        btn.Text = "⏳..."
-        btn.BackgroundColor3 = Color3.fromRGB(50, 50, 30)
-        arrow.Text = "⏳"
-        task.wait(0.15)
-        
-        local success, msg = loadScript(gameData.link)
-        
-        if success then
-            btn.Text = "✅ " .. gameData.name
-            btn.BackgroundColor3 = Color3.fromRGB(30, 50, 30)
-            arrow.Text = "✅"
-        else
-            btn.Text = "❌ " .. gameData.name
-            btn.BackgroundColor3 = Color3.fromRGB(50, 30, 30)
-            arrow.Text = "❌"
-            warn("Error: " .. msg)
-        end
-        
-        task.wait(1.5)
-        btn.Text = gameData.name
-        btn.BackgroundColor3 = Color3.fromRGB(20, 20, 50)
-        arrow.Text = "▶"
-    end)
-end
-
--- ============================================
--- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА
--- ============================================
-local function updateContent(category)
+local function renderGames(category)
+    -- Очищаем
     for _, child in ipairs(contentFrame:GetChildren()) do
         if child:IsA("TextButton") then child:Destroy() end
     end
@@ -576,6 +488,7 @@ local function updateContent(category)
     local gamesToShow = {}
     local searchText = searchBox.Text:lower()
     
+    -- Фильтруем по категории
     if category == "⭐ Избранное" then
         for _, game in ipairs(Games) do
             if Favorites[game.name] then
@@ -588,6 +501,7 @@ local function updateContent(category)
         end
     end
     
+    -- Фильтруем по поиску
     if searchText ~= "" then
         local filtered = {}
         for _, game in ipairs(gamesToShow) do
@@ -598,25 +512,106 @@ local function updateContent(category)
         gamesToShow = filtered
     end
     
+    -- Сортируем
     table.sort(gamesToShow, function(a, b) return a.name < b.name end)
     
+    -- Создаём кнопки
     for _, game in ipairs(gamesToShow) do
-        createGameButton(game)
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, 0, 0, 38)
+        btn.Text = game.name
+        btn.TextColor3 = Color3.fromRGB(230, 230, 255)
+        btn.TextSize = 14
+        btn.TextXAlignment = Enum.TextXAlignment.Left
+        btn.Font = Enum.Font.GothamBold
+        btn.BackgroundColor3 = Color3.fromRGB(20, 20, 50)
+        btn.BackgroundTransparency = 0.2
+        btn.BorderSizePixel = 0
+        btn.Parent = contentFrame
+        btn.Name = game.name
+        
+        local btnCorner = Instance.new("UICorner")
+        btnCorner.CornerRadius = UDim.new(0, 8)
+        btnCorner.Parent = btn
+        
+        local padding = Instance.new("UIPadding")
+        padding.PaddingLeft = UDim.new(0, 15)
+        padding.Parent = btn
+        
+        local arrow = Instance.new("TextLabel")
+        arrow.Size = UDim2.new(0, 30, 1, 0)
+        arrow.Position = UDim2.new(1, -40, 0, 0)
+        arrow.Text = "▶"
+        arrow.TextColor3 = Color3.fromRGB(150, 100, 200)
+        arrow.TextSize = 18
+        arrow.BackgroundTransparency = 1
+        arrow.Parent = btn
+        
+        local favBtn = Instance.new("TextButton")
+        favBtn.Size = UDim2.new(0, 30, 1, 0)
+        favBtn.Position = UDim2.new(1, -75, 0, 0)
+        favBtn.Text = Favorites[game.name] and "⭐" or "☆"
+        favBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
+        favBtn.TextSize = 18
+        favBtn.BackgroundTransparency = 1
+        favBtn.Parent = btn
+        
+        favBtn.MouseButton1Click:Connect(function()
+            toggleFavorite(game.name)
+            favBtn.Text = Favorites[game.name] and "⭐" or "☆"
+        end)
+        
+        btn.MouseEnter:Connect(function()
+            TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(40, 30, 80)}):Play()
+            TweenService:Create(arrow, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
+        end)
+        btn.MouseLeave:Connect(function()
+            TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0.2, BackgroundColor3 = Color3.fromRGB(20, 20, 50)}):Play()
+            TweenService:Create(arrow, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(150, 100, 200)}):Play()
+        end)
+        
+        btn.MouseButton1Click:Connect(function()
+            TweenService:Create(btn, TweenInfo.new(0.1, Enum.EasingStyle.Back), {Size = UDim2.new(1, 0, 0, 36)}):Play()
+            task.wait(0.1)
+            TweenService:Create(btn, TweenInfo.new(0.1, Enum.EasingStyle.Back), {Size = UDim2.new(1, 0, 0, 38)}):Play()
+            
+            btn.Text = "⏳..."
+            btn.BackgroundColor3 = Color3.fromRGB(50, 50, 30)
+            arrow.Text = "⏳"
+            task.wait(0.15)
+            
+            local success, msg = loadScript(game.link)
+            
+            if success then
+                btn.Text = "✅ " .. game.name
+                btn.BackgroundColor3 = Color3.fromRGB(30, 50, 30)
+                arrow.Text = "✅"
+            else
+                btn.Text = "❌ " .. game.name
+                btn.BackgroundColor3 = Color3.fromRGB(50, 30, 30)
+                arrow.Text = "❌"
+                warn("Error: " .. msg)
+            end
+            
+            task.wait(1.5)
+            btn.Text = game.name
+            btn.BackgroundColor3 = Color3.fromRGB(20, 20, 50)
+            arrow.Text = "▶"
+        end)
     end
     
     contentFrame.CanvasSize = UDim2.new(0, 0, 0, #gamesToShow * 44 + 10)
-    updateStats()
 end
 
 -- ============================================
 -- 🔧 ПОИСК
 -- ============================================
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
-    updateContent(currentCategory)
+    renderGames(currentCategory)
 end)
 
 -- ============================================
--- 🚀 ФИНАЛЬНЫЙ ЗАПУСК
+-- 🚀 ЗАПУСК
 -- ============================================
 local function finalStart()
     updateLoading(10, "Создание интерфейса")
@@ -637,31 +632,16 @@ local function finalStart()
     updateLoading(90, "Финальная настройка")
     task.wait(0.1)
     
-    -- ИМИТАЦИЯ ПОИСКА ПРИ ЗАПУСКЕ
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
-    updateContent(currentCategory)
+    -- ПРЯМОЙ ВЫЗОВ
+    renderGames(currentCategory)
     updateStats()
-    task.wait(0.1)
-    
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
-    updateContent(currentCategory)
-    task.wait(0.05)
-    
-    if #contentFrame:GetChildren() == 0 then
-        searchBox.Text = ""
-        searchBox:GetPropertyChangedSignal("Text"):Fire()
-        updateContent(currentCategory)
-    end
     
     updateLoading(100, "Готово!")
     task.wait(0.3)
     
     loadingFrame:Destroy()
     
-    print("✅ Lunar Hub v10.2 loaded! (" .. #Games .. " games)")
-    print("⭐ Избранное сохранено!")
+    print("✅ Lunar Hub v10.3 loaded! (" .. #Games .. " games)")
 end
 
 task.wait(0.1)
@@ -686,28 +666,25 @@ connection = RunService.Stepped:Connect(function()
     end
     
     if not hasButtons and frame.Visible then
-        searchBox.Text = ""
-        searchBox:GetPropertyChangedSignal("Text"):Fire()
-        updateContent(currentCategory)
+        print("🔄 Принудительное обновление через Stepped")
+        renderGames(currentCategory)
         updateStats()
     end
 end)
 
 -- ============================================
--- 🔧 ДОПОЛНИТЕЛЬНЫЙ ТАЙМЕР
+-- 🔧 ДОПОЛНИТЕЛЬНЫЕ ТАЙМЕРЫ
 -- ============================================
 task.wait(1)
 if #contentFrame:GetChildren() == 0 then
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
-    updateContent(currentCategory)
+    print("🔄 Таймер 1: Принудительное обновление")
+    renderGames(currentCategory)
     updateStats()
 end
 
 task.wait(2)
 if #contentFrame:GetChildren() == 0 then
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
-    updateContent(currentCategory)
+    print("🔄 Таймер 2: Аварийное обновление")
+    renderGames(currentCategory)
     updateStats()
 end
