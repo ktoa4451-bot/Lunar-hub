@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v10.4 (С СЕКРЕТНЫМ ФИКСОМ)
+-- 🌙 LUNAR HUB v10.5 (ФИНАЛЬНЫЙ ФИКС)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "10.4"
+    local currentVersion = "10.5"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -217,7 +217,7 @@ headerCorner.Parent = header
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 250, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
-title.Text = "🌙 LUNAR HUB v10.4"
+title.Text = "🌙 LUNAR HUB v10.5"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextSize = 20
 title.Font = Enum.Font.GothamBold
@@ -301,7 +301,7 @@ searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
 -- ============================================
--- 📋 КАТЕГОРИИ
+-- 📋 КАТЕГОРИИ (С ПРИНУДИТЕЛЬНЫМ ОБНОВЛЕНИЕМ)
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 300)
@@ -344,8 +344,7 @@ for _, cat in ipairs(allCategories) do
         end
         btn.BackgroundTransparency = 0
         
-        -- ПРЯМОЙ ВЫЗОВ
-        searchBox.Text = ""
+        -- ПРЯМОЙ ВЫЗОВ ОБНОВЛЕНИЯ
         renderGames(cat)
         updateStats()
     end)
@@ -411,7 +410,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v10.4 — Секретный фикс\n— Игры появляются сразу\n— Избранное сохраняется"
+    updateText.Text = "v10.5 — Финальный фикс\n— Избранное считается\n— Категории работают"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -461,7 +460,7 @@ local function toggleFavorite(gameName)
         Favorites[gameName] = true
     end
     saveFavorites()
-    updateStats()
+    updateStats()  -- ОБНОВЛЯЕМ СЧЁТЧИК
     if currentCategory == "⭐ Избранное" then
         renderGames("⭐ Избранное")
     end
@@ -629,7 +628,7 @@ local function finalStart()
     task.wait(0.1)
     
     -- ============================================
-    -- 🔥 СЕКРЕТНЫЙ ФИКС (ИЗ v9.4)
+    -- 🔥 СЕКРЕТНЫЙ ФИКС
     -- ============================================
     task.wait(0.2)
     searchBox.Text = ""
@@ -644,8 +643,8 @@ local function finalStart()
     
     loadingFrame:Destroy()
     
-    print("✅ Lunar Hub v10.4 loaded! (" .. #Games .. " games)")
-    print("🔥 Секретный фикс активирован!")
+    print("✅ Lunar Hub v10.5 loaded! (" .. #Games .. " games)")
+    print("🔥 Финальный фикс активирован!")
 end
 
 task.wait(0.1)
