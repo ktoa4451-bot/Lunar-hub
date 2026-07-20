@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v27.0 (ULTIMATE)
+-- 🌙 LUNAR HUB v28.0 (FIXED)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "27.0"
+    local currentVersion = "28.0"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -88,7 +88,6 @@ local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
 
 local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
@@ -98,8 +97,8 @@ screen.Parent = PlayerGui
 -- 🎵 ЗВУК НАЖАТИЯ
 -- ============================================
 local clickSound = Instance.new("Sound")
-clickSound.SoundId = "rbxassetid://9120385735"
-clickSound.Volume = 0.2
+clickSound.SoundId = "rbxassetid://9120385735" -- Roblox UI Click
+clickSound.Volume = 0.3
 clickSound.Parent = screen
 
 -- ============================================
@@ -198,7 +197,7 @@ headerCorner.CornerRadius = UDim.new(0, 16)
 headerCorner.Parent = header
 
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(0, 200, 1, 0)
+title.Size = UDim2.new(0, 180, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
 title.Text = "🌙 LUNAR HUB"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
@@ -208,11 +207,11 @@ title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = header
 
--- СЧЁТЧИК ОНЛАЙНА
+-- ОНЛАЙН (С ТЕКСТОМ)
 local onlineLabel = Instance.new("TextLabel")
-onlineLabel.Size = UDim2.new(0, 100, 1, 0)
-onlineLabel.Position = UDim2.new(0, 220, 0, 0)
-onlineLabel.Text = "🟢 0"
+onlineLabel.Size = UDim2.new(0, 130, 1, 0)
+onlineLabel.Position = UDim2.new(0, 200, 0, 0)
+onlineLabel.Text = "🟢 Онлайн: 0"
 onlineLabel.TextColor3 = Color3.fromRGB(0, 255, 100)
 onlineLabel.TextSize = 14
 onlineLabel.Font = Enum.Font.GothamBold
@@ -220,11 +219,11 @@ onlineLabel.BackgroundTransparency = 1
 onlineLabel.TextXAlignment = Enum.TextXAlignment.Left
 onlineLabel.Parent = header
 
--- СЧЁТЧИК ИГР
+-- СЧЁТЧИК ИГР (С ТЕКСТОМ)
 local gameCountLabel = Instance.new("TextLabel")
-gameCountLabel.Size = UDim2.new(0, 100, 1, 0)
-gameCountLabel.Position = UDim2.new(0, 320, 0, 0)
-gameCountLabel.Text = "🎮 0"
+gameCountLabel.Size = UDim2.new(0, 130, 1, 0)
+gameCountLabel.Position = UDim2.new(0, 330, 0, 0)
+gameCountLabel.Text = "🎮 Игр: 0"
 gameCountLabel.TextColor3 = Color3.fromRGB(100, 200, 255)
 gameCountLabel.TextSize = 14
 gameCountLabel.Font = Enum.Font.GothamBold
@@ -260,9 +259,6 @@ end)
 
 close.MouseButton1Click:Connect(function()
     clickSound:Play()
-    TweenService:Create(close, TweenInfo.new(0.1, Enum.EasingStyle.Back), {Size = UDim2.new(0, 28, 0, 28)}):Play()
-    task.wait(0.1)
-    TweenService:Create(close, TweenInfo.new(0.1, Enum.EasingStyle.Back), {Size = UDim2.new(0, 34, 0, 34)}):Play()
     screen:Destroy()
 end)
 
@@ -287,6 +283,7 @@ local searchCorner = Instance.new("UICorner")
 searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
+-- АНИМАЦИЯ ФОКУСА
 searchBox.Focused:Connect(function()
     TweenService:Create(searchBox, TweenInfo.new(0.2), {BackgroundTransparency = 0.1, BackgroundColor3 = Color3.fromRGB(50, 40, 100)}):Play()
 end)
@@ -295,7 +292,7 @@ searchBox.FocusLost:Connect(function()
 end)
 
 -- ============================================
--- 📂 КАТЕГОРИЯ "ИГРЫ" (СЛЕВА)
+-- 📂 КАТЕГОРИИ
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 300)
@@ -303,7 +300,7 @@ categoriesFrame.Position = UDim2.new(0, 20, 0, 120)
 categoriesFrame.BackgroundTransparency = 1
 categoriesFrame.Parent = frame
 
--- КНОПКА КАТЕГОРИИ "ИГРЫ"
+-- 1. КНОПКА "ИГРЫ" (ПЕРВАЯ)
 local gamesCategoryBtn = Instance.new("TextButton")
 gamesCategoryBtn.Size = UDim2.new(1, 0, 0, 36)
 gamesCategoryBtn.Position = UDim2.new(0, 0, 0, 0)
@@ -320,9 +317,22 @@ local gamesBtnCorner = Instance.new("UICorner")
 gamesBtnCorner.CornerRadius = UDim.new(0, 8)
 gamesBtnCorner.Parent = gamesCategoryBtn
 
--- ============================================
--- 📢 КНОПКА ОБНОВЛЕНИЙ
--- ============================================
+gamesCategoryBtn.MouseEnter:Connect(function()
+    TweenService:Create(gamesCategoryBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(80, 60, 200)}):Play()
+end)
+gamesCategoryBtn.MouseLeave:Connect(function()
+    TweenService:Create(gamesCategoryBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(60, 40, 150)}):Play()
+end)
+
+gamesCategoryBtn.MouseButton1Click:Connect(function()
+    clickSound:Play()
+    TweenService:Create(gamesCategoryBtn, TweenInfo.new(0.1, Enum.EasingStyle.Back), {Size = UDim2.new(1, 0, 0, 32)}):Play()
+    task.wait(0.1)
+    TweenService:Create(gamesCategoryBtn, TweenInfo.new(0.1, Enum.EasingStyle.Back), {Size = UDim2.new(1, 0, 0, 36)}):Play()
+    updateContent()
+end)
+
+-- 2. КНОПКА "ОБНОВЛЕНИЯ" (ВТОРАЯ)
 local updateBtn = Instance.new("TextButton")
 updateBtn.Size = UDim2.new(1, 0, 0, 36)
 updateBtn.Position = UDim2.new(0, 0, 0, 45)
@@ -361,8 +371,8 @@ updateBtn.MouseButton1Click:Connect(function()
     
     updateOpen = true
     updateFrame = Instance.new("Frame")
-    updateFrame.Size = UDim2.new(0, 350, 0, 200)
-    updateFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
+    updateFrame.Size = UDim2.new(0, 350, 0, 180)
+    updateFrame.Position = UDim2.new(0.5, -175, 0.5, -90)
     updateFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 30)
     updateFrame.BackgroundTransparency = 0.15
     updateFrame.BorderSizePixel = 0
@@ -374,7 +384,7 @@ updateBtn.MouseButton1Click:Connect(function()
     updateCorner.Parent = updateFrame
     
     local updateTitle = Instance.new("TextLabel")
-    updateTitle.Size = UDim2.new(1, 0, 0, 45)
+    updateTitle.Size = UDim2.new(1, 0, 0, 40)
     updateTitle.Position = UDim2.new(0, 0, 0, 10)
     updateTitle.Text = "📢 Обновления"
     updateTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
@@ -384,9 +394,9 @@ updateBtn.MouseButton1Click:Connect(function()
     updateTitle.Parent = updateFrame
     
     local updateText = Instance.new("TextLabel")
-    updateText.Size = UDim2.new(1, -20, 0, 90)
-    updateText.Position = UDim2.new(0, 10, 0, 55)
-    updateText.Text = "v27.0 — Ultimate\n— Категория 'Игры'\n— Счётчик игр\n— Соцсети\n— Анимации и звук"
+    updateText.Size = UDim2.new(1, -20, 0, 80)
+    updateText.Position = UDim2.new(0, 10, 0, 50)
+    updateText.Text = "v28.0 — Исправлено:\n— Звук и анимации\n— Надписи вверху\n— Категория 'Игры' сверху\n— Игры без поиска"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -394,13 +404,13 @@ updateBtn.MouseButton1Click:Connect(function()
     updateText.TextWrapped = true
     updateText.Parent = updateFrame
     
-    -- СОЦСЕТИ
+    -- ТОЛЬКО GITHUB (БЕЗ TWITTER)
     local socialText = Instance.new("TextLabel")
     socialText.Size = UDim2.new(1, -20, 0, 25)
-    socialText.Position = UDim2.new(0, 10, 0, 145)
-    socialText.Text = "🌐 GitHub: @ktoa4451-bot | 🐦 Twitter: @RyzenHub"
+    socialText.Position = UDim2.new(0, 10, 0, 140)
+    socialText.Text = "🌐 GitHub: @ktoa4451-bot"
     socialText.TextColor3 = Color3.fromRGB(150, 150, 200)
-    socialText.TextSize = 11
+    socialText.TextSize = 12
     socialText.Font = Enum.Font.Gotham
     socialText.BackgroundTransparency = 1
     socialText.Parent = updateFrame
@@ -447,8 +457,8 @@ contentLayout.Parent = contentFrame
 -- 🎮 ОБНОВЛЕНИЕ СЧЁТЧИКОВ
 -- ============================================
 local function updateCounters()
-    gameCountLabel.Text = "🎮 " .. #Games
-    onlineLabel.Text = "🟢 " .. #Players:GetPlayers()
+    gameCountLabel.Text = "🎮 Игр: " .. #Games
+    onlineLabel.Text = "🟢 Онлайн: " .. #Players:GetPlayers()
 end
 
 Players.PlayerAdded:Connect(updateCounters)
@@ -456,7 +466,7 @@ Players.PlayerRemoving:Connect(updateCounters)
 updateCounters()
 
 -- ============================================
--- 🎨 КНОПКИ ИГР (С АНИМАЦИЯМИ)
+-- 🎨 КНОПКИ ИГР
 -- ============================================
 local function createGameButton(gameData)
     local btn = Instance.new("TextButton")
@@ -489,7 +499,6 @@ local function createGameButton(gameData)
     arrow.BackgroundTransparency = 1
     arrow.Parent = btn
     
-    -- АНИМАЦИИ НАВЕДЕНИЯ
     btn.MouseEnter:Connect(function()
         TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(45, 35, 90)}):Play()
         TweenService:Create(arrow, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
@@ -499,7 +508,6 @@ local function createGameButton(gameData)
         TweenService:Create(arrow, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(150, 100, 200)}):Play()
     end)
     
-    -- АНИМАЦИЯ НАЖАТИЯ + ЗВУК
     btn.MouseButton1Click:Connect(function()
         clickSound:Play()
         TweenService:Create(btn, TweenInfo.new(0.1, Enum.EasingStyle.Back), {Size = UDim2.new(1, 0, 0, 32)}):Play()
@@ -531,7 +539,7 @@ local function createGameButton(gameData)
 end
 
 -- ============================================
--- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА
+-- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА (ФИКС ПОИСКА)
 -- ============================================
 local function updateContent()
     for _, child in ipairs(contentFrame:GetChildren()) do
@@ -583,7 +591,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 end)
 
 -- ============================================
--- 🚀 ЗАПУСК
+-- 🚀 ЗАПУСК (ФИКС: ИГРЫ ПОЯВЛЯЮТСЯ СРАЗУ)
 -- ============================================
 local function finalStart()
     updateLoading(10, "Создание интерфейса")
@@ -616,20 +624,17 @@ local function finalStart()
     updateLoading(85, "Финальная настройка")
     task.wait(0.2)
     
+    -- 🔥 ГЛАВНЫЙ ФИКС: ПРИНУДИТЕЛЬНЫЙ ЗАПУСК
     updateContent()
     task.wait(0.1)
-    updateContent()
-    
-    if #contentFrame:GetChildren() == 0 then
-        updateContent()
-    end
+    updateContent()  -- Двойной вызов для гарантии
     
     updateLoading(100, "Готово!")
     task.wait(0.4)
     
     loadingFrame:Destroy()
     
-    print("✅ Lunar Hub v27.0 loaded! (" .. #Games .. " games)")
+    print("✅ Lunar Hub v28.0 loaded! (" .. #Games .. " games)")
     print("🟢 Online: " .. #Players:GetPlayers())
 end
 
