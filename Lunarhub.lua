@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v10.2 (ФИКС КАТЕГОРИЙ И ПОИСКА)
+-- 🌙 LUNAR HUB v24.0 (ULTIMATE EDITION)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "10.2"
+    local currentVersion = "24.0"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -113,6 +113,7 @@ local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
 local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
@@ -217,7 +218,7 @@ headerCorner.Parent = header
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 250, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
-title.Text = "🌙 LUNAR HUB v10.2"
+title.Text = "🌙 LUNAR HUB v24.0"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextSize = 20
 title.Font = Enum.Font.GothamBold
@@ -301,7 +302,7 @@ searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
 -- ============================================
--- 📋 КАТЕГОРИИ (С ПРИНУДИТЕЛЬНЫМ ПОИСКОМ)
+-- 📋 КАТЕГОРИИ
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 300)
@@ -344,9 +345,8 @@ for _, cat in ipairs(allCategories) do
         end
         btn.BackgroundTransparency = 0
         
-        -- 🔥 ПРИНУДИТЕЛЬНЫЙ ПОИСК ПРИ ПЕРЕКЛЮЧЕНИИ
+        -- ПРИНУДИТЕЛЬНОЕ ОБНОВЛЕНИЕ
         searchBox.Text = ""
-        searchBox:GetPropertyChangedSignal("Text"):Fire()
         updateContent(cat)
         updateStats()
     end)
@@ -412,7 +412,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v10.2 — Фикс категорий\n— Принудительный поиск\n— Избранное сохраняется"
+    updateText.Text = "v24.0 — Ultimate Edition\n— Избранное сохраняется\n— Онлайн-счётчик\n— Красивый дизайн"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -616,6 +616,16 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ============================================
+-- ⌨️ ГОРЯЧАЯ КЛАВИША Ctrl+F
+-- ============================================
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.F and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        searchBox:CaptureFocus()
+    end
+end)
+
+-- ============================================
 -- 🚀 ФИНАЛЬНЫЙ ЗАПУСК
 -- ============================================
 local function finalStart()
@@ -637,21 +647,13 @@ local function finalStart()
     updateLoading(90, "Финальная настройка")
     task.wait(0.1)
     
-    -- ИМИТАЦИЯ ПОИСКА ПРИ ЗАПУСКЕ
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
+    -- ПРИНУДИТЕЛЬНЫЙ ЗАПУСК (БЕЗ Fire)
     updateContent(currentCategory)
     updateStats()
     task.wait(0.1)
-    
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
     updateContent(currentCategory)
-    task.wait(0.05)
     
     if #contentFrame:GetChildren() == 0 then
-        searchBox.Text = ""
-        searchBox:GetPropertyChangedSignal("Text"):Fire()
         updateContent(currentCategory)
     end
     
@@ -660,8 +662,9 @@ local function finalStart()
     
     loadingFrame:Destroy()
     
-    print("✅ Lunar Hub v10.2 loaded! (" .. #Games .. " games)")
+    print("✅ Lunar Hub v24.0 loaded! (" .. #Games .. " games)")
     print("⭐ Избранное сохранено!")
+    print("🟢 Online: " .. #Players:GetPlayers())
 end
 
 task.wait(0.1)
@@ -686,28 +689,25 @@ connection = RunService.Stepped:Connect(function()
     end
     
     if not hasButtons and frame.Visible then
-        searchBox.Text = ""
-        searchBox:GetPropertyChangedSignal("Text"):Fire()
+        print("🔄 Принудительное обновление через Stepped")
         updateContent(currentCategory)
         updateStats()
     end
 end)
 
 -- ============================================
--- 🔧 ДОПОЛНИТЕЛЬНЫЙ ТАЙМЕР
+-- 🔧 ДОПОЛНИТЕЛЬНЫЕ ТАЙМЕРЫ
 -- ============================================
 task.wait(1)
 if #contentFrame:GetChildren() == 0 then
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
+    print("🔄 Таймер 1: Принудительное обновление")
     updateContent(currentCategory)
     updateStats()
 end
 
 task.wait(2)
 if #contentFrame:GetChildren() == 0 then
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
+    print("🔄 Таймер 2: Аварийное обновление")
     updateContent(currentCategory)
     updateStats()
 end
