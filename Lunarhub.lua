@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v10.1 (ФИНАЛЬНЫЙ ФИКС)
+-- 🌙 LUNAR HUB v10.2 (ФИКС КАТЕГОРИЙ И ПОИСКА)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "10.1"
+    local currentVersion = "10.2"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -217,7 +217,7 @@ headerCorner.Parent = header
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 250, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
-title.Text = "🌙 LUNAR HUB v10.1"
+title.Text = "🌙 LUNAR HUB v10.2"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextSize = 20
 title.Font = Enum.Font.GothamBold
@@ -301,7 +301,7 @@ searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
 -- ============================================
--- 📋 КАТЕГОРИИ (ФИКС ПЕРЕКЛЮЧЕНИЯ)
+-- 📋 КАТЕГОРИИ (С ПРИНУДИТЕЛЬНЫМ ПОИСКОМ)
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 300)
@@ -344,17 +344,11 @@ for _, cat in ipairs(allCategories) do
         end
         btn.BackgroundTransparency = 0
         
-        -- ФИКС: ИМИТАЦИЯ ПОИСКА ПРИ ПЕРЕКЛЮЧЕНИИ
+        -- 🔥 ПРИНУДИТЕЛЬНЫЙ ПОИСК ПРИ ПЕРЕКЛЮЧЕНИИ
         searchBox.Text = ""
+        searchBox:GetPropertyChangedSignal("Text"):Fire()
         updateContent(cat)
         updateStats()
-        
-        -- ГАРАНТИЯ
-        task.wait(0.05)
-        if #contentFrame:GetChildren() == 0 then
-            searchBox.Text = ""
-            updateContent(cat)
-        end
     end)
     categoryButtons[cat] = btn
 end
@@ -418,7 +412,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v10.1 — Финальный фикс\n— Переключение категорий работает\n— Автоматическое появление игр"
+    updateText.Text = "v10.2 — Фикс категорий\n— Принудительный поиск\n— Избранное сохраняется"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -645,16 +639,19 @@ local function finalStart()
     
     -- ИМИТАЦИЯ ПОИСКА ПРИ ЗАПУСКЕ
     searchBox.Text = ""
+    searchBox:GetPropertyChangedSignal("Text"):Fire()
     updateContent(currentCategory)
     updateStats()
     task.wait(0.1)
     
     searchBox.Text = ""
+    searchBox:GetPropertyChangedSignal("Text"):Fire()
     updateContent(currentCategory)
     task.wait(0.05)
     
     if #contentFrame:GetChildren() == 0 then
         searchBox.Text = ""
+        searchBox:GetPropertyChangedSignal("Text"):Fire()
         updateContent(currentCategory)
     end
     
@@ -663,7 +660,7 @@ local function finalStart()
     
     loadingFrame:Destroy()
     
-    print("✅ Lunar Hub v10.1 loaded! (" .. #Games .. " games)")
+    print("✅ Lunar Hub v10.2 loaded! (" .. #Games .. " games)")
     print("⭐ Избранное сохранено!")
 end
 
@@ -690,6 +687,7 @@ connection = RunService.Stepped:Connect(function()
     
     if not hasButtons and frame.Visible then
         searchBox.Text = ""
+        searchBox:GetPropertyChangedSignal("Text"):Fire()
         updateContent(currentCategory)
         updateStats()
     end
@@ -701,6 +699,7 @@ end)
 task.wait(1)
 if #contentFrame:GetChildren() == 0 then
     searchBox.Text = ""
+    searchBox:GetPropertyChangedSignal("Text"):Fire()
     updateContent(currentCategory)
     updateStats()
 end
@@ -708,6 +707,7 @@ end
 task.wait(2)
 if #contentFrame:GetChildren() == 0 then
     searchBox.Text = ""
+    searchBox:GetPropertyChangedSignal("Text"):Fire()
     updateContent(currentCategory)
     updateStats()
 end
