@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v9.7 ULTIMATE (ФИКС ОТОБРАЖЕНИЯ)
+-- 🌙 LUNAR HUB v9.8 (С ЭКРАНОМ ЗАГРУЗКИ)
 -- by Ryzen
 -- ============================================
 
@@ -87,7 +87,7 @@ local function loadScript(link)
 end
 
 -- ============================================
--- 🔧 GUI (ПОШАГОВОЕ СОЗДАНИЕ)
+-- 🔧 GUI
 -- ============================================
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -100,7 +100,83 @@ screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 -- ============================================
--- 🎨 ОСНОВНОЙ ФРЕЙМ
+-- 🎬 ЭКРАН ЗАГРУЗКИ (ПОЯВЛЯЕТСЯ СРАЗУ)
+-- ============================================
+local loadingFrame = Instance.new("Frame")
+loadingFrame.Size = UDim2.new(0, 320, 0, 140)
+loadingFrame.Position = UDim2.new(0.5, -160, 0.5, -70)
+loadingFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 30)
+loadingFrame.BackgroundTransparency = 0
+loadingFrame.BorderSizePixel = 0
+loadingFrame.ClipsDescendants = true
+loadingFrame.Parent = screen
+
+local loadingCorner = Instance.new("UICorner")
+loadingCorner.CornerRadius = UDim.new(0, 16)
+loadingCorner.Parent = loadingFrame
+
+-- Тень на загрузке
+local loadingShadow = Instance.new("ImageLabel")
+loadingShadow.Size = UDim2.new(1, 30, 1, 30)
+loadingShadow.Position = UDim2.new(0, -15, 0, -15)
+loadingShadow.BackgroundTransparency = 1
+loadingShadow.Image = "rbxassetid://13188751145"
+loadingShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+loadingShadow.ImageTransparency = 0.4
+loadingShadow.Parent = loadingFrame
+
+local loadingTitle = Instance.new("TextLabel")
+loadingTitle.Size = UDim2.new(1, 0, 0, 40)
+loadingTitle.Position = UDim2.new(0, 0, 0, 10)
+loadingTitle.Text = "🌙 LUNAR HUB"
+loadingTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+loadingTitle.TextSize = 24
+loadingTitle.Font = Enum.Font.GothamBold
+loadingTitle.BackgroundTransparency = 1
+loadingTitle.Parent = loadingFrame
+
+local loadingText = Instance.new("TextLabel")
+loadingText.Size = UDim2.new(1, 0, 0, 30)
+loadingText.Position = UDim2.new(0, 0, 0, 55)
+loadingText.Text = "⏳ Загрузка... 0%"
+loadingText.TextColor3 = Color3.fromRGB(200, 200, 255)
+loadingText.TextSize = 16
+loadingText.Font = Enum.Font.GothamBold
+loadingText.BackgroundTransparency = 1
+loadingText.Parent = loadingFrame
+
+-- Полоска загрузки
+local loadingBarBg = Instance.new("Frame")
+loadingBarBg.Size = UDim2.new(0.9, 0, 0, 6)
+loadingBarBg.Position = UDim2.new(0.05, 0, 0, 100)
+loadingBarBg.BackgroundColor3 = Color3.fromRGB(40, 40, 70)
+loadingBarBg.BorderSizePixel = 0
+loadingBarBg.Parent = loadingFrame
+
+local loadingBarCorner = Instance.new("UICorner")
+loadingBarCorner.CornerRadius = UDim.new(0, 3)
+loadingBarCorner.Parent = loadingBarBg
+
+local loadingBar = Instance.new("Frame")
+loadingBar.Size = UDim2.new(0, 0, 0, 6)
+loadingBar.BackgroundColor3 = Color3.fromRGB(0, 200, 255)
+loadingBar.BorderSizePixel = 0
+loadingBar.Parent = loadingBarBg
+
+local loadingBarCorner2 = Instance.new("UICorner")
+loadingBarCorner2.CornerRadius = UDim.new(0, 3)
+loadingBarCorner2.Parent = loadingBar
+
+-- ============================================
+-- 📊 ФУНКЦИЯ ОБНОВЛЕНИЯ ПРОГРЕССА
+-- ============================================
+local function updateLoading(percent, text)
+    loadingText.Text = "⏳ " .. text .. " " .. percent .. "%"
+    loadingBar.Size = UDim2.new(percent / 100, 0, 0, 6)
+end
+
+-- ============================================
+-- 🚀 ОСНОВНОЙ ИНТЕРФЕЙС (СКРЫВАЕТ ЗАГРУЗКУ)
 -- ============================================
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 600, 0, 450)
@@ -112,6 +188,7 @@ frame.ClipsDescendants = true
 frame.Active = true
 frame.Draggable = true
 frame.Parent = screen
+frame.Visible = false  -- Скрыт, пока загрузка
 
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 16)
@@ -134,9 +211,9 @@ headerCorner.Parent = header
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 250, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
-title.Text = "🌙 LUNAR HUB"
+title.Text = "🌙 LUNAR HUB v9.8"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
-title.TextSize = 22
+title.TextSize = 20
 title.Font = Enum.Font.GothamBold
 title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
@@ -324,7 +401,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v9.7 Ultimate — Фикс отображения\n— Гарантированный запуск"
+    updateText.Text = "v9.8 — Экран загрузки\n— Полоска прогресса\n— Гарантированный запуск"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -390,7 +467,7 @@ local function updateStats()
 end
 
 -- ============================================
--- 🎨 КНОПКИ ИГР (С ГАРАНТИЕЙ ПОЯВЛЕНИЯ)
+-- 🎨 КНОПКИ ИГР
 -- ============================================
 local function createGameButton(gameData)
     local btn = Instance.new("TextButton")
@@ -477,10 +554,9 @@ local function createGameButton(gameData)
 end
 
 -- ============================================
--- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА (С ПРОВЕРКОЙ)
+-- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА
 -- ============================================
 local function updateContent(category)
-    -- Очищаем старые кнопки
     for _, child in ipairs(contentFrame:GetChildren()) do
         if child:IsA("TextButton") then child:Destroy() end
     end
@@ -512,12 +588,10 @@ local function updateContent(category)
     
     table.sort(gamesToShow, function(a, b) return a.name < b.name end)
     
-    -- СОЗДАЁМ КНОПКИ
     for _, game in ipairs(gamesToShow) do
         createGameButton(game)
     end
     
-    -- ОБНОВЛЯЕМ РАЗМЕР
     contentFrame.CanvasSize = UDim2.new(0, 0, 0, #gamesToShow * 44 + 10)
     updateStats()
 end
@@ -530,28 +604,57 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ============================================
--- 🚀 ФИНАЛЬНЫЙ ЗАПУСК (С ГАРАНТИЕЙ)
+-- 🚀 ФИНАЛЬНЫЙ ЗАПУСК (С ЭКРАНОМ ЗАГРУЗКИ)
 -- ============================================
 local function finalStart()
-    -- Проверяем, что contentFrame существует
-    if contentFrame and contentFrame.Parent then
-        updateContent(currentCategory)
-        updateStats()
-        print("✅ Lunar Hub v9.7 Ultimate loaded! (" .. #Games .. " games)")
-    else
-        warn("⚠️ contentFrame не найден! Повторная попытка...")
-        task.wait(0.5)
-        finalStart()
-    end
+    updateLoading(10, "Создание интерфейса")
+    task.wait(0.1)
+    
+    updateLoading(30, "Загрузка игр")
+    task.wait(0.1)
+    
+    updateLoading(50, "Настройка категорий")
+    task.wait(0.1)
+    
+    updateLoading(70, "Создание кнопок")
+    task.wait(0.1)
+    
+    -- Показываем основной интерфейс
+    frame.Visible = true
+    
+    updateLoading(90, "Финальная настройка")
+    task.wait(0.1)
+    
+    -- Обновляем контент
+    updateContent(currentCategory)
+    updateStats()
+    
+    updateLoading(100, "Готово!")
+    task.wait(0.3)
+    
+    -- Скрываем загрузку
+    loadingFrame:Destroy()
+    
+    print("✅ Lunar Hub v9.8 loaded! (" .. #Games .. " games)")
+    print("🌙 Экран загрузки активирован!")
 end
 
--- Запускаем через 0.2 секунды (гарантия)
-task.wait(0.2)
+-- Запускаем через 0.1 секунды
+task.wait(0.1)
 finalStart()
 
--- ПОВТОРНЫЙ ВЫЗОВ ЧЕРЕЗ STEPPED (САМЫЙ НАДЁЖНЫЙ)
+-- ============================================
+-- 🔄 STEPPED-ФИКС (НАДЁЖНОСТЬ)
+-- ============================================
 local connection
 connection = RunService.Stepped:Connect(function()
+    -- Проверяем, существует ли loadingFrame (если нет — значит загрузка завершена)
+    if not loadingFrame.Parent then
+        connection:Disconnect()
+        return
+    end
+    
+    -- Проверяем, есть ли кнопки
     local hasButtons = false
     for _, child in ipairs(contentFrame:GetChildren()) do
         if child:IsA("TextButton") then
@@ -560,12 +663,9 @@ connection = RunService.Stepped:Connect(function()
         end
     end
     
-    if not hasButtons then
+    if not hasButtons and frame.Visible then
         print("🔄 Принудительное обновление через Stepped")
         updateContent(currentCategory)
         updateStats()
-    else
-        connection:Disconnect()
-        print("✅ Кнопки появились, Stepped отключён")
     end
 end)
