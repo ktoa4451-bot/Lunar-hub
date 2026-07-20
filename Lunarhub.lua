@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v11.0 (FINAL - РАБОЧАЯ ВЕРСИЯ)
+-- 🌙 LUNAR HUB v11.1 (С ФИКСОМ ЗАПУСКА)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "11.0"
+    local currentVersion = "11.1"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -115,7 +115,7 @@ corner.Parent = frame
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 40)
 title.Position = UDim2.new(0, 0, 0, 5)
-title.Text = "🌙 LUNAR HUB v11.0"
+title.Text = "🌙 LUNAR HUB v11.1"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextSize = 22
 title.Font = Enum.Font.GothamBold
@@ -202,7 +202,7 @@ local function toggleFavorite(gameName)
         Favorites[gameName] = true
     end
     updateFavCount()
-    updateContent(currentCategory)  -- Обновляем список, чтобы звёздочки обновились
+    updateContent(currentCategory)
 end
 
 -- ============================================
@@ -258,7 +258,6 @@ local function updateContent(category)
         padding.PaddingLeft = UDim.new(0, 12)
         padding.Parent = btn
         
-        -- КНОПКА ИЗБРАННОГО (ЗВЁЗДОЧКА)
         local favBtn = Instance.new("TextButton")
         favBtn.Size = UDim2.new(0, 25, 1, 0)
         favBtn.Position = UDim2.new(1, -30, 0, 0)
@@ -276,7 +275,6 @@ local function updateContent(category)
             end
         end)
         
-        -- НАВЕДЕНИЕ
         btn.MouseEnter:Connect(function()
             btn.BackgroundTransparency = 0
             btn.BackgroundColor3 = Color3.fromRGB(45, 35, 80)
@@ -286,7 +284,6 @@ local function updateContent(category)
             btn.BackgroundColor3 = Color3.fromRGB(25, 25, 55)
         end)
         
-        -- ЗАГРУЗКА СКРИПТА
         btn.MouseButton1Click:Connect(function()
             btn.Text = "⏳..."
             task.wait(0.15)
@@ -351,8 +348,15 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ============================================
--- ⚡ ЗАПУСК
+-- ⚡ ЗАПУСК (С ФИКСОМ)
 -- ============================================
 updateFavCount()
 updateContent(currentCategory)
-print("✅ Lunar Hub v11.0 loaded! (" .. #Games .. " games)")
+
+-- 🔥 ФИКС: принудительный запуск через поиск
+task.wait(0.2)
+searchBox.Text = ""
+searchBox:GetPropertyChangedSignal("Text"):Fire()
+
+print("✅ Lunar Hub v11.1 loaded! (" .. #Games .. " games)")
+print("🔥 Фикс запуска активирован!")
