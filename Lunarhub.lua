@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v13.1 (ФИКС ПЕРЕКЛЮЧЕНИЯ)
+-- 🌙 LUNAR HUB v13.2 (ФИНАЛЬНЫЙ ФИКС)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "13.1"
+    local currentVersion = "13.2"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -228,7 +228,7 @@ headerCorner.Parent = header
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 280, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
-title.Text = "🌙 LUNAR HUB v13.1"
+title.Text = "🌙 LUNAR HUB v13.2"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextSize = 20
 title.Font = Enum.Font.GothamBold
@@ -304,7 +304,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 end)
 
 -- ============================================
--- 📂 КАТЕГОРИИ (С ПРИНУДИТЕЛЬНЫМ ПОИСКОМ)
+-- 📂 КАТЕГОРИИ (С ПРИНУДИТЕЛЬНЫМ ОБНОВЛЕНИЕМ)
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 110, 0, 300)
@@ -360,11 +360,21 @@ for _, cat in ipairs(categories) do
         btn.BackgroundTransparency = 0
         btn.BorderColor3 = Color3.fromRGB(255, 215, 0)
         
-        -- 🔥 ПРИНУДИТЕЛЬНЫЙ ПОИСК ПРИ ПЕРЕКЛЮЧЕНИИ
-        searchBox.Text = ""
-        searchBox:GetPropertyChangedSignal("Text"):Fire()
-        updateContent(cat)
+        -- ============================================
+        -- 🔥 ГЛАВНЫЙ ФИКС: ПРИНУДИТЕЛЬНОЕ ОБНОВЛЕНИЕ
+        -- ============================================
+        -- Очищаем список
+        for _, child in ipairs(list:GetChildren()) do
+            if child:IsA("TextButton") then
+                child:Destroy()
+            end
+        end
+        
+        -- Пересоздаём кнопки с задержкой
+        task.wait(0.05)
+        renderGames(cat)
         updateFavCount()
+        -- ============================================
     end)
     categoryButtons[cat] = btn
 end
@@ -409,18 +419,21 @@ local function toggleFavorite(gameName)
     saveFavorites()
     updateFavCount()
     if currentCategory == "⭐ Избранное" then
-        updateContent("⭐ Избранное")
+        renderGames("⭐ Избранное")
     else
-        updateContent(currentCategory)
+        renderGames(currentCategory)
     end
 end
 
 -- ============================================
--- 🎨 ОТРИСОВКА ИГР
+-- 🎨 ОТРИСОВКА ИГР (ОСНОВНАЯ ФУНКЦИЯ)
 -- ============================================
-local function updateContent(category)
+local function renderGames(category)
+    -- Очищаем список
     for _, child in ipairs(list:GetChildren()) do
-        if child:IsA("TextButton") then child:Destroy() end
+        if child:IsA("TextButton") then
+            child:Destroy()
+        end
     end
     
     local gamesToShow = {}
@@ -537,7 +550,7 @@ end
 -- 🔍 ПОИСК
 -- ============================================
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
-    updateContent(currentCategory)
+    renderGames(currentCategory)
 end)
 
 -- ============================================
@@ -562,22 +575,20 @@ local function finalStart()
     updateLoading(90, "Финальная настройка")
     task.wait(0.1)
     
+    -- Принудительный запуск
     task.wait(0.2)
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
-    
+    renderGames(currentCategory)
     updateFavCount()
-    updateContent(currentCategory)
     
     updateLoading(100, "Готово!")
     task.wait(0.3)
     
     loadingFrame:Destroy()
     
-    print("✅ Lunar Hub v13.1 loaded! (" .. #Games .. " games)")
+    print("✅ Lunar Hub v13.2 loaded! (" .. #Games .. " games)")
     print("💾 Избранное сохраняется!")
     print("⌨️ Горячая клавиша: Ctrl+F")
-    print("🔥 Фикс переключения категорий активирован!")
+    print("🔥 Финальный фикс категорий активирован!")
 end
 
 task.wait(0.1)
@@ -603,9 +614,7 @@ connection = game:GetService("RunService").Stepped:Connect(function()
     
     if not hasButtons and frame.Visible then
         print("🔄 Принудительное обновление через Stepped")
-        searchBox.Text = ""
-        searchBox:GetPropertyChangedSignal("Text"):Fire()
-        updateContent(currentCategory)
+        renderGames(currentCategory)
         updateFavCount()
     end
 end)
@@ -616,26 +625,20 @@ end)
 task.wait(1)
 if #list:GetChildren() == 0 then
     print("🔄 Таймер 1: Принудительное обновление")
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
-    updateContent(currentCategory)
+    renderGames(currentCategory)
     updateFavCount()
 end
 
 task.wait(2)
 if #list:GetChildren() == 0 then
     print("🔄 Таймер 2: Аварийное обновление")
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
-    updateContent(currentCategory)
+    renderGames(currentCategory)
     updateFavCount()
 end
 
 task.wait(3)
 if #list:GetChildren() == 0 then
     print("🔄 Таймер 3: Экстренное обновление")
-    searchBox.Text = ""
-    searchBox:GetPropertyChangedSignal("Text"):Fire()
-    updateContent(currentCategory)
+    renderGames(currentCategory)
     updateFavCount()
 end
