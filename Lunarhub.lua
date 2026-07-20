@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v12.0 (ИЗБРАННОЕ КАК ВКЛАДКА)
+-- 🌙 LUNAR HUB v12.2 (ВСЕ УЛУЧШЕНИЯ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "12.1"
+    local currentVersion = "12.2"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -38,7 +38,7 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ (С ИКОНКАМИ)
+-- ⚡ ИГРЫ
 -- ============================================
 local Games = {
     {name = "🔫 Forsaken", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
@@ -58,10 +58,29 @@ local Games = {
 }
 
 -- ============================================
--- ⭐ ИЗБРАННОЕ
+-- ⭐ ИЗБРАННОЕ (С СОХРАНЕНИЕМ)
 -- ============================================
 local Favorites = {}
 local currentCategory = "Все игры"
+
+-- Загрузка избранного
+local function loadFavorites()
+    local success, data = pcall(function()
+        return game:GetService("HttpService"):JSONDecode(game:GetService("Players").LocalPlayer:GetAttribute("LunarFavorites") or "{}")
+    end)
+    if success and data then
+        Favorites = data
+    end
+end
+
+-- Сохранение избранного
+local function saveFavorites()
+    pcall(function()
+        game:GetService("Players").LocalPlayer:SetAttribute("LunarFavorites", game:GetService("HttpService"):JSONEncode(Favorites))
+    end)
+end
+
+loadFavorites()
 
 -- ============================================
 -- 🔧 УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
@@ -88,15 +107,17 @@ local function loadScript(link)
 end
 
 -- ============================================
--- 🔧 GUI (КРАСИВЫЙ, НЕОНОВЫЙ)
+-- 🔧 GUI
 -- ============================================
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
 screen.Parent = PlayerGui
+screen.Enabled = false
 
 -- ============================================
 -- 🖼️ ОСНОВНОЕ ОКНО
@@ -153,7 +174,7 @@ headerCorner.Parent = header
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 250, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
-title.Text = "🌙 LUNAR HUB v12.0"
+title.Text = "🌙 LUNAR HUB v12.2"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextSize = 20
 title.Font = Enum.Font.GothamBold
@@ -161,7 +182,6 @@ title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = header
 
--- СЧЁТЧИК ИЗБРАННОГО
 local favCountLabel = Instance.new("TextLabel")
 favCountLabel.Size = UDim2.new(0, 150, 1, 0)
 favCountLabel.Position = UDim2.new(1, -160, 0, 0)
@@ -173,7 +193,6 @@ favCountLabel.BackgroundTransparency = 1
 favCountLabel.TextXAlignment = Enum.TextXAlignment.Right
 favCountLabel.Parent = header
 
--- КНОПКА ЗАКРЫТИЯ
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 34, 0, 34)
 close.Position = UDim2.new(1, -40, 0, 10)
@@ -222,8 +241,16 @@ local searchCorner = Instance.new("UICorner")
 searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
+-- ГОРЯЧАЯ КЛАВИША Ctrl+F
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.F and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        searchBox:CaptureFocus()
+    end
+end)
+
 -- ============================================
--- 📂 КАТЕГОРИИ (ГОРИЗОНТАЛЬНЫЕ ВКЛАДКИ)
+-- 📂 КАТЕГОРИИ
 -- ============================================
 local categoriesContainer = Instance.new("Frame")
 categoriesContainer.Size = UDim2.new(0, 380, 0, 36)
@@ -330,7 +357,7 @@ local function showUpdateWindow()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 90)
     updateText.Position = UDim2.new(0, 10, 0, 50)
-    updateText.Text = "v12.0 — Избранное как вкладка\n— Горизонтальные категории\n— Красивый неоновый дизайн"
+    updateText.Text = "v12.2 — Все улучшения:\n— Сохранение избранного\n— Плавное появление\n— Индикатор загрузки\n— Горячая клавиша Ctrl+F"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -349,16 +376,7 @@ local function showUpdateWindow()
     closeUpdate.Parent = updateFrame
     closeUpdate.MouseButton1Click:Connect(function()
         updateFrame:Destroy()
-        -- Возвращаемся к "Все игры"
         switchCategory("Все игры")
-    end)
-
-    -- Клик вне окна закрывает
-    screen.MouseButton1Click:Connect(function()
-        if updateFrame then
-            updateFrame:Destroy()
-            switchCategory("Все игры")
-        end
     end)
 end
 
@@ -394,6 +412,7 @@ local function toggleFavorite(gameName)
     else
         Favorites[gameName] = true
     end
+    saveFavorites()
     updateFavCount()
     if currentCategory == "⭐ Избранное" then
         updateContent("⭐ Избранное")
@@ -533,5 +552,12 @@ end)
 updateFavCount()
 switchCategory("Все игры")
 
-print("✅ Lunar Hub v12.0 loaded! (" .. #Games .. " games)")
-print("⭐ Избранное как вкладка!")
+-- ПЛАВНОЕ ПОЯВЛЕНИЕ
+task.wait(0.1)
+screen.Enabled = true
+TweenService:Create(screen, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {Enabled = true}):Play()
+
+print("✅ Lunar Hub v12.2 loaded! (" .. #Games .. " games)")
+print("💾 Избранное сохраняется!")
+print("⌨️ Горячая клавиша: Ctrl+F")
+print("✨ Плавное появление активировано!")
