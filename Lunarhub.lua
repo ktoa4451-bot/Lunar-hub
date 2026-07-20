@@ -1,6 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v9.7 ULTIMATE (ГИБРИД)
--- Дизайн из v8.9 + Надёжность из v9.7
+-- 🌙 LUNAR HUB v9.7 ULTIMATE (ФИКС ОТОБРАЖЕНИЯ)
 -- by Ryzen
 -- ============================================
 
@@ -39,7 +38,7 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ (С ИКОНКАМИ ИЗ v8.9)
+-- ⚡ ИГРЫ (С ИКОНКАМИ)
 -- ============================================
 local Games = {
     {name = "🔫 Forsaken", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
@@ -59,7 +58,7 @@ local Games = {
 }
 
 -- ============================================
--- ⭐ ИЗБРАННОЕ (ИЗ v8.9)
+-- ⭐ ИЗБРАННОЕ
 -- ============================================
 local Favorites = {}
 
@@ -88,7 +87,7 @@ local function loadScript(link)
 end
 
 -- ============================================
--- 🔧 GUI (ДИЗАЙН ИЗ v8.9)
+-- 🔧 GUI (ПОШАГОВОЕ СОЗДАНИЕ)
 -- ============================================
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -101,7 +100,7 @@ screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 -- ============================================
--- 🎨 ОСНОВНОЙ ФРЕЙМ (ИЗ v8.9)
+-- 🎨 ОСНОВНОЙ ФРЕЙМ
 -- ============================================
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 600, 0, 450)
@@ -118,17 +117,8 @@ local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 16)
 corner.Parent = frame
 
-local shadow = Instance.new("ImageLabel")
-shadow.Size = UDim2.new(1, 30, 1, 30)
-shadow.Position = UDim2.new(0, -15, 0, -15)
-shadow.BackgroundTransparency = 1
-shadow.Image = "rbxassetid://13188751145"
-shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-shadow.ImageTransparency = 0.4
-shadow.Parent = frame
-
 -- ============================================
--- 🔧 ЗАГОЛОВОК (ИЗ v8.9)
+-- 🔧 ЗАГОЛОВОК
 -- ============================================
 local header = Instance.new("Frame")
 header.Size = UDim2.new(1, 0, 0, 60)
@@ -175,7 +165,7 @@ favLabel.TextXAlignment = Enum.TextXAlignment.Left
 favLabel.Parent = header
 
 -- ============================================
--- 🔧 КНОПКА ЗАКРЫТИЯ (ИЗ v8.9)
+-- 🔧 КНОПКА ЗАКРЫТИЯ
 -- ============================================
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 34, 0, 34)
@@ -207,7 +197,7 @@ close.MouseButton1Click:Connect(function()
 end)
 
 -- ============================================
--- 📋 ПОИСК (ИЗ v8.9)
+-- 📋 ПОИСК
 -- ============================================
 local searchBox = Instance.new("TextBox")
 searchBox.Size = UDim2.new(1, -40, 0, 32)
@@ -228,7 +218,7 @@ searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
 -- ============================================
--- 📋 КАТЕГОРИИ (ИЗ v8.9)
+-- 📋 КАТЕГОРИИ
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 120, 0, 300)
@@ -280,7 +270,7 @@ if categoryButtons["🎮 Игры"] then
 end
 
 -- ============================================
--- 📢 КНОПКА ОБНОВЛЕНИЙ (ИЗ v8.9)
+-- 📢 КНОПКА ОБНОВЛЕНИЙ
 -- ============================================
 local updateBtn = Instance.new("TextButton")
 updateBtn.Size = UDim2.new(1, 0, 0, 36)
@@ -334,7 +324,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v9.7 Ultimate — Гибрид\n— Дизайн из v8.9\n— Надёжность из v9.7"
+    updateText.Text = "v9.7 Ultimate — Фикс отображения\n— Гарантированный запуск"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -358,7 +348,7 @@ updateBtn.MouseButton1Click:Connect(function()
 end)
 
 -- ============================================
--- 📋 КОНТЕНТ (СПИСОК ИГР ИЗ v9.7)
+-- 📋 КОНТЕНТ (СПИСОК ИГР)
 -- ============================================
 local contentFrame = Instance.new("ScrollingFrame")
 contentFrame.Size = UDim2.new(0, 430, 0, 300)
@@ -375,7 +365,7 @@ contentLayout.Padding = UDim.new(0, 6)
 contentLayout.Parent = contentFrame
 
 -- ============================================
--- ⭐ ИЗБРАННОЕ (ИЗ v8.9)
+-- ⭐ ИЗБРАННОЕ
 -- ============================================
 local function toggleFavorite(gameName)
     if Favorites[gameName] then
@@ -400,7 +390,7 @@ local function updateStats()
 end
 
 -- ============================================
--- 🎨 КНОПКИ ИГР (ИЗ v9.7 С ДИЗАЙНОМ ИЗ v8.9)
+-- 🎨 КНОПКИ ИГР (С ГАРАНТИЕЙ ПОЯВЛЕНИЯ)
 -- ============================================
 local function createGameButton(gameData)
     local btn = Instance.new("TextButton")
@@ -414,7 +404,7 @@ local function createGameButton(gameData)
     btn.BackgroundTransparency = 0.2
     btn.BorderSizePixel = 0
     btn.Parent = contentFrame
-    btn.Name = gameData.name  -- Для поиска
+    btn.Name = gameData.name
     
     local btnCorner = Instance.new("UICorner")
     btnCorner.CornerRadius = UDim.new(0, 8)
@@ -487,9 +477,10 @@ local function createGameButton(gameData)
 end
 
 -- ============================================
--- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА (ИЗ v8.9)
+-- 🔧 ОБНОВЛЕНИЕ КОНТЕНТА (С ПРОВЕРКОЙ)
 -- ============================================
 local function updateContent(category)
+    -- Очищаем старые кнопки
     for _, child in ipairs(contentFrame:GetChildren()) do
         if child:IsA("TextButton") then child:Destroy() end
     end
@@ -521,39 +512,46 @@ local function updateContent(category)
     
     table.sort(gamesToShow, function(a, b) return a.name < b.name end)
     
+    -- СОЗДАЁМ КНОПКИ
     for _, game in ipairs(gamesToShow) do
         createGameButton(game)
     end
     
+    -- ОБНОВЛЯЕМ РАЗМЕР
     contentFrame.CanvasSize = UDim2.new(0, 0, 0, #gamesToShow * 44 + 10)
     updateStats()
 end
 
 -- ============================================
--- 🔧 ПОИСК (ИЗ v8.9)
+-- 🔧 ПОИСК
 -- ============================================
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
     updateContent(currentCategory)
 end)
 
 -- ============================================
--- 🚀 ФИНАЛЬНЫЙ ЗАПУСК (ИЗ v9.7 - НАДЁЖНЫЙ)
+-- 🚀 ФИНАЛЬНЫЙ ЗАПУСК (С ГАРАНТИЕЙ)
 -- ============================================
 local function finalStart()
-    updateContent(currentCategory)
-    updateStats()
-    print("✅ Lunar Hub v9.7 Ultimate loaded! (" .. #Games .. " games)")
-    print("🌙 Гибрид v8.9 + v9.7 активирован!")
+    -- Проверяем, что contentFrame существует
+    if contentFrame and contentFrame.Parent then
+        updateContent(currentCategory)
+        updateStats()
+        print("✅ Lunar Hub v9.7 Ultimate loaded! (" .. #Games .. " games)")
+    else
+        warn("⚠️ contentFrame не найден! Повторная попытка...")
+        task.wait(0.5)
+        finalStart()
+    end
 end
 
--- Ждём полной отрисовки
-task.wait(0.1)
+-- Запускаем через 0.2 секунды (гарантия)
+task.wait(0.2)
 finalStart()
 
--- ПОВТОРНЫЙ ВЫЗОВ ЧЕРЕЗ STEPPED (НАДЁЖНОСТЬ ИЗ v8.9)
+-- ПОВТОРНЫЙ ВЫЗОВ ЧЕРЕЗ STEPPED (САМЫЙ НАДЁЖНЫЙ)
 local connection
 connection = RunService.Stepped:Connect(function()
-    -- Проверяем, есть ли кнопки
     local hasButtons = false
     for _, child in ipairs(contentFrame:GetChildren()) do
         if child:IsA("TextButton") then
@@ -562,13 +560,11 @@ connection = RunService.Stepped:Connect(function()
         end
     end
     
-    -- Если кнопок нет — обновляем
     if not hasButtons then
+        print("🔄 Принудительное обновление через Stepped")
         updateContent(currentCategory)
         updateStats()
-        print("🔄 Принудительное обновление через Stepped")
     else
-        -- Если кнопки появились — отключаем проверку
         connection:Disconnect()
         print("✅ Кнопки появились, Stepped отключён")
     end
