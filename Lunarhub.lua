@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB (ГОРИЗОНТАЛЬНЫЙ)
+-- 🌙 LUNAR HUB (FINAL ULTIMATE)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "21.0"
+    local currentVersion = "22.0"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -38,7 +38,7 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ (БЕЗ ИКОНОК)
+-- ⚡ ИГРЫ
 -- ============================================
 local Games = {
     {name = "Forsaken", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
@@ -88,6 +88,7 @@ local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 
 local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
@@ -95,13 +96,18 @@ screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 -- ============================================
--- 🖼️ ОСНОВНОЕ ОКНО
+-- 🎬 АНИМАЦИЯ ПОЯВЛЕНИЯ
+-- ============================================
+screen.Enabled = false
+
+-- ============================================
+-- 🖼️ ОСНОВНОЕ ОКНО (ЭФФЕКТ СТЕКЛА)
 -- ============================================
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 550, 0, 420)
-frame.Position = UDim2.new(0.5, -275, 0.5, -210)
-frame.BackgroundColor3 = Color3.fromRGB(10, 10, 25)
-frame.BackgroundTransparency = 0
+frame.Size = UDim2.new(0, 600, 0, 420)
+frame.Position = UDim2.new(0.5, -300, 0.5, -210)
+frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+frame.BackgroundTransparency = 0.15
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
 frame.Active = true
@@ -109,8 +115,30 @@ frame.Draggable = true
 frame.Parent = screen
 
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 12)
+corner.CornerRadius = UDim.new(0, 16)
 corner.Parent = frame
+
+-- ЭФФЕКТ СТЕКЛА (GLASSMORPHISM)
+local glass = Instance.new("Frame")
+glass.Size = UDim2.new(1, 0, 1, 0)
+glass.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+glass.BackgroundTransparency = 0.15
+glass.BorderSizePixel = 0
+glass.Parent = frame
+
+-- РАМКА
+local border = Instance.new("Frame")
+border.Size = UDim2.new(1, 0, 1, 0)
+border.BackgroundTransparency = 1
+border.BorderSizePixel = 2
+border.BorderColor3 = Color3.fromRGB(255, 255, 255)
+border.BorderColor3 = Color3.fromRGB(200, 180, 255)
+border.BackgroundTransparency = 1
+border.Parent = frame
+
+local borderCorner = Instance.new("UICorner")
+borderCorner.CornerRadius = UDim.new(0, 16)
+borderCorner.Parent = border
 
 -- ============================================
 -- 🔹 ЗАГОЛОВОК
@@ -118,12 +146,12 @@ corner.Parent = frame
 local header = Instance.new("Frame")
 header.Size = UDim2.new(1, 0, 0, 50)
 header.BackgroundColor3 = Color3.fromRGB(20, 15, 45)
-header.BackgroundTransparency = 0
+header.BackgroundTransparency = 0.2
 header.BorderSizePixel = 0
 header.Parent = frame
 
 local headerCorner = Instance.new("UICorner")
-headerCorner.CornerRadius = UDim.new(0, 12)
+headerCorner.CornerRadius = UDim.new(0, 16)
 headerCorner.Parent = header
 
 local title = Instance.new("TextLabel")
@@ -137,15 +165,41 @@ title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = header
 
+-- ОНЛАЙН
+local onlineLabel = Instance.new("TextLabel")
+onlineLabel.Size = UDim2.new(0, 120, 1, 0)
+onlineLabel.Position = UDim2.new(0, 250, 0, 0)
+onlineLabel.Text = "🟢 Online: 0"
+onlineLabel.TextColor3 = Color3.fromRGB(0, 255, 100)
+onlineLabel.TextSize = 14
+onlineLabel.Font = Enum.Font.GothamBold
+onlineLabel.BackgroundTransparency = 1
+onlineLabel.TextXAlignment = Enum.TextXAlignment.Left
+onlineLabel.Parent = header
+
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 30, 0, 30)
 close.Position = UDim2.new(1, -40, 0, 10)
 close.Text = "✕"
-close.TextColor3 = Color3.fromRGB(255, 100, 100)
+close.TextColor3 = Color3.fromRGB(255, 255, 255)
 close.TextSize = 18
 close.Font = Enum.Font.GothamBold
-close.BackgroundTransparency = 1
+close.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+close.BackgroundTransparency = 0.2
+close.BorderSizePixel = 0
 close.Parent = header
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.Parent = close
+
+close.MouseEnter:Connect(function()
+    TweenService:Create(close, TweenInfo.new(0.15), {BackgroundTransparency = 0, TextColor3 = Color3.fromRGB(255, 50, 50)}):Play()
+end)
+close.MouseLeave:Connect(function()
+    TweenService:Create(close, TweenInfo.new(0.15), {BackgroundTransparency = 0.2, TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+end)
+
 close.MouseButton1Click:Connect(function()
     screen:Destroy()
 end)
@@ -157,7 +211,7 @@ local searchBox = Instance.new("TextBox")
 searchBox.Size = UDim2.new(0, 280, 0, 30)
 searchBox.Position = UDim2.new(0, 15, 0, 60)
 searchBox.BackgroundColor3 = Color3.fromRGB(30, 25, 60)
-searchBox.BackgroundTransparency = 0.2
+searchBox.BackgroundTransparency = 0.3
 searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 searchBox.PlaceholderText = "🔍 Поиск..."
 searchBox.PlaceholderColor3 = Color3.fromRGB(150, 140, 200)
@@ -171,26 +225,34 @@ local searchCorner = Instance.new("UICorner")
 searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
+-- АНИМАЦИЯ ФОКУСА НА ПОИСК
+searchBox.Focused:Connect(function()
+    TweenService:Create(searchBox, TweenInfo.new(0.2), {BackgroundTransparency = 0.1, BackgroundColor3 = Color3.fromRGB(50, 40, 100)}):Play()
+end)
+searchBox.FocusLost:Connect(function()
+    TweenService:Create(searchBox, TweenInfo.new(0.2), {BackgroundTransparency = 0.3, BackgroundColor3 = Color3.fromRGB(30, 25, 60)}):Play()
+end)
+
 -- ============================================
--- 📂 КАТЕГОРИИ (ГОРИЗОНТАЛЬНЫЕ)
+-- 📂 КАТЕГОРИИ (СЛЕВА)
 -- ============================================
-local categoriesContainer = Instance.new("Frame")
-categoriesContainer.Size = UDim2.new(0, 280, 0, 32)
-categoriesContainer.Position = UDim2.new(0, 15, 0, 100)
-categoriesContainer.BackgroundTransparency = 1
-categoriesContainer.Parent = frame
+local categoriesFrame = Instance.new("Frame")
+categoriesFrame.Size = UDim2.new(0, 110, 0, 320)
+categoriesFrame.Position = UDim2.new(0, 15, 0, 100)
+categoriesFrame.BackgroundTransparency = 1
+categoriesFrame.Parent = frame
 
 local categoriesLayout = Instance.new("UIListLayout")
-categoriesLayout.FillDirection = Enum.FillDirection.Horizontal
-categoriesLayout.Padding = UDim.new(0, 10)
-categoriesLayout.Parent = categoriesContainer
+categoriesLayout.FillDirection = Enum.FillDirection.Vertical
+categoriesLayout.Padding = UDim.new(0, 8)
+categoriesLayout.Parent = categoriesFrame
 
 -- ============================================
 -- 📋 СПИСОК ИГР
 -- ============================================
 local list = Instance.new("ScrollingFrame")
-list.Size = UDim2.new(1, -20, 1, -145)
-list.Position = UDim2.new(0, 10, 0, 140)
+list.Size = UDim2.new(0, 430, 0, 320)
+list.Position = UDim2.new(0, 135, 0, 100)
 list.BackgroundTransparency = 1
 list.CanvasSize = UDim2.new(0, 0, 0, 0)
 list.ScrollBarThickness = 4
@@ -215,16 +277,23 @@ local function showUpdateWindow()
     local updateFrame = Instance.new("Frame")
     updateFrame.Size = UDim2.new(0, 320, 0, 160)
     updateFrame.Position = UDim2.new(0.5, -160, 0.5, -80)
-    updateFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 30)
-    updateFrame.BackgroundTransparency = 0
-    updateFrame.BorderSizePixel = 1
-    updateFrame.BorderColor3 = Color3.fromRGB(255, 215, 0)
+    updateFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    updateFrame.BackgroundTransparency = 0.1
+    updateFrame.BorderSizePixel = 0
     updateFrame.ClipsDescendants = true
     updateFrame.Parent = screen
     
     local updateCorner = Instance.new("UICorner")
     updateCorner.CornerRadius = UDim.new(0, 12)
     updateCorner.Parent = updateFrame
+    
+    -- ЭФФЕКТ СТЕКЛА НА ОКНЕ
+    local updateGlass = Instance.new("Frame")
+    updateGlass.Size = UDim2.new(1, 0, 1, 0)
+    updateGlass.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    updateGlass.BackgroundTransparency = 0.1
+    updateGlass.BorderSizePixel = 0
+    updateGlass.Parent = updateFrame
     
     local updateTitle = Instance.new("TextLabel")
     updateTitle.Size = UDim2.new(1, 0, 0, 40)
@@ -238,7 +307,7 @@ local function showUpdateWindow()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "LUNAR HUB — Финальная версия\n— Горизонтальное меню\n— Лёгкие анимации\n— Работает без лагов"
+    updateText.Text = "LUNAR HUB — Финальная версия\n— Категории слева\n— Эффект стекла\n— Онлайн-счётчик"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -264,7 +333,7 @@ local function showUpdateWindow()
     local appear = TweenService:Create(
         updateFrame,
         TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-        {BackgroundTransparency = 0}
+        {BackgroundTransparency = 0.1}
     )
     appear:Play()
 end
@@ -305,9 +374,8 @@ local function updateContent(category)
         btn.TextXAlignment = Enum.TextXAlignment.Left
         btn.Font = Enum.Font.GothamBold
         btn.BackgroundColor3 = Color3.fromRGB(25, 22, 55)
-        btn.BackgroundTransparency = 0.1
-        btn.BorderSizePixel = 1
-        btn.BorderColor3 = Color3.fromRGB(80, 60, 180)
+        btn.BackgroundTransparency = 0.2
+        btn.BorderSizePixel = 0
         btn.Parent = list
         btn.Name = game.name
         
@@ -329,16 +397,17 @@ local function updateContent(category)
         arrow.BackgroundTransparency = 1
         arrow.Parent = btn
         
-        -- АНИМАЦИИ
+        -- АНИМАЦИИ НАВЕДЕНИЯ
         btn.MouseEnter:Connect(function()
             TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(45, 35, 90)}):Play()
             TweenService:Create(arrow, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 215, 0)}):Play()
         end)
         btn.MouseLeave:Connect(function()
-            TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundTransparency = 0.1, BackgroundColor3 = Color3.fromRGB(25, 22, 55)}):Play()
+            TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundTransparency = 0.2, BackgroundColor3 = Color3.fromRGB(25, 22, 55)}):Play()
             TweenService:Create(arrow, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(150, 100, 200)}):Play()
         end)
         
+        -- АНИМАЦИЯ НАЖАТИЯ
         btn.MouseButton1Click:Connect(function()
             TweenService:Create(btn, TweenInfo.new(0.1), {Size = UDim2.new(1, 0, 0, 30)}):Play()
             task.wait(0.1)
@@ -371,22 +440,21 @@ local function updateContent(category)
 end
 
 -- ============================================
--- 🔧 КНОПКИ КАТЕГОРИЙ (ГОРИЗОНТАЛЬНЫЕ)
+-- 🔧 КНОПКИ КАТЕГОРИЙ (СЛЕВА)
 -- ============================================
 local categories = {"Все игры", "Обновления"}
 
 for _, cat in ipairs(categories) do
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, 120, 1, 0)
+    btn.Size = UDim2.new(1, 0, 0, 34)
     btn.Text = cat
     btn.TextColor3 = Color3.fromRGB(200, 200, 255)
     btn.TextSize = 13
     btn.Font = Enum.Font.GothamBold
     btn.BackgroundColor3 = Color3.fromRGB(25, 22, 55)
     btn.BackgroundTransparency = 0.2
-    btn.BorderSizePixel = 1
-    btn.BorderColor3 = Color3.fromRGB(80, 60, 180)
-    btn.Parent = categoriesContainer
+    btn.BorderSizePixel = 0
+    btn.Parent = categoriesFrame
     btn.Name = cat
     
     local btnCorner = Instance.new("UICorner")
@@ -407,17 +475,15 @@ for _, cat in ipairs(categories) do
     btn.MouseButton1Click:Connect(function()
         currentCategory = cat
         
-        for _, b in ipairs(categoriesContainer:GetChildren()) do
+        for _, b in ipairs(categoriesFrame:GetChildren()) do
             if b:IsA("TextButton") then
                 b.BackgroundTransparency = 0.2
                 b.BackgroundColor3 = Color3.fromRGB(25, 22, 55)
-                b.BorderColor3 = Color3.fromRGB(80, 60, 180)
             end
         end
         
         btn.BackgroundTransparency = 0
         btn.BackgroundColor3 = Color3.fromRGB(60, 40, 150)
-        btn.BorderColor3 = Color3.fromRGB(255, 215, 0)
         
         if cat == "Обновления" then
             showUpdateWindow()
@@ -431,7 +497,6 @@ end
 if categoryButtons["Все игры"] then
     categoryButtons["Все игры"].BackgroundTransparency = 0
     categoryButtons["Все игры"].BackgroundColor3 = Color3.fromRGB(60, 40, 150)
-    categoryButtons["Все игры"].BorderColor3 = Color3.fromRGB(255, 215, 0)
 end
 
 -- ============================================
@@ -452,7 +517,19 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 end)
 
 -- ============================================
--- ⚡ ЗАПУСК
+-- 🟢 ОБНОВЛЕНИЕ ОНЛАЙНА
+-- ============================================
+local function updateOnline()
+    local count = #Players:GetPlayers()
+    onlineLabel.Text = "🟢 Online: " .. count
+end
+
+Players.PlayerAdded:Connect(updateOnline)
+Players.PlayerRemoving:Connect(updateOnline)
+updateOnline()
+
+-- ============================================
+-- ⚡ ЗАПУСК С АНИМАЦИЕЙ
 -- ============================================
 updateContent("Все игры")
 
@@ -461,6 +538,11 @@ task.wait(0.2)
 searchBox.Text = ""
 searchBox:GetPropertyChangedSignal("Text"):Fire()
 
+-- АНИМАЦИЯ ПОЯВЛЕНИЯ ХАБА
+screen.Enabled = true
+TweenService:Create(screen, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Enabled = true}):Play()
+
 print("✅ LUNAR HUB loaded! (" .. #Games .. " games)")
-print("🎨 Горизонтальное меню активировано!")
+print("🟢 Online счётчик активирован!")
+print("🧊 Эффект стекла включён!")
 print("⌨️ Горячая клавиша: Ctrl+F")
