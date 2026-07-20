@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v13.0 (ULTIMATE EDITION)
+-- 🌙 LUNAR HUB v13.1 (ФИКС ПЕРЕКЛЮЧЕНИЯ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "13.0"
+    local currentVersion = "13.1"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -198,7 +198,7 @@ local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 16)
 corner.Parent = frame
 
--- НЕОНОВАЯ РАМКА (лёгкая, без лагов)
+-- НЕОНОВАЯ РАМКА
 local glow = Instance.new("Frame")
 glow.Size = UDim2.new(1, 6, 1, 6)
 glow.Position = UDim2.new(0, -3, 0, -3)
@@ -228,7 +228,7 @@ headerCorner.Parent = header
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 280, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
-title.Text = "🌙 LUNAR HUB v13.0"
+title.Text = "🌙 LUNAR HUB v13.1"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextSize = 20
 title.Font = Enum.Font.GothamBold
@@ -236,7 +236,6 @@ title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = header
 
--- СЧЁТЧИК ИЗБРАННОГО
 local favCountLabel = Instance.new("TextLabel")
 favCountLabel.Size = UDim2.new(0, 150, 1, 0)
 favCountLabel.Position = UDim2.new(1, -160, 0, 0)
@@ -248,7 +247,6 @@ favCountLabel.BackgroundTransparency = 1
 favCountLabel.TextXAlignment = Enum.TextXAlignment.Right
 favCountLabel.Parent = header
 
--- КНОПКА ЗАКРЫТИЯ
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 34, 0, 34)
 close.Position = UDim2.new(1, -40, 0, 10)
@@ -306,7 +304,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 end)
 
 -- ============================================
--- 📂 КАТЕГОРИИ (ВЕРТИКАЛЬНЫЕ - НАДЁЖНЕЕ)
+-- 📂 КАТЕГОРИИ (С ПРИНУДИТЕЛЬНЫМ ПОИСКОМ)
 -- ============================================
 local categoriesFrame = Instance.new("Frame")
 categoriesFrame.Size = UDim2.new(0, 110, 0, 300)
@@ -361,7 +359,12 @@ for _, cat in ipairs(categories) do
         end
         btn.BackgroundTransparency = 0
         btn.BorderColor3 = Color3.fromRGB(255, 215, 0)
+        
+        -- 🔥 ПРИНУДИТЕЛЬНЫЙ ПОИСК ПРИ ПЕРЕКЛЮЧЕНИИ
+        searchBox.Text = ""
+        searchBox:GetPropertyChangedSignal("Text"):Fire()
         updateContent(cat)
+        updateFavCount()
     end)
     categoryButtons[cat] = btn
 end
@@ -538,7 +541,7 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ============================================
--- 🚀 ЗАПУСК (С СЕКРЕТНЫМ ФИКСОМ)
+-- 🚀 ЗАПУСК
 -- ============================================
 local function finalStart()
     updateLoading(10, "Создание интерфейса")
@@ -559,7 +562,6 @@ local function finalStart()
     updateLoading(90, "Финальная настройка")
     task.wait(0.1)
     
-    -- 🔥 СЕКРЕТНЫЙ ФИКС
     task.wait(0.2)
     searchBox.Text = ""
     searchBox:GetPropertyChangedSignal("Text"):Fire()
@@ -572,10 +574,10 @@ local function finalStart()
     
     loadingFrame:Destroy()
     
-    print("✅ Lunar Hub v13.0 loaded! (" .. #Games .. " games)")
+    print("✅ Lunar Hub v13.1 loaded! (" .. #Games .. " games)")
     print("💾 Избранное сохраняется!")
     print("⌨️ Горячая клавиша: Ctrl+F")
-    print("🔥 Секретный фикс активирован!")
+    print("🔥 Фикс переключения категорий активирован!")
 end
 
 task.wait(0.1)
