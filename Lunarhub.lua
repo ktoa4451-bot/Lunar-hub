@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v9.8.1 (ФИКС ИЗБРАННОГО И ПОИСКА)
+-- 🌙 LUNAR HUB v9.8.2 (ФИНАЛЬНЫЙ ФИКС)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "9.8.1"
+    local currentVersion = "9.8.2"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -62,7 +62,6 @@ local Games = {
 -- ============================================
 local Favorites = {}
 
--- Загружаем избранное из памяти Roblox
 local function loadFavorites()
     local success, data = pcall(function()
         return game:GetService("HttpService"):JSONDecode(game:GetService("Players").LocalPlayer:GetAttribute("LunarFavorites") or "{}")
@@ -72,7 +71,6 @@ local function loadFavorites()
     end
 end
 
--- Сохраняем избранное
 local function saveFavorites()
     local success = pcall(function()
         game:GetService("Players").LocalPlayer:SetAttribute("LunarFavorites", game:GetService("HttpService"):JSONEncode(Favorites))
@@ -82,7 +80,6 @@ local function saveFavorites()
     end
 end
 
--- Загружаем при старте
 loadFavorites()
 
 -- ============================================
@@ -220,7 +217,7 @@ headerCorner.Parent = header
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 250, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
-title.Text = "🌙 LUNAR HUB v9.8.1"
+title.Text = "🌙 LUNAR HUB v9.8.2"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextSize = 20
 title.Font = Enum.Font.GothamBold
@@ -410,7 +407,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v9.8.1 — Фикс багов\n— Сохранение избранного\n— Авто-загрузка игр"
+    updateText.Text = "v9.8.2 — Финальный фикс\n— Игры появляются автоматически\n— Избранное сохраняется"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -451,7 +448,7 @@ contentLayout.Padding = UDim.new(0, 6)
 contentLayout.Parent = contentFrame
 
 -- ============================================
--- ⭐ ИЗБРАННОЕ (С СОХРАНЕНИЕМ)
+-- ⭐ ИЗБРАННОЕ
 -- ============================================
 local function toggleFavorite(gameName)
     if Favorites[gameName] then
@@ -459,7 +456,7 @@ local function toggleFavorite(gameName)
     else
         Favorites[gameName] = true
     end
-    saveFavorites()  -- Сохраняем сразу
+    saveFavorites()
     updateStats()
     if currentCategory == "⭐ Избранное" then
         updateContent("⭐ Избранное")
@@ -630,22 +627,29 @@ local function finalStart()
     task.wait(0.1)
     
     frame.Visible = true
+    task.wait(0.15)
     
     updateLoading(90, "Финальная настройка")
     task.wait(0.1)
     
-    -- ГЛАВНЫЙ ФИКС: принудительно обновляем контент ДВАЖДЫ
     updateContent(currentCategory)
     updateStats()
+    task.wait(0.1)
+    
+    updateContent(currentCategory)
     task.wait(0.05)
-    updateContent(currentCategory)  -- Второй раз для гарантии
+    
+    if #contentFrame:GetChildren() == 0 then
+        print("🔄 Экстренный запуск...")
+        updateContent(currentCategory)
+    end
     
     updateLoading(100, "Готово!")
     task.wait(0.3)
     
     loadingFrame:Destroy()
     
-    print("✅ Lunar Hub v9.8.1 loaded! (" .. #Games .. " games)")
+    print("✅ Lunar Hub v9.8.2 loaded! (" .. #Games .. " games)")
     print("⭐ Избранное сохранено!")
 end
 
@@ -676,3 +680,20 @@ connection = RunService.Stepped:Connect(function()
         updateStats()
     end
 end)
+
+-- ============================================
+-- 🔧 ДОПОЛНИТЕЛЬНЫЙ ТАЙМЕР (ГАРАНТИЯ)
+-- ============================================
+task.wait(1)
+if #contentFrame:GetChildren() == 0 then
+    print("🔄 Финальный форсированный запуск...")
+    updateContent(currentCategory)
+    updateStats()
+end
+
+task.wait(2)
+if #contentFrame:GetChildren() == 0 then
+    print("🔄 Аварийный запуск...")
+    updateContent(currentCategory)
+    updateStats()
+end
