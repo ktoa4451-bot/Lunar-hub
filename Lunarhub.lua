@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v10.3 (ПОЛНЫЙ РЕФАКТОРИНГ)
+-- 🌙 LUNAR HUB v10.4 (С СЕКРЕТНЫМ ФИКСОМ)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "10.3"
+    local currentVersion = "10.4"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -38,7 +38,7 @@ if selfUpdate() then
 end
 
 -- ============================================
--- ⚡ ИГРЫ
+-- ⚡ ИГРЫ (С ИКОНКАМИ)
 -- ============================================
 local Games = {
     {name = "🔫 Forsaken", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
@@ -58,7 +58,7 @@ local Games = {
 }
 
 -- ============================================
--- ⭐ ИЗБРАННОЕ
+-- ⭐ ИЗБРАННОЕ (С СОХРАНЕНИЕМ)
 -- ============================================
 local Favorites = {}
 
@@ -83,7 +83,7 @@ end
 loadFavorites()
 
 -- ============================================
--- 🔧 ЗАГРУЗЧИК
+-- 🔧 УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
 -- ============================================
 local function loadScript(link)
     local success, result = pcall(function()
@@ -120,7 +120,7 @@ screen.Parent = PlayerGui
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 -- ============================================
--- 🎬 ЗАГРУЗКА
+-- 🎬 ЭКРАН ЗАГРУЗКИ
 -- ============================================
 local loadingFrame = Instance.new("Frame")
 loadingFrame.Size = UDim2.new(0, 320, 0, 140)
@@ -217,7 +217,7 @@ headerCorner.Parent = header
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0, 250, 1, 0)
 title.Position = UDim2.new(0, 20, 0, 0)
-title.Text = "🌙 LUNAR HUB v10.3"
+title.Text = "🌙 LUNAR HUB v10.4"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextSize = 20
 title.Font = Enum.Font.GothamBold
@@ -344,7 +344,8 @@ for _, cat in ipairs(allCategories) do
         end
         btn.BackgroundTransparency = 0
         
-        -- ===== ПРЯМОЙ ВЫЗОВ ОБНОВЛЕНИЯ =====
+        -- ПРЯМОЙ ВЫЗОВ
+        searchBox.Text = ""
         renderGames(cat)
         updateStats()
     end)
@@ -410,7 +411,7 @@ updateBtn.MouseButton1Click:Connect(function()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 80)
     updateText.Position = UDim2.new(0, 10, 0, 45)
-    updateText.Text = "v10.3 — Полный рефакторинг\n— Прямой вызов обновления\n— Гарантированное появление игр"
+    updateText.Text = "v10.4 — Секретный фикс\n— Игры появляются сразу\n— Избранное сохраняется"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -477,10 +478,9 @@ local function updateStats()
 end
 
 -- ============================================
--- 🎨 ОТРИСОВКА ИГР (ГЛАВНАЯ ФУНКЦИЯ)
+-- 🎨 ОТРИСОВКА ИГР
 -- ============================================
 local function renderGames(category)
-    -- Очищаем
     for _, child in ipairs(contentFrame:GetChildren()) do
         if child:IsA("TextButton") then child:Destroy() end
     end
@@ -488,7 +488,6 @@ local function renderGames(category)
     local gamesToShow = {}
     local searchText = searchBox.Text:lower()
     
-    -- Фильтруем по категории
     if category == "⭐ Избранное" then
         for _, game in ipairs(Games) do
             if Favorites[game.name] then
@@ -501,7 +500,6 @@ local function renderGames(category)
         end
     end
     
-    -- Фильтруем по поиску
     if searchText ~= "" then
         local filtered = {}
         for _, game in ipairs(gamesToShow) do
@@ -512,10 +510,8 @@ local function renderGames(category)
         gamesToShow = filtered
     end
     
-    -- Сортируем
     table.sort(gamesToShow, function(a, b) return a.name < b.name end)
     
-    -- Создаём кнопки
     for _, game in ipairs(gamesToShow) do
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(1, 0, 0, 38)
@@ -611,7 +607,7 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 -- ============================================
--- 🚀 ЗАПУСК
+-- 🚀 ЗАПУСК (С СЕКРЕТНЫМ ФИКСОМ)
 -- ============================================
 local function finalStart()
     updateLoading(10, "Создание интерфейса")
@@ -632,7 +628,14 @@ local function finalStart()
     updateLoading(90, "Финальная настройка")
     task.wait(0.1)
     
-    -- ПРЯМОЙ ВЫЗОВ
+    -- ============================================
+    -- 🔥 СЕКРЕТНЫЙ ФИКС (ИЗ v9.4)
+    -- ============================================
+    task.wait(0.2)
+    searchBox.Text = ""
+    searchBox:GetPropertyChangedSignal("Text"):Fire()
+    -- ============================================
+    
     renderGames(currentCategory)
     updateStats()
     
@@ -641,7 +644,8 @@ local function finalStart()
     
     loadingFrame:Destroy()
     
-    print("✅ Lunar Hub v10.3 loaded! (" .. #Games .. " games)")
+    print("✅ Lunar Hub v10.4 loaded! (" .. #Games .. " games)")
+    print("🔥 Секретный фикс активирован!")
 end
 
 task.wait(0.1)
@@ -667,6 +671,8 @@ connection = RunService.Stepped:Connect(function()
     
     if not hasButtons and frame.Visible then
         print("🔄 Принудительное обновление через Stepped")
+        searchBox.Text = ""
+        searchBox:GetPropertyChangedSignal("Text"):Fire()
         renderGames(currentCategory)
         updateStats()
     end
@@ -678,6 +684,8 @@ end)
 task.wait(1)
 if #contentFrame:GetChildren() == 0 then
     print("🔄 Таймер 1: Принудительное обновление")
+    searchBox.Text = ""
+    searchBox:GetPropertyChangedSignal("Text"):Fire()
     renderGames(currentCategory)
     updateStats()
 end
@@ -685,6 +693,17 @@ end
 task.wait(2)
 if #contentFrame:GetChildren() == 0 then
     print("🔄 Таймер 2: Аварийное обновление")
+    searchBox.Text = ""
+    searchBox:GetPropertyChangedSignal("Text"):Fire()
+    renderGames(currentCategory)
+    updateStats()
+end
+
+task.wait(3)
+if #contentFrame:GetChildren() == 0 then
+    print("🔄 Таймер 3: Экстренное обновление")
+    searchBox.Text = ""
+    searchBox:GetPropertyChangedSignal("Text"):Fire()
     renderGames(currentCategory)
     updateStats()
 end
