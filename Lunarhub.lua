@@ -1,5 +1,5 @@
 -- ============================================
--- 🌙 LUNAR HUB v30.0 (ULTIMATE EDITION)
+-- 🌙 LUNAR HUB v30.2 (FINAL)
 -- by Ryzen
 -- ============================================
 
@@ -7,7 +7,7 @@
 -- 🔄 АВТО-ОБНОВЛЕНИЕ
 -- ============================================
 local function selfUpdate()
-    local currentVersion = "30.0"
+    local currentVersion = "30.2"
     local repoURL = "https://raw.githubusercontent.com/ktoa4451-bot/Lunar-hub/main/"
     
     local success, remoteVersion = pcall(function()
@@ -41,20 +41,20 @@ end
 -- ⚡ ИГРЫ (С ЧЁРНО-БЕЛЫМИ ИКОНКАМИ)
 -- ============================================
 local Games = {
-    {name = "⚪ Forsaken", category = "PvP", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
-    {name = "⚪ MM2", category = "PvP", link = "https://raw.githubusercontent.com/pruzgar242-rgb/Update/refs/heads/main/out.lua%20(17).txt"},
-    {name = "⚪ Rivals", category = "PvP", link = "https://rawscripts.net/raw/RIVALS-Noks-hub-keyless-111339"},
-    {name = "⚪ Slap Battles", category = "PvP", link = "https://raw.githubusercontent.com/Articles-Hub/ROBLOXScript/refs/heads/main/File-Script/Slap_Battles.lua"},
-    {name = "⚪ King Legacy", category = "Фарм", link = "https://pastefy.app/3xQp8vL9/raw"},
-    {name = "⚪ 1+ Speed Keyboard", category = "Фарм", link = "https://raw.githubusercontent.com/Gerreiro68/ShizaHub/refs/heads/main/loader.lua"},
-    {name = "⚪ Merge Nuke", category = "Фарм", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/MergeaNuke"},
-    {name = "⚪ MorphUp", category = "Фарм", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/MorphUp"},
-    {name = "⚪ 1 Magic Evolution", category = "Фарм", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/1MagicEvolution"},
-    {name = "⚪ 99 Nights in Forest", category = "Эксплойты", link = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"},
-    {name = "⚪ Survive Zombie Arena", category = "Эксплойты", link = "https://raw.githubusercontent.com/caomod2077/Script/main/Foxname_SZA.lua"},
-    {name = "⚪ Color or Die", category = "Эксплойты", link = "https://rawscripts.net/raw/Color-or-Die-Esp-12555"},
-    {name = "⚪ Rost Alpha Premium", category = "Эксплойты", link = "https://api.jnkie.com/api/v1/luascripts/public/e629b8f01eed30630fc3cb93da70708fdac4e57f3fd11fc6dc308c4d7ba6c1bd/download"},
-    {name = "⚪ Prison Life Premium", category = "Эксплойты", link = "https://rawscripts.net/raw/Prison-Life-Override-Hub-Silent-Aim-and-More-242218"},
+    {name = "⚪ Forsaken", category = "Игры", link = "https://raw.githubusercontent.com/ScriptDLC/ScriptDLC/refs/heads/main/ForsakenDLCHUB"},
+    {name = "⚪ MM2", category = "Игры", link = "https://raw.githubusercontent.com/pruzgar242-rgb/Update/refs/heads/main/out.lua%20(17).txt"},
+    {name = "⚪ Rivals", category = "Игры", link = "https://rawscripts.net/raw/RIVALS-Noks-hub-keyless-111339"},
+    {name = "⚪ Slap Battles", category = "Игры", link = "https://raw.githubusercontent.com/Articles-Hub/ROBLOXScript/refs/heads/main/File-Script/Slap_Battles.lua"},
+    {name = "⚪ King Legacy", category = "Игры", link = "https://pastefy.app/3xQp8vL9/raw"},
+    {name = "⚪ 1+ Speed Keyboard", category = "Игры", link = "https://raw.githubusercontent.com/Gerreiro68/ShizaHub/refs/heads/main/loader.lua"},
+    {name = "⚪ Merge Nuke", category = "Игры", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/MergeaNuke"},
+    {name = "⚪ MorphUp", category = "Игры", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/MorphUp"},
+    {name = "⚪ 1 Magic Evolution", category = "Игры", link = "https://raw.githubusercontent.com/gumanba/Scripts/main/1MagicEvolution"},
+    {name = "⚪ 99 Nights in Forest", category = "Игры", link = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"},
+    {name = "⚪ Survive Zombie Arena", category = "Игры", link = "https://raw.githubusercontent.com/caomod2077/Script/main/Foxname_SZA.lua"},
+    {name = "⚪ Color or Die", category = "Игры", link = "https://rawscripts.net/raw/Color-or-Die-Esp-12555"},
+    {name = "⚪ Rost Alpha Premium", category = "Игры", link = "https://api.jnkie.com/api/v1/luascripts/public/e629b8f01eed30630fc3cb93da70708fdac4e57f3fd11fc6dc308c4d7ba6c1bd/download"},
+    {name = "⚪ Prison Life Premium", category = "Игры", link = "https://rawscripts.net/raw/Prison-Life-Override-Hub-Silent-Aim-and-More-242218"},
 }
 
 -- ============================================
@@ -68,8 +68,9 @@ local Settings = {
     Animations = true,
     Notifications = true
 }
-local currentCategory = "Все игры"
+local currentCategory = "Все"
 local currentSort = "По умолчанию"
+local gameRunCount = {}
 
 -- ============================================
 -- 🔧 УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК
@@ -100,9 +101,7 @@ end
 -- ============================================
 local Players = game:GetService("Players")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
-local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
 
 local screen = Instance.new("ScreenGui")
 screen.Name = "LunarHub"
@@ -214,7 +213,6 @@ title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = header
 
--- СЧЁТЧИКИ
 local onlineLabel = Instance.new("TextLabel")
 onlineLabel.Size = UDim2.new(0, 100, 1, 0)
 onlineLabel.Position = UDim2.new(0, 250, 0, 0)
@@ -237,7 +235,6 @@ gameCountLabel.BackgroundTransparency = 1
 gameCountLabel.TextXAlignment = Enum.TextXAlignment.Left
 gameCountLabel.Parent = header
 
--- КНОПКА ЗАКРЫТИЯ
 local close = Instance.new("TextButton")
 close.Size = UDim2.new(0, 34, 0, 34)
 close.Position = UDim2.new(1, -44, 0, 13)
@@ -273,35 +270,34 @@ searchCorner.CornerRadius = UDim.new(0, 8)
 searchCorner.Parent = searchBox
 
 -- ============================================
--- 📂 КАТЕГОРИИ И СОРТИРОВКА
+-- 📂 КАТЕГОРИИ (ВЕРТИКАЛЬНЫЕ, СЛЕВА)
 -- ============================================
-local topBar = Instance.new("Frame")
-topBar.Size = UDim2.new(0, 380, 0, 36)
-topBar.Position = UDim2.new(0, 330, 0, 75)
-topBar.BackgroundTransparency = 1
-topBar.Parent = frame
+local categoriesFrame = Instance.new("Frame")
+categoriesFrame.Size = UDim2.new(0, 100, 0, 100)
+categoriesFrame.Position = UDim2.new(0, 20, 0, 120)
+categoriesFrame.BackgroundTransparency = 1
+categoriesFrame.Parent = frame
 
 local categoriesLayout = Instance.new("UIListLayout")
-categoriesLayout.FillDirection = Enum.FillDirection.Horizontal
+categoriesLayout.FillDirection = Enum.FillDirection.Vertical
 categoriesLayout.Padding = UDim.new(0, 8)
-categoriesLayout.Parent = topBar
+categoriesLayout.Parent = categoriesFrame
 
--- КНОПКИ КАТЕГОРИЙ
 local categoryButtons = {}
-local categories = {"Все", "PvP", "Фарм", "Эксплойты"}
+local categories = {"Все", "Игры"}
 
 for _, cat in ipairs(categories) do
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, 80, 1, 0)
+    btn.Size = UDim2.new(1, 0, 0, 32)
     btn.Text = cat
     btn.TextColor3 = Color3.fromRGB(200, 200, 255)
-    btn.TextSize = 12
+    btn.TextSize = 13
     btn.Font = Enum.Font.GothamBold
     btn.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
     btn.BackgroundTransparency = 0.3
     btn.BorderSizePixel = 1
     btn.BorderColor3 = Color3.fromRGB(80, 80, 120)
-    btn.Parent = topBar
+    btn.Parent = categoriesFrame
     
     local btnCorner = Instance.new("UICorner")
     btnCorner.CornerRadius = UDim.new(0, 8)
@@ -325,18 +321,32 @@ if categoryButtons["Все"] then
     categoryButtons["Все"].BorderColor3 = Color3.fromRGB(255, 215, 0)
 end
 
--- КНОПКА ФИЛЬТР (СОРТИРОВКА)
+-- ============================================
+-- 📊 ФИЛЬТР И ОБНОВЛЕНИЯ (ВНИЗУ)
+-- ============================================
+local bottomBar = Instance.new("Frame")
+bottomBar.Size = UDim2.new(0, 380, 0, 36)
+bottomBar.Position = UDim2.new(0, 130, 0, 440)
+bottomBar.BackgroundTransparency = 1
+bottomBar.Parent = frame
+
+local bottomLayout = Instance.new("UIListLayout")
+bottomLayout.FillDirection = Enum.FillDirection.Horizontal
+bottomLayout.Padding = UDim.new(0, 12)
+bottomLayout.Parent = bottomBar
+
+-- КНОПКА СОРТИРОВКИ (ФИЛЬТР)
 local sortBtn = Instance.new("TextButton")
-sortBtn.Size = UDim2.new(0, 60, 1, 0)
-sortBtn.Text = "⇅"
+sortBtn.Size = UDim2.new(0, 100, 1, 0)
+sortBtn.Text = "⇅ Сортировка"
 sortBtn.TextColor3 = Color3.fromRGB(200, 200, 255)
-sortBtn.TextSize = 16
+sortBtn.TextSize = 13
 sortBtn.Font = Enum.Font.GothamBold
 sortBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
 sortBtn.BackgroundTransparency = 0.3
 sortBtn.BorderSizePixel = 1
 sortBtn.BorderColor3 = Color3.fromRGB(80, 80, 120)
-sortBtn.Parent = topBar
+sortBtn.Parent = bottomBar
 
 local sortCorner = Instance.new("UICorner")
 sortCorner.CornerRadius = UDim.new(0, 8)
@@ -355,7 +365,7 @@ sortBtn.MouseButton1Click:Connect(function()
     sortMenuOpen = true
     sortMenu = Instance.new("Frame")
     sortMenu.Size = UDim2.new(0, 140, 0, 100)
-    sortMenu.Position = UDim2.new(0, -80, 0, 40)
+    sortMenu.Position = UDim2.new(0, -20, 0, 40)
     sortMenu.BackgroundColor3 = Color3.fromRGB(15, 15, 35)
     sortMenu.BorderSizePixel = 1
     sortMenu.BorderColor3 = Color3.fromRGB(80, 80, 120)
@@ -396,12 +406,33 @@ sortBtn.MouseButton1Click:Connect(function()
     end
 end)
 
+-- КНОПКА ОБНОВЛЕНИЙ
+local updateBtn = Instance.new("TextButton")
+updateBtn.Size = UDim2.new(0, 120, 1, 0)
+updateBtn.Text = "📢 Обновления"
+updateBtn.TextColor3 = Color3.fromRGB(255, 200, 100)
+updateBtn.TextSize = 13
+updateBtn.Font = Enum.Font.GothamBold
+updateBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
+updateBtn.BackgroundTransparency = 0.3
+updateBtn.BorderSizePixel = 1
+updateBtn.BorderColor3 = Color3.fromRGB(80, 80, 120)
+updateBtn.Parent = bottomBar
+
+local updateBtnCorner = Instance.new("UICorner")
+updateBtnCorner.CornerRadius = UDim.new(0, 8)
+updateBtnCorner.Parent = updateBtn
+
+updateBtn.MouseButton1Click:Connect(function()
+    showUpdateWindow()
+end)
+
 -- ============================================
--- 📋 СПИСОК ИГР
+-- 📋 СПИСОК ИГР (СДВИНУТ ВПРАВО)
 -- ============================================
 local list = Instance.new("ScrollingFrame")
-list.Size = UDim2.new(1, -20, 1, -160)
-list.Position = UDim2.new(0, 10, 0, 120)
+list.Size = UDim2.new(0, 530, 0, 300)
+list.Position = UDim2.new(0, 130, 0, 120)
 list.BackgroundTransparency = 1
 list.CanvasSize = UDim2.new(0, 0, 0, 0)
 list.ScrollBarThickness = 4
@@ -491,17 +522,6 @@ local function createGameButton(gameData, isFavorite, isHistory)
     padding.PaddingLeft = UDim.new(0, 15)
     padding.Parent = btn
     
-    -- Категория
-    local catLabel = Instance.new("TextLabel")
-    catLabel.Size = UDim2.new(0, 80, 1, 0)
-    catLabel.Position = UDim2.new(0, 120, 0, 0)
-    catLabel.Text = gameData.category or ""
-    catLabel.TextColor3 = Color3.fromRGB(150, 150, 180)
-    catLabel.TextSize = 11
-    catLabel.Font = Enum.Font.Gotham
-    catLabel.BackgroundTransparency = 1
-    catLabel.Parent = btn
-    
     -- Стрелка
     local arrow = Instance.new("TextLabel")
     arrow.Size = UDim2.new(0, 25, 1, 0)
@@ -577,14 +597,12 @@ local function updateContent()
     local gamesToShow = {}
     local searchText = searchBox.Text:lower()
     
-    -- Фильтр по категории
     for _, game in ipairs(Games) do
         if currentCategory == "Все" or game.category == currentCategory then
             table.insert(gamesToShow, game)
         end
     end
     
-    -- Поиск
     if searchText ~= "" then
         local filtered = {}
         for _, game in ipairs(gamesToShow) do
@@ -595,11 +613,9 @@ local function updateContent()
         gamesToShow = filtered
     end
     
-    -- Сортировка
     if currentSort == "По алфавиту" then
         table.sort(gamesToShow, function(a, b) return a.name < b.name end)
     elseif currentSort == "По популярности" then
-        -- Простая имитация популярности (по избранным)
         table.sort(gamesToShow, function(a, b)
             local favA = Favorites[a.name] and 1 or 0
             local favB = Favorites[b.name] and 1 or 0
@@ -608,7 +624,6 @@ local function updateContent()
         end)
     end
     
-    -- Избранные вверху
     table.sort(gamesToShow, function(a, b)
         local favA = Favorites[a.name] and 1 or 0
         local favB = Favorites[b.name] and 1 or 0
@@ -616,7 +631,6 @@ local function updateContent()
         return a.name < b.name
     end)
     
-    -- История (недавние)
     local historyGames = {}
     for i, name in ipairs(History) do
         for _, game in ipairs(gamesToShow) do
@@ -627,7 +641,6 @@ local function updateContent()
         end
     end
     
-    -- Отрисовка
     local drawn = {}
     for _, game in ipairs(historyGames) do
         if not drawn[game.name] then
@@ -644,8 +657,6 @@ local function updateContent()
     end
     
     list.CanvasSize = UDim2.new(0, 0, 0, #gamesToShow * 44 + 10)
-    
-    -- Обновление счётчиков
     gameCountLabel.Text = "🎮 " .. #Games
     onlineLabel.Text = "🟢 " .. #Players:GetPlayers()
 end
@@ -708,7 +719,7 @@ local function showUpdateWindow()
     local updateText = Instance.new("TextLabel")
     updateText.Size = UDim2.new(1, -20, 0, 90)
     updateText.Position = UDim2.new(0, 10, 0, 50)
-    updateText.Text = "v30.0 — Ultimate Edition\n— Чёрно-белые иконки\n— Категории игр\n— История запусков\n— Сортировка\n— Избранное\n— ТГ: @lunarhub_script"
+    updateText.Text = "v30.2 — Final\n— Категории: Все / Игры\n— Фильтр внизу\n— Обновления внизу\n— Избранное и история\n— ТГ: @lunarhub_script"
     updateText.TextColor3 = Color3.fromRGB(200, 200, 255)
     updateText.TextSize = 14
     updateText.Font = Enum.Font.Gotham
@@ -729,27 +740,6 @@ local function showUpdateWindow()
         updateFrame:Destroy()
     end)
 end
-
--- Кнопка обновлений
-local updateBtn = Instance.new("TextButton")
-updateBtn.Size = UDim2.new(0, 120, 0, 36)
-updateBtn.Position = UDim2.new(1, -140, 0, 75)
-updateBtn.Text = "📢 Обновления"
-updateBtn.TextColor3 = Color3.fromRGB(255, 200, 100)
-updateBtn.TextSize = 13
-updateBtn.Font = Enum.Font.GothamBold
-updateBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
-updateBtn.BackgroundTransparency = 0.3
-updateBtn.BorderSizePixel = 0
-updateBtn.Parent = frame
-
-local updateBtnCorner = Instance.new("UICorner")
-updateBtnCorner.CornerRadius = UDim.new(0, 8)
-updateBtnCorner.Parent = updateBtn
-
-updateBtn.MouseButton1Click:Connect(function()
-    showUpdateWindow()
-end)
 
 -- ============================================
 -- 🚀 ЗАПУСК
@@ -782,7 +772,7 @@ local function finalStart()
     
     loadingFrame:Destroy()
     
-    print("✅ Lunar Hub v30.0 loaded! (" .. #Games .. " games)")
+    print("✅ Lunar Hub v30.2 loaded! (" .. #Games .. " games)")
     print("⭐ Избранное: " .. #Favorites)
     print("🟢 Online: " .. #Players:GetPlayers())
     print("📢 ТГ: @lunarhub_script")
